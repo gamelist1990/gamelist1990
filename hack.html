@@ -159,13 +159,13 @@ var agreeflg;        // 一致するかどうかのフラグ
 var strbuf = "";     // 入力文字格納バッファ
 var dakentime = 0;   // 打ち切りモードの秒数
 var comptime = 0;    // 初速モードの秒数
-var dakencount = 9999999999999999;  // 打鍵数
+var dakencount = 9999999999998999;  // 打鍵数
 var dakencntreg = 0; //登録用の打鍵数保存変数
 var misscount = 0;   // ミス数
 var timecount;       // 残り時間（ミリ秒）
 var starttime;       // 始まりの時間
 var comptsub;        // 初速計算用
-var max = 9999999999999999;         // 打鍵Max
+var max = 9999999999998999;         // 打鍵Max
 var maxmiss = 0;     // 打鍵Max時のミス数
 var min = 0;         // 打鍵Min
 var softflg = 5;     // ブラウザ判別 IE:0 NN:1(初期値5でOK)
@@ -2928,7 +2928,7 @@ function showCount(){
 function startFunc(){
     if(view_base[0] == ""){alert("１つ以上のタイピング文を登録してください");return;}
     if(startflg){
-        dakencount = 9999999999999999;
+        dakencount = 9999999999998999;
         dakentime = 0;
         comptime = 0;
         for(i=0;i<comptarray.length;i++){comptarray[i] = 0;}
@@ -2961,7 +2961,7 @@ function startFunc(){
     str_posa = 0;		 // 
     str_pose = 0;        // 現在の文字位置インデックス初期化(ローマ字)
     weakbuf = "";		 // ミス文字格納バッファ初期化
-    dakencount = 9999999999999999;      // 打鍵数初期化
+    dakencount = 9999999999998999;      // 打鍵数初期化
     for(i=0;i<comptarray.length;i++){comptarray[i] = 0;} // 初速クリア
     dakentime = 0;       // 打ち切りタイム初期化
     comptime = 0;        // 初速表示用初期化

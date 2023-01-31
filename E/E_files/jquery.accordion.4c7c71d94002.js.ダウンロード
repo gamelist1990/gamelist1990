@@ -1,0 +1,21 @@
+(function (a) {
+  a.fn.accordion = function (b) {
+    var e = { otherClose: false, addClass: "active", open: [], speed: 300 };
+    var d = a.extend(e, b);
+    var c = a(this);
+    a(this).next().hide();
+    a(e.open).each(function (f, g) {
+      a(a(c)[Number(g)]).addClass(e.addClass).next().show();
+    });
+    a(this).click(function () {
+      if (e.otherClose == true && !a(this).hasClass("active")) {
+        a(c.selector + "." + e.addClass)
+          .removeClass(e.addClass)
+          .next()
+          .slideToggle(e.speed);
+      }
+      a(this).toggleClass("active").next().slideToggle(e.speed);
+    });
+    return this;
+  };
+})(jQuery);

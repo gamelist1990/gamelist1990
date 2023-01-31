@@ -1,0 +1,81 @@
+/* piechart common */
+ul.contents li {
+    position: relative;
+}
+.piechart div.subway-icon {
+    height: 100%;
+    top: 0;
+}
+.piechart div.subway-icon.detail {
+    float:left;
+}
+.piechart div.pipe {
+    background-color: #eeeeee;
+    height: 101%;
+    position: absolute;
+    z-index: -1;
+}
+.pipe.learned {
+    background-color: #FFCC66 !important;
+}
+.piechart div.subway-icon img {
+    border-radius: 50%;
+}
+
+/* piechart large */
+ul.contents.large li {
+    height: 114px;
+}
+.piechart.large div.subway-icon {
+    width: 114px;
+}
+.piechart.large div.pipe {
+    width: 6px;
+    top: 0px; right: auto; bottom: auto; left: 36px;
+}
+.piechart.large div.subway-icon .percent {
+    top: 8px; left: 8px;
+    border: none;
+}
+.piechart.large div.subway-icon div {
+    width: 114px; height: 114px;
+    background-color: #fff;
+    border-radius: 50%;
+}
+
+/* piechart middle */
+.piechart.middle div.subway-icon {
+    width: 80px;
+    height: 80px;
+}
+.piechart.middle div.pipe {
+    width: 6px;
+    top: 0px; right: auto; bottom: auto; left: 36px;
+}
+.piechart.middle div.subway-icon .percent {
+    top: 5px; left: 5px;
+}
+.piechart.middle div.subway-icon img {
+    width: 66px; height: 66px;
+    border: solid 2px #fff;
+}
+
+/* piechart small */
+ul.contents.small li {
+    height: 70px;
+}
+.piechart.small div.subway-icon {
+    position: absolute;
+    width: 48px;
+}
+.piechart.small div.pipe {
+    width: 4px;
+    top: 0px; right: auto; bottom: auto; left: 25px;
+}
+.piechart.small div.subway-icon .percent {
+    top: 4px; left: 4px;
+}
+.piechart.small div.subway-icon img {
+    width: 42px; height: 42px;
+    border: solid 1px #fff;
+}

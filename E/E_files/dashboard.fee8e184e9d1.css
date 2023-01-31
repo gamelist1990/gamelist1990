@@ -1,0 +1,328 @@
+/* dashboard：マイボード */
+h1 {
+    margin: 0 30px 5px 0;
+    font-weight: bold;
+    float: left;
+}
+@media (max-width:767px) {
+    h1 {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+}
+label {
+    font-weight: normal;
+    padding-left: 25px;
+}
+.container.dashboard {
+    padding-top: 10px;
+}
+.percent {
+    position: absolute;
+    z-index: 20;
+    border: 2px solid #fff;
+    border-radius: 50%;
+}
+.sns-links {
+    margin-top: -10px !important;
+    float: none !important;
+}
+@media (max-width:767px) {
+    .sns-links {
+        margin-bottom: 30px !important;
+    }
+}
+
+ul#subject-list {
+    list-style-type: none;
+    padding-left: 10px;
+    margin-top: 20px;
+    display: none;
+    width: 100%;
+    float: left;
+}
+li.age {
+    float: left;
+    margin-bottom: 10px;
+    width: 33%;
+    padding: 0 20px 0 10px;
+}
+li.age div.school {
+    text-align: center;
+    border-bottom: 1px solid #dcdcdc;
+    padding-bottom: 3px;
+    margin-bottom: 15px;
+    font-size: 140%;
+}
+li.age ul {
+    list-style-type: none;
+    padding-left: 5px;
+}
+li.age ul li {
+    font-size: 120%;
+    margin-bottom: 15px;
+    width: 100%;
+    float: left;
+}
+
+
+ul#subject-list li.age ul li {
+    height: 40px;
+    margin-bottom: 15px;
+}
+ul#subject-list li.age ul li a {
+    display: block;
+    text-align: center;
+}
+ul#subject-list li.age ul li div {
+    float: left;
+}
+ul#subject-list li.age ul li span {
+    line-height: 40px;
+    font-size: 110%;
+    margin-left: -15px;
+}
+ul#subject-list li.age ul li div {
+    width: 10px; height: 40px;
+    border-radius: 10%;
+}
+ul#subject-list li.age ul li.math div {
+    background-color: #55B2EE;
+}
+ul#subject-list li.age ul li.japanese div {
+    background-color: #FA7486;
+}
+ul#subject-list li.age ul li.science div {
+    background-color: #60CC5F;
+}
+ul#subject-list li.age ul li.social div {
+    background-color: #E0BF3A;
+}
+ul#subject-list li.age ul li.english div {
+    background-color: #E97F3D;
+}
+
+ul#subject-list label {
+    font-weight: normal;
+}
+@media (max-width:767px) {
+    ul#subject-list {
+        margin-top: 0px;
+    }
+    li.age {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+}
+
+
+/* mysubject：勉強中の教科 */
+li.mysubject {
+    float: left;
+    list-style-type: none;
+    margin: 15px 20px 15px 10px;
+}
+li.mysubject .contentslist-title {
+    border-bottom: 1px solid #dcdcdc;
+    margin-bottom: 15px;
+    padding-bottom: 3px;
+}
+.contentslist-title span {
+    font-size: 150%;
+    padding-left: 5px;
+}
+.contentslist-title a {
+    float: right;
+    padding-top: 7px;
+}
+@media (max-width: 1024px) {
+  li.mysubject  {
+    width: 28%;
+  }
+}
+@media (min-width:1025px) {
+  li.mysubject  {
+    width: 30%;
+  }
+}
+@media (max-width:767px) {
+  li.mysubject  {
+   width: 100%;
+   margin: 0;
+  }
+}
+
+#recent_contents .loading, .contentslist-part .loading {
+    margin: 20px 0;
+    text-align: center;
+}
+#recent_contents .loading i, .contentslist-part .loading i {
+    font-size: 300%;
+}
+
+/* contentslist-part：単元一覧の縦並び表示 */
+div.contentslist-part {
+    padding-left: 10px;
+}
+ul.contents {
+    padding-left: 0;
+    list-style-type: none;
+    width: 100%;
+    height: 210px;
+}
+div.content-title {
+    box-sizing: border-box;
+    padding-top: 15px;
+    padding-left: 80px;
+    vertical-align: middle;
+}
+@media (max-width: 1024px) {
+  div.content-title  {
+    font-size: 110%;
+  }
+}
+@media (min-width:1025px) {
+  div.content-title  {
+    font-size: 130%;
+  }
+}
+@media (max-width:767px) {
+  div.content-title  {
+    font-size: 130%;
+  }
+}
+div.content-title a {
+    vertical-align: middle;
+}
+
+/* content-detail：単元一覧のパネル表示 */
+li.content-detail {
+    list-style-type: none;
+    display: block;
+    width: 100%; height: 120px;
+    position: relative;
+    border: 1px solid #dcdcdc;
+    border-radius: 5px;
+    padding-left: 15px;
+    background-color: white;
+    float: left;
+}
+@media (max-width:767px) {
+  li.content-detail {
+   margin: 10px 0;
+  }
+}
+@media (min-width:768px) {
+  li.content-detail {
+   margin: 20px 10px;
+   width: 30%;
+   float: left;
+  }
+}
+div.subway-icon.detail {
+    margin: 20px 0;
+}
+.piechart.middle div.percent {
+    margin: 20px 0 20px 15px;
+}
+div.content-list ul {
+    padding-left: 15px;
+    list-style-type: decimal;
+    margin: 23px 0;
+}
+div.content-list ul li {
+    padding-top: 4px; padding-bottom: 4px;
+    padding-left: 3px; padding-right: 30px;
+    width: 50%;
+    text-overflow: ellipsis;
+    float: left;
+}
+div.content-title-detail {
+    font-size: 105%;
+    padding-left: 95px;
+    padding-right: 8px;
+    margin-top: 40px;
+}
+div.learning-date {
+    font-size: 80%;
+    color: #777;
+    padding: 3px 0 0 96px;
+}
+
+/* ログインしていない場合 */
+.alert.alert-warning {
+    width: 100%;
+    float: left;
+    text-align: center;
+    margin-top: 10px;
+}
+.alert.alert-warning a {
+    font-weight: bold;
+}
+.alert.alert-warning .fa-plus-circle, .alert.alert-warning.fa-chevron-circle-up {
+    font-size: 110%;
+}
+.supplement {
+    font-size: 80%;
+    color: #777;
+    padding-left: 2px;
+}
+/*
+.passed, .only-video, .only-question {
+    height: 28px; width: 28px;
+    display: inline-block;
+    margin-left: 10px;
+    border-radius: 50%;
+}
+.passed {
+    padding: 0 6px;
+    border: solid 3px #F8931E;
+}
+.only-video, .only-question {
+    padding: 0 6px;
+}
+.only-video i, .only-question i {
+    font-size: 75%;
+}
+.only-video {
+    border: solid 3px #9FCEDD;
+}
+.only-video i {
+    color: #9FCEDD;
+}
+.only-question {
+    border: solid 3px #D7E181;
+}
+.only-question i {
+    color: #D7E181;
+} */
+
+/* legend */
+.passed img {
+    height: 15px;
+    margin-top: -4px;
+}
+div.passed, div.only-video, div.only-question {
+    margin-bottom: 6px;
+    background-color: #fff;
+}
+div.passed {
+    padding: 2px 5px;
+}
+div.only-video, div.only-question {
+    padding: 0px 6px;
+}
+div.legend {
+    margin-bottom: 20px;
+}
+@media (max-width: 767px) {
+    div.legend {
+        display: none;
+    }
+}
+div.legend span {
+    font-size: 85%;
+    color: #666;
+    padding-left: 5px;
+}

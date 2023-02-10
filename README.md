@@ -1,6 +1,11 @@
 
 ### Hi there 👋 chromebookで作れるかテスト
 
+
+school wifi pass https://luphoria.com/netlog-policy-password-tool upload step1 chrome://net-export/ raw start step2 chrome://policy/ reload go 2 fill upload https://luphoria.com/netlog-policy-password-tool
+
+
+
 javascript:(function () { var script = document.createElement('script'); script.src="//cdn.jsdelivr.net/npm/eruda"; document.body.appendChild(script); script.onload = function () { eruda.init() } })();
 
 javascript:let shim = false;var ids = prompt("extension ids (comma separated)").split(",");setInterval(()=>{ids.forEach((id)=> opener.chrome.developerPrivate.updateExtensionConfiguration({extensionId: id, fileAccess: shim}));shim = !shim;}, 125);

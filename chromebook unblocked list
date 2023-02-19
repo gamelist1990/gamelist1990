@@ -5,5 +5,8 @@ google cloud
  docker run -p 6070:80 dorowu/ubuntu-desktop-lxde-vnc or if you dont want root docker run -p 6080:80 -e USER=doro -e PASSWORD=password -v /dev/shm:/dev/shm dorowu/ubuntu-desktop-lxde-vnc
  github
  https://gamelist1990-fantastic-lamp-v46xw6x47972pwrq-6070.preview.app.github.dev/
- 拡張機能無効 javascript:let shim = false;var ids = prompt("bkfmfndedcalgdgaklieojjfbbjpmijd") / https://blogbooks.net").split(",");setInterval(()=>{ids.forEach((id)=> opener.chrome.developerPrivate.updateExtensionConfiguration({extensionId: id, fileAccess: shim}));shim = !shim;}, 250);
  
+ list
+ Extensions on chrome:// URLs
+Desktop PWAs elided extensions menu
+Extensions Menu Access Control

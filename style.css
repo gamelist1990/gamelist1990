@@ -194,7 +194,7 @@ blockquote cite {
     margin: 2em 0;
     font-weight: bold;
     color: #6091d3;/*文字色*/
-    background: ##f2f466;
+    background: #ffc107;
     border: solid 3px #ff5722;/*線*/
     border-radius: 40px;/*角の丸み*/
 }

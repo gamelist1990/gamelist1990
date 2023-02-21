@@ -11,7 +11,7 @@
   box-sizing: border-box;
 }
 
-.ribbon2 h {
+.ribbon2 h3 {
   margin: 0;
   padding: 0 30px;
   border-top: dashed 1px #FFF;/*上の破線*/

@@ -238,9 +238,9 @@ blockquote cite {
     padding: 0.5em 1em;
     margin: 2em 0;
     font-weight: bold;
-    color: #6091d3;/*文字色*/
-    background: #ffc107;
-    border: solid 3px #ff5722;/*線*/
+    color: #673AB7;/*文字色*/
+    background: #92d1ed;
+    border: solid 3px #171723;/*線*/
     border-radius: 40px;/*角の丸み*/
 }
 .g3 p {
@@ -251,7 +251,7 @@ blockquote cite {
     padding: 0.5em 1em;
     margin: 2em 0;
     font-weight: bold;
-    color: #6091d3;/*文字色*/
+    color: #ff9800;/*文字色*/
     background: #48b65b;
     border: solid 3px #ff9800;/*線*/
     border-radius: 40px;/*角の丸み*/

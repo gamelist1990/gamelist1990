@@ -181,3 +181,7 @@ blockquote cite {
 .back {
     background-image: url(https://mobimg.b-cdn.net/v3/fetch/11/119bfdc45f98bb36b9d659383b47caec.jpeg);    /* 背景画像指定 */
 }
+ .center{
+      width:500px;
+      margin: 0 auto;
+    }

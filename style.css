@@ -181,9 +181,9 @@ blockquote cite {
     margin: 2em 0;
     font-weight: bold;
     color: #6091d3;/*文字色*/
-    background: #FFF;
+    background: #6091d3;
     border: solid 3px #6091d3;/*線*/
-    border-radius: 10px;/*角の丸み*/
+    border-radius: 40px;/*角の丸み*/
 }
 .g2 p {
     margin: 0; 
@@ -194,9 +194,9 @@ blockquote cite {
     margin: 2em 0;
     font-weight: bold;
     color: #6091d3;/*文字色*/
-    background: #FFF;
-    border: solid 3px #6091d3;/*線*/
-    border-radius: 10px;/*角の丸み*/
+    background: ##f2f466;
+    border: solid 3px #ff5722;/*線*/
+    border-radius: 40px;/*角の丸み*/
 }
 .g3 p {
     margin: 0; 
@@ -207,9 +207,9 @@ blockquote cite {
     margin: 2em 0;
     font-weight: bold;
     color: #6091d3;/*文字色*/
-    background: #FFF;
-    border: solid 3px #6091d3;/*線*/
-    border-radius: 10px;/*角の丸み*/
+    background: #48b65b;
+    border: solid 3px #ff9800;/*線*/
+    border-radius: 40px;/*角の丸み*/
 }
 .g4 p {
     margin: 0; 

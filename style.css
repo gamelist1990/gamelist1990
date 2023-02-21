@@ -1,23 +1,4 @@
-ul, ol {
-  background: #fffcf4;
-  border-radius :8px;/*角の丸み*/
-  box-shadow :0px 0px 5px silver;/*5px=影の広がり具合*/
-  padding: 0.5em 0.5em 0.5em 2em;
-}
-ul li, ol li {
-  line-height: 1.5;
-  padding: 0.5em 0;
-}
-ul, ol {
-  background: #fffcf4;
-  border-radius :8px;/*角の丸み*/
-  box-shadow :0px 0px 5px silver;/*5px=影の広がり具合*/
-  padding: 0.5em 0.5em 0.5em 2em;
-}
-ul li, ol li {
-  line-height: 1.5;
-  padding: 0.5em 0;
-}
+
 h1 {
   color: #505050;/*文字色*/
   padding: 0.5em;/*文字周りの余白*/
@@ -137,13 +118,13 @@ h1:before {
 .btn-gradient-radius:hover {
   background-image: linear-gradient(45deg, #FFC107 0%, #f76a35 100%);
 }
-ul, ol {
+.ul,　ol {
   background: #fffcf4;
   border-radius :8px;/*角の丸み*/
   box-shadow :0px 0px 5px silver;/*5px=影の広がり具合*/
   padding: 0.5em 0.5em 0.5em 2em;
 }
-ul li, ol li {
+.ul li, ol li {
   line-height: 1.5;
   padding: 0.5em 0;
 }
@@ -183,7 +164,7 @@ blockquote cite {
     color: #888888;
     font-size: 0.9em;
 }
- .g1{
+.g1{
       width:600px;
     }
 .g2{

@@ -1,4 +1,49 @@
+.ribbon2 {
+  display: inline-block;
+  position: relative;
+  height: 60px;
+  line-height: 60px;
+  text-align: center;
+  padding: 7px 0;
+  font-size: 18px;/*フォントサイズ*/
+  background: #78d0f5;/*背景色*/
+  color: #FFF;/*文字色*/
+  box-sizing: border-box;
+}
 
+.ribbon2 h3 {
+  margin: 0;
+  padding: 0 30px;
+  border-top: dashed 1px #FFF;/*上の破線*/
+  border-bottom: dashed 1px #FFF;/*下の破線*/
+  line-height: 46px;
+}
+
+.ribbon2:before, .ribbon2:after {
+  position: absolute;
+  content: '';
+  width: 0px;
+  height: 0px;
+  z-index: 1;
+}
+
+.ribbon2:before {
+  /*左端の山形*/
+  top: 0;
+  left: 0;
+  border-width: 30px 0px 30px 15px;
+  border-color: transparent transparent transparent #fff;
+  border-style: solid;
+}
+
+.ribbon2:after {
+  /*右端の山形*/
+  top: 0;
+  right: 0;
+  border-width: 30px 15px 30px 0px;
+  border-color: transparent #fff transparent transparent;
+  border-style: solid;
+}
 h1 {
   color: #505050;/*文字色*/
   padding: 0.5em;/*文字周りの余白*/

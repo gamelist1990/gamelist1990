@@ -1,0 +1,23 @@
+{
+  "id": "C:/Users/issei/Velocity/src/routes/internal/preferences/inputs/Dropdown.tsx",
+  "deps": [],
+  "plugins": [
+    "vite:load-fallback",
+    "solid"
+  ],
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "import { JSX, createSignal, onMount, createEffect } from \"solid-js\";\r\nimport preferences from \"~/util/preferences\";\r\nimport Preferences from \"~/types/Preferences\";\r\n\r\ninterface ToggleProps {\r\n  id: keyof Preferences;\r\n  label: string;\r\n  default: string;\r\n  values: string[];\r\n}\r\n\r\nexport default function Toggle(props: ToggleProps): JSX.Element {\r\n  const [getState, setState] = createSignal<string>(props.default);\r\n\r\n  onMount(() => {\r\n    // TODO: Fix typings\r\n    setState(preferences()[props.id] ?? (props.default as any));\r\n  });\r\n\r\n  createEffect(() => {\r\n    localStorage.setItem(\r\n      \"preferences\",\r\n      JSON.stringify(\r\n        Object.assign(preferences(), {\r\n          [props.id]: getState()\r\n        })\r\n      )\r\n    );\r\n  });\r\n\r\n  function onChange(element: HTMLSelectElement) {\r\n    element.addEventListener(\"change\", () => {\r\n      setState(element.value);\r\n    });\r\n  }\r\n\r\n  return (\r\n    <div class=\"flex items-center gap-2\">\r\n      <select\r\n        value={getState()}\r\n        ref={onChange}\r\n        id={props.id}\r\n        class=\"bg-[#2A2A32] rounded py-[7px] px-[15px]\"\r\n      >\r\n        {props.values.map(\r\n          (value): JSX.Element => (\r\n            <option class=\"text-white\" value={value.toLowerCase()}>\r\n              {value}\r\n            </option>\r\n          )\r\n        )}\r\n      </select>\r\n      <label>{props.label}</label>\r\n    </div>\r\n  );\r\n}\r\n",
+      "start": 1677131502463,
+      "end": 1677131502752
+    },
+    {
+      "name": "solid",
+      "result": "import { ssr as _$ssr } from \"solid-js/web\";\nimport { ssrAttribute as _$ssrAttribute } from \"solid-js/web\";\nimport { escape as _$escape } from \"solid-js/web\";\nimport { ssrHydrationKey as _$ssrHydrationKey } from \"solid-js/web\";\nconst _tmpl$ = [\"<div\", \" class=\\\"flex items-center gap-2\\\"><select\", \" class=\\\"bg-[#2A2A32] rounded py-[7px] px-[15px]\\\">\", \"</select><label>\", \"</label></div>\"],\n  _tmpl$2 = [\"<option\", \" class=\\\"text-white\\\"\", \">\", \"</option>\"];\nimport { createSignal, onMount, createEffect } from \"solid-js\";\nimport preferences from \"~/util/preferences\";\nexport default function Toggle(props) {\n  const [getState, setState] = createSignal(props.default);\n  onMount(() => {\n    // TODO: Fix typings\n    setState(preferences()[props.id] ?? props.default);\n  });\n  createEffect(() => {\n    localStorage.setItem(\"preferences\", JSON.stringify(Object.assign(preferences(), {\n      [props.id]: getState()\n    })));\n  });\n  function onChange(element) {\n    element.addEventListener(\"change\", () => {\n      setState(element.value);\n    });\n  }\n  return _$ssr(_tmpl$, _$ssrHydrationKey(), _$ssrAttribute(\"value\", _$escape(getState(), true), false) + _$ssrAttribute(\"id\", _$escape(props.id, true), false), _$escape(props.values.map(value => _$ssr(_tmpl$2, _$ssrHydrationKey(), _$ssrAttribute(\"value\", _$escape(value.toLowerCase(), true), false), _$escape(value)))), _$escape(props.label));\n}",
+      "start": 1677131502753,
+      "end": 1677131502772
+    }
+  ],
+  "virtual": false
+}

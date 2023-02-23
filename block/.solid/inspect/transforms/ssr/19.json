@@ -1,0 +1,23 @@
+{
+  "id": "C:/Users/issei/Velocity/node_modules/solid-start/entry-server/index.ts",
+  "deps": [],
+  "plugins": [
+    "vite:load-fallback",
+    "vite:esbuild"
+  ],
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "export * from \"./render\";\n// server-side only exports\nexport { composeMiddleware, createHandler, default as StartServer } from \"./StartServer\";\nexport type { Middleware, MiddlewareFn, MiddlewareInput } from \"./StartServer\";\n",
+      "start": 1677131502392,
+      "end": 1677131502393
+    },
+    {
+      "name": "vite:esbuild",
+      "result": "export * from \"./render\";\nexport { composeMiddleware, createHandler, default as StartServer } from \"./StartServer\";\n",
+      "start": 1677131502393,
+      "end": 1677131502396
+    }
+  ],
+  "virtual": false
+}

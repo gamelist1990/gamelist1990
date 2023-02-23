@@ -1,0 +1,23 @@
+{
+  "id": "C:/Users/issei/Velocity/src/components/ContextMenu/Button.tsx",
+  "deps": [],
+  "plugins": [
+    "vite:load-fallback",
+    "solid"
+  ],
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "import { JSX } from \"solid-js\";\r\n\r\ninterface ButtonProps {\r\n  text: string;\r\n  onClick: () => void;\r\n}\r\n\r\nexport default function Button(props: ButtonProps): JSX.Element {\r\n  return (\r\n    <div\r\n      class=\"w-full hover:bg-[#52525E] text-white text-[11px] px-2 py-1 cursor-default select-none\"\r\n      onClick={props.onClick}\r\n    >\r\n      {props.text}\r\n    </div>\r\n  );\r\n}\r\n",
+      "start": 1677131502906,
+      "end": 1677131503018
+    },
+    {
+      "name": "solid",
+      "result": "import { ssr as _$ssr } from \"solid-js/web\";\nimport { escape as _$escape } from \"solid-js/web\";\nimport { ssrHydrationKey as _$ssrHydrationKey } from \"solid-js/web\";\nconst _tmpl$ = [\"<div\", \" class=\\\"w-full hover:bg-[#52525E] text-white text-[11px] px-2 py-1 cursor-default select-none\\\">\", \"</div>\"];\nexport default function Button(props) {\n  return _$ssr(_tmpl$, _$ssrHydrationKey(), _$escape(props.text));\n}",
+      "start": 1677131503019,
+      "end": 1677131503022
+    }
+  ],
+  "virtual": false
+}

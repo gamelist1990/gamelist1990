@@ -1,0 +1,30 @@
+{
+  "id": "C:/Users/issei/Velocity/node_modules/solid-start/root/FileRoutes.tsx",
+  "deps": [],
+  "plugins": [
+    "vite:load-fallback",
+    "solid-start-file-system-router",
+    "solid"
+  ],
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "/// <reference path=\"../server/types.tsx\" />\n\n// @ts-expect-error\nvar fileRoutes = $FILE_ROUTES;\n\n/**\n * Routes are the file system based routes, used by Solid App Router to show the current page according to the URL.\n */\n\nconst FileRoutes = () => {\n  return fileRoutes;\n};\n\nexport default FileRoutes;\nexport { fileRoutes };\n",
+      "start": 1677131502436,
+      "end": 1677131502450
+    },
+    {
+      "name": "solid-start-file-system-router",
+      "result": "/// <reference path=\"../server/types.tsx\" />\n\n// @ts-expect-error\n\n  \n  import routeData0  from '/Users/issei/Velocity/src/routes/index.tsx';\nimport routeData1  from '/Users/issei/Velocity/src/routes/internal/newTab.tsx';\nimport routeData2  from '/Users/issei/Velocity/src/routes/internal/view-source.tsx';\nimport routeData3  from '/Users/issei/Velocity/src/routes/internal/preferences/General.tsx';\nimport routeData4  from '/Users/issei/Velocity/src/routes/internal/preferences/index.tsx';\nimport routeData5  from '/Users/issei/Velocity/src/routes/internal/preferences/NavButton.tsx';\nimport routeData6  from '/Users/issei/Velocity/src/routes/internal/preferences/Search.tsx';\nimport routeData7  from '/Users/issei/Velocity/src/routes/internal/preferences/inputs/Dropdown.tsx';\nimport routeData8  from '/Users/issei/Velocity/src/routes/internal/preferences/inputs/Toggle.tsx';\n  const fileRoutes = /*#__PURE__*/ [\n{\ncomponent: routeData0,\n path: \"/\" \n},\n{\ncomponent: routeData1,\n path: \"/internal/newTab\" \n},\n{\ncomponent: routeData2,\n path: \"/internal/view-source\" \n},\n{\ncomponent: routeData3,\n path: \"/internal/preferences/General\" \n},\n{\ncomponent: routeData4,\n path: \"/internal/preferences/\" \n},\n{\ncomponent: routeData5,\n path: \"/internal/preferences/NavButton\" \n},\n{\ncomponent: routeData6,\n path: \"/internal/preferences/Search\" \n},\n{\ncomponent: routeData7,\n path: \"/internal/preferences/inputs/Dropdown\" \n},\n{\ncomponent: routeData8,\n path: \"/internal/preferences/inputs/Toggle\" \n}\n];\n\n/**\n * Routes are the file system based routes, used by Solid App Router to show the current page according to the URL.\n */\n\nconst FileRoutes = () => {\n  return fileRoutes;\n};\n\nexport default FileRoutes;\nexport { fileRoutes };\n",
+      "start": 1677131502450,
+      "end": 1677131502450
+    },
+    {
+      "name": "solid",
+      "result": "/// <reference path=\"../server/types.tsx\" />\n\n// @ts-expect-error\n\nimport routeData0 from '/Users/issei/Velocity/src/routes/index.tsx';\nimport routeData1 from '/Users/issei/Velocity/src/routes/internal/newTab.tsx';\nimport routeData2 from '/Users/issei/Velocity/src/routes/internal/view-source.tsx';\nimport routeData3 from '/Users/issei/Velocity/src/routes/internal/preferences/General.tsx';\nimport routeData4 from '/Users/issei/Velocity/src/routes/internal/preferences/index.tsx';\nimport routeData5 from '/Users/issei/Velocity/src/routes/internal/preferences/NavButton.tsx';\nimport routeData6 from '/Users/issei/Velocity/src/routes/internal/preferences/Search.tsx';\nimport routeData7 from '/Users/issei/Velocity/src/routes/internal/preferences/inputs/Dropdown.tsx';\nimport routeData8 from '/Users/issei/Velocity/src/routes/internal/preferences/inputs/Toggle.tsx';\nconst fileRoutes = /*#__PURE__*/[{\n  component: routeData0,\n  path: \"/\"\n}, {\n  component: routeData1,\n  path: \"/internal/newTab\"\n}, {\n  component: routeData2,\n  path: \"/internal/view-source\"\n}, {\n  component: routeData3,\n  path: \"/internal/preferences/General\"\n}, {\n  component: routeData4,\n  path: \"/internal/preferences/\"\n}, {\n  component: routeData5,\n  path: \"/internal/preferences/NavButton\"\n}, {\n  component: routeData6,\n  path: \"/internal/preferences/Search\"\n}, {\n  component: routeData7,\n  path: \"/internal/preferences/inputs/Dropdown\"\n}, {\n  component: routeData8,\n  path: \"/internal/preferences/inputs/Toggle\"\n}];\n\n/**\n * Routes are the file system based routes, used by Solid App Router to show the current page according to the URL.\n */\n\nconst FileRoutes = () => {\n  return fileRoutes;\n};\nexport default FileRoutes;\nexport { fileRoutes };",
+      "start": 1677131502451,
+      "end": 1677131502455
+    }
+  ],
+  "virtual": false
+}

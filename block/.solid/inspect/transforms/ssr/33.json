@@ -1,0 +1,23 @@
+{
+  "id": "C:/Users/issei/Velocity/node_modules/solid-start/root/index.tsx",
+  "deps": [],
+  "plugins": [
+    "vite:load-fallback",
+    "solid"
+  ],
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "// isomorphic exports\n\nexport { Body, Head, Html } from \"./Document\";\nexport { default as Links } from \"./Links\";\nexport { default as Meta } from \"./Meta\";\nexport { default as Scripts } from \"./Scripts\";\n\n",
+      "start": 1677131502820,
+      "end": 1677131502926
+    },
+    {
+      "name": "solid",
+      "result": "// isomorphic exports\n\nexport { Body, Head, Html } from \"./Document\";\nexport { default as Links } from \"./Links\";\nexport { default as Meta } from \"./Meta\";\nexport { default as Scripts } from \"./Scripts\";",
+      "start": 1677131502926,
+      "end": 1677131502928
+    }
+  ],
+  "virtual": false
+}

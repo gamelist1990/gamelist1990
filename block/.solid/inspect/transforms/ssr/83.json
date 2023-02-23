@@ -1,0 +1,23 @@
+{
+  "id": "C:/Users/issei/Velocity/src/util/registerSW.ts",
+  "deps": [],
+  "plugins": [
+    "vite:load-fallback",
+    "vite:esbuild"
+  ],
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "declare global {\r\n  interface Window {\r\n    __uv$config: {\r\n      prefix: string;\r\n      bare: string;\r\n      encodeUrl: (x: string) => string;\r\n      decodeUrl: (x: string) => string;\r\n    };\r\n  }\r\n}\r\n\r\nif (\"serviceWorker\" in navigator) {\r\n  navigator.serviceWorker.register(\"/sw.js\", {\r\n    scope: window.__uv$config.prefix\r\n  });\r\n}\r\n\r\nexport {};\r\n",
+      "start": 1677131502719,
+      "end": 1677131502908
+    },
+    {
+      "name": "vite:esbuild",
+      "result": "if (\"serviceWorker\" in navigator) {\n  navigator.serviceWorker.register(\"/sw.js\", {\n    scope: window.__uv$config.prefix\n  });\n}\nexport {};\n",
+      "start": 1677131502908,
+      "end": 1677131502956
+    }
+  ],
+  "virtual": false
+}

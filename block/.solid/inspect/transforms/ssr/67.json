@@ -1,0 +1,23 @@
+{
+  "id": "C:/Users/issei/Velocity/src/routes/index.tsx",
+  "deps": [],
+  "plugins": [
+    "vite:load-fallback",
+    "solid"
+  ],
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "import { onMount } from \"solid-js\";\r\nimport Tabs from \"~/components/Tabs\";\r\nimport Utility from \"~/components/Utility\";\r\nimport Bookmarks from \"~/components/Bookmarks\";\r\nimport keybinds from \"~/util/keybinds\";\r\nimport { Title } from \"solid-start\";\r\nimport Preferences from \"~/types/Preferences\";\r\nimport { tabs } from \"~/data/appState\";\r\nimport ContextMenu from \"~/components/ContextMenu\";\r\n\r\nexport default function Home() {\r\n  onMount(async () => {\r\n    await import(\"~/util/registerSW\");\r\n    await import(\"~/API\");\r\n    window.addEventListener(\"keydown\", keybinds);\r\n\r\n    addEventListener(\r\n      \"beforeunload\",\r\n      (event) => {\r\n        const preferences: Preferences = JSON.parse(\r\n          localStorage.getItem(\"preferences\") || \"{}\"\r\n        );\r\n        if (\r\n          tabs().length > 1 &&\r\n          preferences[\"general.tabs.confirmBeforeClosing\"]\r\n        ) {\r\n          event.preventDefault();\r\n          return (event.returnValue = \"Confirm before closing multiple tabs\");\r\n        }\r\n      },\r\n      { capture: true }\r\n    );\r\n  });\r\n\r\n  return (\r\n    <main class=\"h-full flex flex-col\">\r\n      <Title>Velocity</Title>\r\n      <Tabs />\r\n      <Utility />\r\n      <Bookmarks />\r\n      <ContextMenu />\r\n      <div class=\"h-[0px] w-full border-b border-[#0C0C0D]\"></div>\r\n      <main id=\"content\" class=\"w-full bg-white flex-1\"></main>\r\n    </main>\r\n  );\r\n}\r\n",
+      "start": 1677131502463,
+      "end": 1677131502612
+    },
+    {
+      "name": "solid",
+      "result": "import { ssr as _$ssr } from \"solid-js/web\";\nimport { escape as _$escape } from \"solid-js/web\";\nimport { createComponent as _$createComponent } from \"solid-js/web\";\nimport { ssrHydrationKey as _$ssrHydrationKey } from \"solid-js/web\";\nconst _tmpl$ = [\"<main\", \" class=\\\"h-full flex flex-col\\\"><!--#-->\", \"<!--/--><!--#-->\", \"<!--/--><!--#-->\", \"<!--/--><!--#-->\", \"<!--/--><!--#-->\", \"<!--/--><div class=\\\"h-[0px] w-full border-b border-[#0C0C0D]\\\"></div><main id=\\\"content\\\" class=\\\"w-full bg-white flex-1\\\"></main></main>\"];\nimport { onMount } from \"solid-js\";\nimport Tabs from \"~/components/Tabs\";\nimport Utility from \"~/components/Utility\";\nimport Bookmarks from \"~/components/Bookmarks\";\nimport keybinds from \"~/util/keybinds\";\nimport { Title } from \"solid-start\";\nimport { tabs } from \"~/data/appState\";\nimport ContextMenu from \"~/components/ContextMenu\";\nexport default function Home() {\n  onMount(async () => {\n    await import(\"~/util/registerSW\");\n    await import(\"~/API\");\n    window.addEventListener(\"keydown\", keybinds);\n    addEventListener(\"beforeunload\", event => {\n      const preferences = JSON.parse(localStorage.getItem(\"preferences\") || \"{}\");\n      if (tabs().length > 1 && preferences[\"general.tabs.confirmBeforeClosing\"]) {\n        event.preventDefault();\n        return event.returnValue = \"Confirm before closing multiple tabs\";\n      }\n    }, {\n      capture: true\n    });\n  });\n  return _$ssr(_tmpl$, _$ssrHydrationKey(), _$escape(_$createComponent(Title, {\n    children: \"Velocity\"\n  })), _$escape(_$createComponent(Tabs, {})), _$escape(_$createComponent(Utility, {})), _$escape(_$createComponent(Bookmarks, {})), _$escape(_$createComponent(ContextMenu, {})));\n}",
+      "start": 1677131502613,
+      "end": 1677131502629
+    }
+  ],
+  "virtual": false
+}

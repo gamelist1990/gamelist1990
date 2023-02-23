@@ -1,0 +1,23 @@
+{
+  "id": "C:/Users/issei/Velocity/src/routes/internal/preferences/index.tsx",
+  "deps": [],
+  "plugins": [
+    "vite:load-fallback",
+    "solid"
+  ],
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "import { JSX, createSignal } from \"solid-js\";\r\nimport { Title, Link } from \"solid-start\";\r\nimport NavButton from \"./NavButton\";\r\n\r\nimport General from \"./General\";\r\nimport Search from \"./Search\";\r\n\r\nexport default function Preferences(): JSX.Element {\r\n  const [activeSection, setActiveSection] = createSignal<string>(\"general\");\r\n\r\n  return (\r\n    <main class=\"flex w-full h-full bg-[#1C1B22] text-white\">\r\n      <Title>Settings</Title>\r\n      <Link rel=\"icon\" href=\"/icons/gear.svg\"></Link>\r\n      {/*  */}\r\n      <div class=\"w-[118px] sm:w-[240px] sm:items-end h-full flex flex-col items-center pt-[70px] text-2xl select-none\">\r\n        <NavButton\r\n          active={[activeSection, setActiveSection]}\r\n          title=\"General\"\r\n          icon=\"gear\"\r\n        />\r\n        <NavButton\r\n          active={[activeSection, setActiveSection]}\r\n          title=\"Home\"\r\n          icon=\"home\"\r\n        />\r\n        <NavButton\r\n          active={[activeSection, setActiveSection]}\r\n          title=\"Search\"\r\n          icon=\"search\"\r\n        />\r\n      </div>\r\n      <div class=\"flex-1\">\r\n        <div class=\"w-full h-[82px]\">{/* Search box */}</div>\r\n        <General id=\"general\" active={activeSection} />\r\n        <Search id=\"search\" active={activeSection} />\r\n      </div>\r\n    </main>\r\n  );\r\n}\r\n",
+      "start": 1677131502463,
+      "end": 1677131502672
+    },
+    {
+      "name": "solid",
+      "result": "import { ssr as _$ssr } from \"solid-js/web\";\nimport { escape as _$escape } from \"solid-js/web\";\nimport { createComponent as _$createComponent } from \"solid-js/web\";\nimport { ssrHydrationKey as _$ssrHydrationKey } from \"solid-js/web\";\nconst _tmpl$ = [\"<main\", \" class=\\\"flex w-full h-full bg-[#1C1B22] text-white\\\"><!--#-->\", \"<!--/--><!--#-->\", \"<!--/--><div class=\\\"w-[118px] sm:w-[240px] sm:items-end h-full flex flex-col items-center pt-[70px] text-2xl select-none\\\"><!--#-->\", \"<!--/--><!--#-->\", \"<!--/--><!--#-->\", \"<!--/--></div><div class=\\\"flex-1\\\"><div class=\\\"w-full h-[82px]\\\"></div><!--#-->\", \"<!--/--><!--#-->\", \"<!--/--></div></main>\"];\nimport { createSignal } from \"solid-js\";\nimport { Title, Link } from \"solid-start\";\nimport NavButton from \"./NavButton\";\nimport General from \"./General\";\nimport Search from \"./Search\";\nexport default function Preferences() {\n  const [activeSection, setActiveSection] = createSignal(\"general\");\n  return _$ssr(_tmpl$, _$ssrHydrationKey(), _$escape(_$createComponent(Title, {\n    children: \"Settings\"\n  })), _$escape(_$createComponent(Link, {\n    rel: \"icon\",\n    href: \"/icons/gear.svg\"\n  })), _$escape(_$createComponent(NavButton, {\n    active: [activeSection, setActiveSection],\n    title: \"General\",\n    icon: \"gear\"\n  })), _$escape(_$createComponent(NavButton, {\n    active: [activeSection, setActiveSection],\n    title: \"Home\",\n    icon: \"home\"\n  })), _$escape(_$createComponent(NavButton, {\n    active: [activeSection, setActiveSection],\n    title: \"Search\",\n    icon: \"search\"\n  })), _$escape(_$createComponent(General, {\n    id: \"general\",\n    active: activeSection\n  })), _$escape(_$createComponent(Search, {\n    id: \"search\",\n    active: activeSection\n  })));\n}",
+      "start": 1677131502673,
+      "end": 1677131502684
+    }
+  ],
+  "virtual": false
+}

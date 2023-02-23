@@ -1,0 +1,23 @@
+{
+  "id": "C:/Users/issei/Velocity/src/util/codec.ts",
+  "deps": [],
+  "plugins": [
+    "vite:load-fallback",
+    "vite:esbuild"
+  ],
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "export const xor = {\r\n  encode(str: string): string {\r\n    if (!str) return str;\r\n    return encodeURIComponent(\r\n      str\r\n        .toString()\r\n        .split(\"\")\r\n        .map((char, ind) =>\r\n          ind % 2 ? String.fromCharCode(char.charCodeAt(0) ^ 2) : char\r\n        )\r\n        .join(\"\")\r\n    );\r\n  },\r\n  decode(str: string): string {\r\n    if (!str) return str;\r\n    let [input, ...search] = str.split(\"?\");\r\n\r\n    return (\r\n      decodeURIComponent(input)\r\n        .split(\"\")\r\n        .map((char, ind) =>\r\n          ind % 2 ? String.fromCharCode(char.charCodeAt(0) ^ 2) : char\r\n        )\r\n        .join(\"\") + (search.length ? \"?\" + search.join(\"?\") : \"\")\r\n    );\r\n  }\r\n};\r\n",
+      "start": 1677131503018,
+      "end": 1677131503312
+    },
+    {
+      "name": "vite:esbuild",
+      "result": "export const xor = {\n  encode(str) {\n    if (!str)\n      return str;\n    return encodeURIComponent(\n      str.toString().split(\"\").map(\n        (char, ind) => ind % 2 ? String.fromCharCode(char.charCodeAt(0) ^ 2) : char\n      ).join(\"\")\n    );\n  },\n  decode(str) {\n    if (!str)\n      return str;\n    let [input, ...search] = str.split(\"?\");\n    return decodeURIComponent(input).split(\"\").map(\n      (char, ind) => ind % 2 ? String.fromCharCode(char.charCodeAt(0) ^ 2) : char\n    ).join(\"\") + (search.length ? \"?\" + search.join(\"?\") : \"\");\n  }\n};\n",
+      "start": 1677131503312,
+      "end": 1677131503328
+    }
+  ],
+  "virtual": false
+}

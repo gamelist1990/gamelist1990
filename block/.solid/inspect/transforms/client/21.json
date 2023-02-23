@@ -1,0 +1,23 @@
+{
+  "id": "C:/Users/issei/Velocity/node_modules/solid-start/entry-client/index.tsx",
+  "deps": [],
+  "plugins": [
+    "vite:load-fallback",
+    "solid"
+  ],
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "export { default as mount } from \"./mount\";\nexport { default as StartClient } from \"./StartClient\";\n",
+      "start": 1677131499218,
+      "end": 1677131499282
+    },
+    {
+      "name": "solid",
+      "result": "export { default as mount } from \"./mount\";\nexport { default as StartClient } from \"./StartClient\";",
+      "start": 1677131499282,
+      "end": 1677131499290
+    }
+  ],
+  "virtual": false
+}

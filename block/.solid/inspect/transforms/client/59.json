@@ -1,0 +1,23 @@
+{
+  "id": "C:/Users/issei/Velocity/src/components/Favicon.tsx",
+  "deps": [],
+  "plugins": [
+    "vite:load-fallback",
+    "solid"
+  ],
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "import BareClient from \"@tomphttp/bare-client\";\r\nimport { JSX, onCleanup, createSignal, Accessor, createEffect } from \"solid-js\";\r\nimport { bareClient, setBareClient } from \"~/data/appState\";\r\n\r\ninterface FaviconProps {\r\n  src: Accessor<string>;\r\n}\r\n\r\nexport default function Favicon(props: FaviconProps): JSX.Element {\r\n  const [icon, setIcon] = createSignal<string | undefined>(\r\n    /^data:/.test(props.src()) ? undefined : props.src()\r\n  );\r\n\r\n  createEffect(() => {\r\n    const abort = new AbortController();\r\n\r\n    if (/^data:/.test(props.src())) return setIcon(props.src());\r\n\r\n    try {\r\n      new URL(props.src());\r\n    } catch {\r\n      return;\r\n    }\r\n\r\n    if (new URL(props.src()).origin === location.origin)\r\n      return setIcon(props.src());\r\n\r\n    if (!bareClient())\r\n      setBareClient(\r\n        new BareClient(new URL(window.__uv$config.bare, location.toString()))\r\n      );\r\n\r\n    const promise = (async () => {\r\n      const outgoing = await (bareClient() as BareClient).fetch(props.src(), {\r\n        signal: abort.signal\r\n      });\r\n      const obj = URL.createObjectURL(await outgoing.blob());\r\n      setIcon(obj);\r\n      return obj;\r\n    })();\r\n\r\n    onCleanup(() => {\r\n      abort.abort();\r\n      promise?.then((obj) => URL.revokeObjectURL(obj));\r\n    });\r\n  });\r\n\r\n  return (\r\n    <div\r\n      class={`w-full h-full bg-cover bg-no-repeat`}\r\n      style={`background-image: url(\"${icon()}\")`}\r\n    ></div>\r\n  );\r\n}\r\n",
+      "start": 1677131500596,
+      "end": 1677131500837
+    },
+    {
+      "name": "solid",
+      "result": "import { template as _$template } from \"solid-js/web\";\nimport { style as _$style } from \"solid-js/web\";\nimport { effect as _$effect } from \"solid-js/web\";\nconst _tmpl$ = /*#__PURE__*/_$template(`<div class=\"w-full h-full bg-cover bg-no-repeat\"></div>`, 2);\nimport BareClient from \"@tomphttp/bare-client\";\nimport { onCleanup, createSignal, createEffect } from \"solid-js\";\nimport { bareClient, setBareClient } from \"~/data/appState\";\nexport default function Favicon(props) {\n  const [icon, setIcon] = createSignal(/^data:/.test(props.src()) ? undefined : props.src());\n  createEffect(() => {\n    const abort = new AbortController();\n    if (/^data:/.test(props.src())) return setIcon(props.src());\n    try {\n      new URL(props.src());\n    } catch {\n      return;\n    }\n    if (new URL(props.src()).origin === location.origin) return setIcon(props.src());\n    if (!bareClient()) setBareClient(new BareClient(new URL(window.__uv$config.bare, location.toString())));\n    const promise = (async () => {\n      const outgoing = await bareClient().fetch(props.src(), {\n        signal: abort.signal\n      });\n      const obj = URL.createObjectURL(await outgoing.blob());\n      setIcon(obj);\n      return obj;\n    })();\n    onCleanup(() => {\n      abort.abort();\n      promise?.then(obj => URL.revokeObjectURL(obj));\n    });\n  });\n  return (() => {\n    const _el$ = _tmpl$.cloneNode(true);\n    _$effect(_$p => _$style(_el$, `background-image: url(\"${icon()}\")`, _$p));\n    return _el$;\n  })();\n}",
+      "start": 1677131500837,
+      "end": 1677131500845
+    }
+  ],
+  "virtual": false
+}

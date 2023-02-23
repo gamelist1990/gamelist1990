@@ -1,0 +1,23 @@
+{
+  "id": "C:/Users/issei/Velocity/src/API/index.ts",
+  "deps": [],
+  "plugins": [
+    "vite:load-fallback",
+    "vite:esbuild"
+  ],
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "import Tab from \"./Tab\";\r\nimport Protocol from \"./Protocol\";\r\nimport ContextItem from \"./ContextItem\";\r\nimport Bookmark from \"./Bookmark\";\r\nimport { bindIFrameMousemove } from \"~/components/ContextMenu\";\r\nimport { tabs, protocols, bookmarks } from \"~/data/appState\";\r\n\r\nconst Velocity = {\r\n  Tab,\r\n  getTabs: tabs,\r\n  Protocol,\r\n  getProtocols: protocols,\r\n  Bookmark,\r\n  getBookmarks: bookmarks,\r\n  ContextItem,\r\n  bindIFrameMousemove\r\n};\r\n\r\ndeclare global {\r\n  interface Window {\r\n    Velocity: typeof Velocity;\r\n  }\r\n}\r\n\r\nwindow.Velocity = Velocity;\r\n\r\nexport default Velocity;\r\n",
+      "start": 1677131500014,
+      "end": 1677131500346
+    },
+    {
+      "name": "vite:esbuild",
+      "result": "import Tab from \"./Tab\";\nimport Protocol from \"./Protocol\";\nimport ContextItem from \"./ContextItem\";\nimport Bookmark from \"./Bookmark\";\nimport { bindIFrameMousemove } from \"~/components/ContextMenu\";\nimport { tabs, protocols, bookmarks } from \"~/data/appState\";\nconst Velocity = {\n  Tab,\n  getTabs: tabs,\n  Protocol,\n  getProtocols: protocols,\n  Bookmark,\n  getBookmarks: bookmarks,\n  ContextItem,\n  bindIFrameMousemove\n};\nwindow.Velocity = Velocity;\nexport default Velocity;\n",
+      "start": 1677131500346,
+      "end": 1677131500789
+    }
+  ],
+  "virtual": false
+}

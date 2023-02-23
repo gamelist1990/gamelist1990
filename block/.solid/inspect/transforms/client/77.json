@@ -1,0 +1,23 @@
+{
+  "id": "C:/Users/issei/Velocity/src/util/clickHandler.ts",
+  "deps": [],
+  "plugins": [
+    "vite:load-fallback",
+    "vite:esbuild"
+  ],
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "import Tab from \"~/API/Tab\";\r\nimport { tabStack } from \"~/data/appState\";\r\nimport Preferences from \"~/types/Preferences\";\r\n\r\nexport default function clickHandler(event: MouseEvent) {\r\n  const element = getAnchor(event.target);\r\n  if (element && element.href) {\r\n    if (event.ctrlKey) {\r\n      open(event, element.href, false, false);\r\n    } else if (event.shiftKey) {\r\n      open(event, element.href, true, false);\r\n    } else if (element.target === \"_blank\") {\r\n      open(event, element.href, false, true);\r\n    } else if (element.target === \"_parent\") {\r\n      navigate(event, element.href);\r\n    } else if (element.target === \"_top\") {\r\n      navigate(event, element.href);\r\n    }\r\n  }\r\n}\r\n\r\nexport function open(\r\n  event: MouseEvent | undefined,\r\n  url: string,\r\n  isWindow: boolean,\r\n  isBlank: boolean\r\n) {\r\n  if (event) event.preventDefault();\r\n  const preferences: Preferences = JSON.parse(\r\n    localStorage.getItem(\"preferences\") || \"{}\"\r\n  );\r\n  if (isWindow && !preferences[\"general.tabs.openWindowLinksInTab\"]) {\r\n    window.open(`${location.origin}?url=${encodeURIComponent(url)}`);\r\n  } else {\r\n    new Tab(url, preferences[\"general.tabs.switchToMedia\"] || isBlank);\r\n  }\r\n}\r\n\r\nfunction navigate(event: MouseEvent, url: string) {\r\n  event.preventDefault();\r\n  Array.from(tabStack())[0].navigate(url);\r\n}\r\n\r\nfunction getAnchor(element: EventTarget | null): HTMLAnchorElement | undefined {\r\n  if (!element) return;\r\n  const target = element as HTMLElement;\r\n  if (target.tagName === \"A\") {\r\n    return target as HTMLAnchorElement;\r\n  } else if (target.parentElement) {\r\n    return getAnchor(target.parentElement);\r\n  } else {\r\n    return;\r\n  }\r\n}\r\n",
+      "start": 1677131500756,
+      "end": 1677131500836
+    },
+    {
+      "name": "vite:esbuild",
+      "result": "import Tab from \"~/API/Tab\";\nimport { tabStack } from \"~/data/appState\";\nexport default function clickHandler(event) {\n  const element = getAnchor(event.target);\n  if (element && element.href) {\n    if (event.ctrlKey) {\n      open(event, element.href, false, false);\n    } else if (event.shiftKey) {\n      open(event, element.href, true, false);\n    } else if (element.target === \"_blank\") {\n      open(event, element.href, false, true);\n    } else if (element.target === \"_parent\") {\n      navigate(event, element.href);\n    } else if (element.target === \"_top\") {\n      navigate(event, element.href);\n    }\n  }\n}\nexport function open(event, url, isWindow, isBlank) {\n  if (event)\n    event.preventDefault();\n  const preferences = JSON.parse(\n    localStorage.getItem(\"preferences\") || \"{}\"\n  );\n  if (isWindow && !preferences[\"general.tabs.openWindowLinksInTab\"]) {\n    window.open(`${location.origin}?url=${encodeURIComponent(url)}`);\n  } else {\n    new Tab(url, preferences[\"general.tabs.switchToMedia\"] || isBlank);\n  }\n}\nfunction navigate(event, url) {\n  event.preventDefault();\n  Array.from(tabStack())[0].navigate(url);\n}\nfunction getAnchor(element) {\n  if (!element)\n    return;\n  const target = element;\n  if (target.tagName === \"A\") {\n    return target;\n  } else if (target.parentElement) {\n    return getAnchor(target.parentElement);\n  } else {\n    return;\n  }\n}\n",
+      "start": 1677131500836,
+      "end": 1677131500850
+    }
+  ],
+  "virtual": false
+}

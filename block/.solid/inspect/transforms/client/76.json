@@ -1,0 +1,23 @@
+{
+  "id": "C:/Users/issei/Velocity/src/routes/internal/view-source.tsx",
+  "deps": [],
+  "plugins": [
+    "vite:load-fallback",
+    "solid"
+  ],
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "import { JSX } from \"solid-js\";\r\nimport { Title, Link } from \"solid-start\";\r\nimport { bareClient, setBareClient } from \"~/data/appState\";\r\nimport BareClient from \"@tomphttp/bare-client\";\r\nimport Prism from \"prismjs\";\r\nimport \"prism-themes/themes/prism-one-dark.css\";\r\n\r\nexport default function ViewSource(): JSX.Element {\r\n  if (!bareClient()) {\r\n    setBareClient(\r\n      new BareClient(new URL(window.__uv$config.bare, location.toString()))\r\n    );\r\n  }\r\n\r\n  const query = new URLSearchParams(location.search).get(\"q\") ?? \"\";\r\n\r\n  bareClient()\r\n    ?.fetch(query)\r\n    .then((response) => {\r\n      response.text().then((text) => {\r\n        document.getElementById(\"code\")!.innerHTML = Prism.highlight(\r\n          text,\r\n          Prism.languages.html,\r\n          \"html\"\r\n        );\r\n      });\r\n    })\r\n    .catch(() => {\r\n      window.close();\r\n    });\r\n\r\n  return (\r\n    <main class=\"w-full h-full bg-[#282C34] text-white text-sm line-numbers\">\r\n      <style>\r\n        {`\r\n          * {\r\n            background: #282C34;\r\n          }\r\n        `}\r\n      </style>\r\n      <Title>view-source:{query}</Title>\r\n      <Link rel=\"icon\" href=\"/icons/earth.svg\"></Link>\r\n      {/* */}\r\n      <pre>\r\n        <code\r\n          class=\"language-html\"\r\n          id=\"code\"\r\n          style=\"white-space:hard-wrap;\"\r\n        ></code>\r\n      </pre>\r\n    </main>\r\n  );\r\n}\r\n",
+      "start": 1677131499751,
+      "end": 1677131499936
+    },
+    {
+      "name": "solid",
+      "result": "import { template as _$template } from \"solid-js/web\";\nimport { insert as _$insert } from \"solid-js/web\";\nimport { createComponent as _$createComponent } from \"solid-js/web\";\nconst _tmpl$ = /*#__PURE__*/_$template(`<main class=\"w-full h-full bg-[#282C34] text-white text-sm line-numbers\"><style>\n          * {\n            background: #282C34;\n          }\n        </style><pre><code class=\"language-html\" id=\"code\" style=\"white-space:hard-wrap;\"></code></pre></main>`, 8);\nimport { Title, Link } from \"solid-start\";\nimport { bareClient, setBareClient } from \"~/data/appState\";\nimport BareClient from \"@tomphttp/bare-client\";\nimport Prism from \"prismjs\";\nimport \"prism-themes/themes/prism-one-dark.css\";\nexport default function ViewSource() {\n  if (!bareClient()) {\n    setBareClient(new BareClient(new URL(window.__uv$config.bare, location.toString())));\n  }\n  const query = new URLSearchParams(location.search).get(\"q\") ?? \"\";\n  bareClient()?.fetch(query).then(response => {\n    response.text().then(text => {\n      document.getElementById(\"code\").innerHTML = Prism.highlight(text, Prism.languages.html, \"html\");\n    });\n  }).catch(() => {\n    window.close();\n  });\n  return (() => {\n    const _el$ = _tmpl$.cloneNode(true),\n      _el$2 = _el$.firstChild,\n      _el$3 = _el$2.nextSibling;\n    _$insert(_el$, _$createComponent(Title, {\n      get children() {\n        return [\"view-source:\", query];\n      }\n    }), _el$3);\n    _$insert(_el$, _$createComponent(Link, {\n      rel: \"icon\",\n      href: \"/icons/earth.svg\"\n    }), _el$3);\n    return _el$;\n  })();\n}",
+      "start": 1677131499938,
+      "end": 1677131499959
+    }
+  ],
+  "virtual": false
+}

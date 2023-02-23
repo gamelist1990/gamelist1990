@@ -1,0 +1,23 @@
+{
+  "id": "C:/Users/issei/Velocity/src/components/Bookmark.tsx",
+  "deps": [],
+  "plugins": [
+    "vite:load-fallback",
+    "solid"
+  ],
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "import { JSX, createSignal } from \"solid-js\";\r\nimport Tab from \"~/API/Tab\";\r\nimport { tabStack } from \"~/data/appState\";\r\nimport Favicon from \"./Favicon\";\r\nimport ContextItem from \"~/API/ContextItem\";\r\nimport { open } from \"~/util/clickHandler\";\r\nimport BookmarkAPI from \"~/API/Bookmark\";\r\n\r\ninterface BookmarkProps {\r\n  sortable: any;\r\n  bookmark: BookmarkAPI;\r\n}\r\n\r\nexport default function Bookmark(props: BookmarkProps): JSX.Element {\r\n  const { sortable, bookmark } = props;\r\n\r\n  function handleClick(event: MouseEvent) {\r\n    if (/^javascript:/.test(bookmark.url)) {\r\n      Array.from(tabStack())[0].executeScript(\r\n        decodeURIComponent(bookmark.url.replace(/^javascript:/, \"\"))\r\n      );\r\n    } else {\r\n      if (event.ctrlKey) {\r\n        new Tab(bookmark.url, false);\r\n      } else {\r\n        Array.from(tabStack())[0].navigate(bookmark.url);\r\n      }\r\n    }\r\n  }\r\n\r\n  return (\r\n    <div\r\n      // @ts-ignore\r\n      use:sortable\r\n      onClick={handleClick}\r\n      class=\"h-6 flex items-center gap-1 rounded hover:bg-[#60606e] cursor-default px-1 select-none\"\r\n      oncontextmenu={(event: MouseEvent & { data?: ContextItem[] }): void => {\r\n        event.data = [\r\n          new ContextItem({\r\n            text: \"Open in new tab\",\r\n            onClick: () => {\r\n              open(event, bookmark.url, false, true);\r\n            }\r\n          }),\r\n          new ContextItem({\r\n            separator: true\r\n          }),\r\n          new ContextItem({\r\n            text: \"Delete\",\r\n            onClick: () => {\r\n              bookmark.delete();\r\n            }\r\n          }),\r\n          new ContextItem({\r\n            separator: true\r\n          })\r\n        ];\r\n      }}\r\n    >\r\n      <div class=\"w-[15px] h-[15px]\">\r\n        <Favicon src={createSignal<string>(bookmark.icon)[0]}></Favicon>\r\n      </div>\r\n      {bookmark.name}\r\n    </div>\r\n  );\r\n}\r\n",
+      "start": 1677131500309,
+      "end": 1677131500743
+    },
+    {
+      "name": "solid",
+      "result": "import { template as _$template } from \"solid-js/web\";\nimport { delegateEvents as _$delegateEvents } from \"solid-js/web\";\nimport { insert as _$insert } from \"solid-js/web\";\nimport { createComponent as _$createComponent } from \"solid-js/web\";\nimport { use as _$use } from \"solid-js/web\";\nconst _tmpl$ = /*#__PURE__*/_$template(`<div class=\"h-6 flex items-center gap-1 rounded hover:bg-[#60606e] cursor-default px-1 select-none\"><div class=\"w-[15px] h-[15px]\"></div></div>`, 4);\nimport { createSignal } from \"solid-js\";\nimport Tab from \"~/API/Tab\";\nimport { tabStack } from \"~/data/appState\";\nimport Favicon from \"./Favicon\";\nimport ContextItem from \"~/API/ContextItem\";\nimport { open } from \"~/util/clickHandler\";\nexport default function Bookmark(props) {\n  const {\n    sortable,\n    bookmark\n  } = props;\n  function handleClick(event) {\n    if (/^javascript:/.test(bookmark.url)) {\n      Array.from(tabStack())[0].executeScript(decodeURIComponent(bookmark.url.replace(/^javascript:/, \"\")));\n    } else {\n      if (event.ctrlKey) {\n        new Tab(bookmark.url, false);\n      } else {\n        Array.from(tabStack())[0].navigate(bookmark.url);\n      }\n    }\n  }\n  return (() => {\n    const _el$ = _tmpl$.cloneNode(true),\n      _el$2 = _el$.firstChild;\n    _el$.$$contextmenu = event => {\n      event.data = [new ContextItem({\n        text: \"Open in new tab\",\n        onClick: () => {\n          open(event, bookmark.url, false, true);\n        }\n      }), new ContextItem({\n        separator: true\n      }), new ContextItem({\n        text: \"Delete\",\n        onClick: () => {\n          bookmark.delete();\n        }\n      }), new ContextItem({\n        separator: true\n      })];\n    };\n    _el$.$$click = handleClick;\n    _$use(sortable, _el$, () => true);\n    _$insert(_el$2, _$createComponent(Favicon, {\n      get src() {\n        return createSignal(bookmark.icon)[0];\n      }\n    }));\n    _$insert(_el$, () => bookmark.name, null);\n    return _el$;\n  })();\n}\n_$delegateEvents([\"click\", \"contextmenu\"]);",
+      "start": 1677131500743,
+      "end": 1677131500750
+    }
+  ],
+  "virtual": false
+}

@@ -1,0 +1,195 @@
+[
+  {
+    "name": "vite:load-fallback",
+    "invokeCount": 86,
+    "totalTime": 19135
+  },
+  {
+    "name": "vite:esbuild",
+    "invokeCount": 26,
+    "totalTime": 7774
+  },
+  {
+    "name": "vite:css",
+    "invokeCount": 2,
+    "totalTime": 3201
+  },
+  {
+    "name": "solid",
+    "enforce": "pre",
+    "invokeCount": 48,
+    "totalTime": 956
+  },
+  {
+    "name": "commonjs",
+    "invokeCount": 1,
+    "totalTime": 58
+  },
+  {
+    "name": "vite:build-html",
+    "invokeCount": 1,
+    "totalTime": 31
+  },
+  {
+    "name": "vite:import-glob",
+    "invokeCount": 1,
+    "totalTime": 22
+  },
+  {
+    "name": "vite:define",
+    "invokeCount": 10,
+    "totalTime": 2
+  },
+  {
+    "name": "vite:build-import-analysis",
+    "invokeCount": 3,
+    "totalTime": 2
+  },
+  {
+    "name": "solid-start-file-system-router",
+    "enforce": "pre",
+    "invokeCount": 2,
+    "totalTime": 2
+  },
+  {
+    "name": "vite:css-post",
+    "invokeCount": 2,
+    "totalTime": 1
+  },
+  {
+    "name": "vite:modulepreload-polyfill",
+    "invokeCount": 1,
+    "totalTime": 0
+  },
+  {
+    "name": "alias",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "solid-start-config",
+    "enforce": "pre",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "solid-start-route-manifest",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "solid-start-server",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "vite-plugin-inspect",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "vite-plugin-static-copy:build",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "vite:asset",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "vite:asset-import-meta-url",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "vite:build-metadata",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "vite:data-uri",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "vite:dynamic-import-vars",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "vite:esbuild-transpile",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "vite:force-systemjs-wrap-complete",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "vite:html-inline-proxy",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "vite:json",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "vite:manifest",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "vite:pre-alias",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "vite:reporter",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "vite:resolve",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "vite:ssr-manifest",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "vite:terser",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "vite:wasm-fallback",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "vite:wasm-helper",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "vite:watch-package-data",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "vite:worker",
+    "invokeCount": 0,
+    "totalTime": 0
+  },
+  {
+    "name": "vite:worker-import-meta-url",
+    "invokeCount": 0,
+    "totalTime": 0
+  }
+]

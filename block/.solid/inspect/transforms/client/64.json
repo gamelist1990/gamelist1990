@@ -1,0 +1,23 @@
+{
+  "id": "C:/Users/issei/Velocity/src/data/appState.ts",
+  "deps": [],
+  "plugins": [
+    "vite:load-fallback",
+    "vite:esbuild"
+  ],
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "import { createSignal } from \"solid-js\";\r\nimport Tab from \"~/API/Tab\";\r\nimport BareClient from \"@tomphttp/bare-client\";\r\nimport Bookmark from \"~/API/Bookmark\";\r\nimport Protocol from \"~/API/Protocol\";\r\n\r\nexport const [tabs, setTabs] = createSignal<Tab[]>([]);\r\nexport const [tabStack, setTabStack] = createSignal<Set<Tab>>(new Set());\r\nexport const [bareClient, setBareClient] = createSignal<\r\n  BareClient | undefined\r\n>();\r\nexport const [bookmarks, setBookmarks] = createSignal<Bookmark[]>([]);\r\nexport const [bookmarksShown, setBookmarksShown] = createSignal<boolean>(true);\r\nexport const [protocols, setProtocols] = createSignal<Protocol[]>([]);\r\n",
+      "start": 1677131499603,
+      "end": 1677131499775
+    },
+    {
+      "name": "vite:esbuild",
+      "result": "import { createSignal } from \"solid-js\";\nexport const [tabs, setTabs] = createSignal([]);\nexport const [tabStack, setTabStack] = createSignal(/* @__PURE__ */ new Set());\nexport const [bareClient, setBareClient] = createSignal();\nexport const [bookmarks, setBookmarks] = createSignal([]);\nexport const [bookmarksShown, setBookmarksShown] = createSignal(true);\nexport const [protocols, setProtocols] = createSignal([]);\n",
+      "start": 1677131499775,
+      "end": 1677131500120
+    }
+  ],
+  "virtual": false
+}

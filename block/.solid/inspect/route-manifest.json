@@ -1,0 +1,187 @@
+{
+  "/": [
+    {
+      "type": "script",
+      "href": "/assets/index.19fda2af.js"
+    },
+    {
+      "type": "script",
+      "href": "/assets/index.c4f6bcfb.js"
+    },
+    {
+      "type": "style",
+      "href": "/assets/index.25c53db8.css"
+    },
+    {
+      "type": "script",
+      "href": "/assets/url.05066fb0.js"
+    },
+    {
+      "type": "script",
+      "href": "/assets/BareClient.06787bc0.js"
+    }
+  ],
+  "/internal/newTab": [
+    {
+      "type": "script",
+      "href": "/assets/newTab.f3050e9b.js"
+    },
+    {
+      "type": "script",
+      "href": "/assets/index.c4f6bcfb.js"
+    },
+    {
+      "type": "style",
+      "href": "/assets/index.25c53db8.css"
+    },
+    {
+      "type": "script",
+      "href": "/assets/url.05066fb0.js"
+    }
+  ],
+  "/internal/view-source": [
+    {
+      "type": "script",
+      "href": "/assets/view-source.7d6b3b73.js"
+    },
+    {
+      "type": "script",
+      "href": "/assets/index.c4f6bcfb.js"
+    },
+    {
+      "type": "style",
+      "href": "/assets/index.25c53db8.css"
+    },
+    {
+      "type": "script",
+      "href": "/assets/BareClient.06787bc0.js"
+    },
+    {
+      "type": "style",
+      "href": "/assets/view-source.5c045b07.css"
+    }
+  ],
+  "/internal/preferences/General": [
+    {
+      "type": "script",
+      "href": "/assets/General.13092578.js"
+    },
+    {
+      "type": "script",
+      "href": "/assets/index.c4f6bcfb.js"
+    },
+    {
+      "type": "style",
+      "href": "/assets/index.25c53db8.css"
+    },
+    {
+      "type": "script",
+      "href": "/assets/Toggle.1cc3a262.js"
+    }
+  ],
+  "/internal/preferences/inputs/Toggle": [
+    {
+      "type": "script",
+      "href": "/assets/Toggle.1cc3a262.js"
+    },
+    {
+      "type": "script",
+      "href": "/assets/index.c4f6bcfb.js"
+    },
+    {
+      "type": "style",
+      "href": "/assets/index.25c53db8.css"
+    }
+  ],
+  "/internal/preferences/": [
+    {
+      "type": "script",
+      "href": "/assets/index.a5a28d61.js"
+    },
+    {
+      "type": "script",
+      "href": "/assets/index.c4f6bcfb.js"
+    },
+    {
+      "type": "style",
+      "href": "/assets/index.25c53db8.css"
+    },
+    {
+      "type": "script",
+      "href": "/assets/NavButton.41e4beb8.js"
+    },
+    {
+      "type": "script",
+      "href": "/assets/General.13092578.js"
+    },
+    {
+      "type": "script",
+      "href": "/assets/Toggle.1cc3a262.js"
+    },
+    {
+      "type": "script",
+      "href": "/assets/Search.7a786682.js"
+    },
+    {
+      "type": "script",
+      "href": "/assets/Dropdown.258ea7ab.js"
+    }
+  ],
+  "/internal/preferences/NavButton": [
+    {
+      "type": "script",
+      "href": "/assets/NavButton.41e4beb8.js"
+    },
+    {
+      "type": "script",
+      "href": "/assets/index.c4f6bcfb.js"
+    },
+    {
+      "type": "style",
+      "href": "/assets/index.25c53db8.css"
+    }
+  ],
+  "/internal/preferences/Search": [
+    {
+      "type": "script",
+      "href": "/assets/Search.7a786682.js"
+    },
+    {
+      "type": "script",
+      "href": "/assets/index.c4f6bcfb.js"
+    },
+    {
+      "type": "style",
+      "href": "/assets/index.25c53db8.css"
+    },
+    {
+      "type": "script",
+      "href": "/assets/Dropdown.258ea7ab.js"
+    }
+  ],
+  "/internal/preferences/inputs/Dropdown": [
+    {
+      "type": "script",
+      "href": "/assets/Dropdown.258ea7ab.js"
+    },
+    {
+      "type": "script",
+      "href": "/assets/index.c4f6bcfb.js"
+    },
+    {
+      "type": "style",
+      "href": "/assets/index.25c53db8.css"
+    }
+  ],
+  "entry-client": [],
+  "index.html": [
+    {
+      "type": "script",
+      "href": "/assets/index.c4f6bcfb.js"
+    },
+    {
+      "type": "style",
+      "href": "/assets/index.25c53db8.css"
+    }
+  ]
+}

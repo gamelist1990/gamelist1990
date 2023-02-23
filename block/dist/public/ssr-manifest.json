@@ -1,0 +1,145 @@
+{
+  "vite/modulepreload-polyfill": [],
+  "node_modules/solid-js/dist/solid.js": [],
+  "node_modules/solid-js/web/dist/web.js": [],
+  "\u0000vite/preload-helper": [],
+  "node_modules/solid-start/entry-client/mount.tsx": [],
+  "node_modules/@solidjs/meta/dist/index.jsx": [],
+  "node_modules/@solidjs/router/dist/integration.js": [],
+  "node_modules/@solidjs/router/dist/lifecycle.js": [],
+  "node_modules/@solidjs/router/dist/utils.js": [],
+  "node_modules/@solidjs/router/dist/routing.js": [],
+  "node_modules/@solidjs/router/dist/components.jsx": [],
+  "node_modules/solid-start/root/FileRoutes.tsx": [],
+  "node_modules/solid-start/server/ServerContext.tsx": [],
+  "node_modules/solid-start/router.tsx": [],
+  "node_modules/solid-start/server/types.tsx": [],
+  "node_modules/solid-start/error-boundary/ErrorBoundary.tsx": [],
+  "node_modules/solid-start/root/Scripts.tsx": [],
+  "node_modules/solid-start/root/Document.tsx": [],
+  "src/root.css": [],
+  "src/components/SEO.tsx": [],
+  "src/data/appState.ts": [],
+  "src/util/preferences.ts": [],
+  "src/API/Bookmark.ts": [],
+  "src/root.tsx": [],
+  "node_modules/solid-start/entry-client/StartClient.tsx": [],
+  "src/entry-client.tsx": [],
+  ".solid/index.html": [],
+  "node_modules/solid-js/store/dist/store.js": [
+    "/assets/index.19fda2af.js"
+  ],
+  "node_modules/@thisbeyond/solid-dnd/dist/index.jsx": [
+    "/assets/index.19fda2af.js"
+  ],
+  "src/util/keybinds.ts": [
+    "/assets/index.19fda2af.js"
+  ],
+  "src/util/clickHandler.ts": [
+    "/assets/index.19fda2af.js"
+  ],
+  "src/components/ContextMenu/Button.tsx": [
+    "/assets/index.19fda2af.js"
+  ],
+  "src/components/ContextMenu/index.tsx": [
+    "/assets/index.19fda2af.js"
+  ],
+  "src/API/ContextItem.ts": [
+    "/assets/index.19fda2af.js"
+  ],
+  "src/util/generateContextButtons.ts": [
+    "/assets/index.19fda2af.js"
+  ],
+  "src/API/Tab.ts": [
+    "/assets/index.19fda2af.js"
+  ],
+  "src/components/Favicon.tsx": [
+    "/assets/index.19fda2af.js"
+  ],
+  "src/components/Tab.tsx": [
+    "/assets/index.19fda2af.js"
+  ],
+  "src/components/ConstrainDragAxis.tsx": [
+    "/assets/index.19fda2af.js"
+  ],
+  "src/components/Tabs.tsx": [
+    "/assets/index.19fda2af.js"
+  ],
+  "src/components/Utility.tsx": [
+    "/assets/index.19fda2af.js"
+  ],
+  "src/components/Bookmark.tsx": [
+    "/assets/index.19fda2af.js"
+  ],
+  "src/components/Bookmarks.tsx": [
+    "/assets/index.19fda2af.js"
+  ],
+  "src/routes/index.tsx": [
+    "/assets/index.19fda2af.js"
+  ],
+  "src/API/Protocol.ts": [
+    "/assets/url.05066fb0.js"
+  ],
+  "src/util/protocols.ts": [
+    "/assets/url.05066fb0.js"
+  ],
+  "src/util/codec.ts": [
+    "/assets/url.05066fb0.js"
+  ],
+  "src/util/engines.ts": [
+    "/assets/url.05066fb0.js"
+  ],
+  "src/util/url.ts": [
+    "/assets/url.05066fb0.js"
+  ],
+  "node_modules/@tomphttp/bare-client/dist/BareClient.js": [
+    "/assets/BareClient.06787bc0.js"
+  ],
+  "src/routes/internal/newTab.tsx": [
+    "/assets/newTab.f3050e9b.js"
+  ],
+  "\u0000commonjsHelpers.js": [
+    "/assets/view-source.7d6b3b73.js",
+    "/assets/view-source.5c045b07.css"
+  ],
+  "\u0000C:/Users/issei/Velocity/node_modules/prismjs/prism.js?commonjs-module": [
+    "/assets/view-source.7d6b3b73.js",
+    "/assets/view-source.5c045b07.css"
+  ],
+  "node_modules/prismjs/prism.js": [
+    "/assets/view-source.7d6b3b73.js",
+    "/assets/view-source.5c045b07.css"
+  ],
+  "node_modules/prism-themes/themes/prism-one-dark.css": [
+    "/assets/view-source.7d6b3b73.js",
+    "/assets/view-source.5c045b07.css"
+  ],
+  "src/routes/internal/view-source.tsx": [
+    "/assets/view-source.7d6b3b73.js",
+    "/assets/view-source.5c045b07.css"
+  ],
+  "src/routes/internal/preferences/General.tsx": [
+    "/assets/General.13092578.js"
+  ],
+  "src/routes/internal/preferences/inputs/Toggle.tsx": [
+    "/assets/Toggle.1cc3a262.js"
+  ],
+  "src/routes/internal/preferences/index.tsx": [
+    "/assets/index.a5a28d61.js"
+  ],
+  "src/routes/internal/preferences/NavButton.tsx": [
+    "/assets/NavButton.41e4beb8.js"
+  ],
+  "src/routes/internal/preferences/Search.tsx": [
+    "/assets/Search.7a786682.js"
+  ],
+  "src/routes/internal/preferences/inputs/Dropdown.tsx": [
+    "/assets/Dropdown.258ea7ab.js"
+  ],
+  "src/util/registerSW.ts": [
+    "/assets/registerSW.86cc5ffa.js"
+  ],
+  "src/API/index.ts": [
+    "/assets/index.983858ca.js"
+  ]
+}

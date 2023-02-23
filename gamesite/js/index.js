@@ -2,31 +2,6 @@
 // Service Worker Registration:
 // The code first registers a service worker with the path "/sw.js". A Service Worker is a script that acts as a client-side proxy for network requests and can be used for offline support and push notifications.
 
-// Script Loading:
-// The code then loads an external script from "https://cdn.jsdelivr.net/gh/3kh0/3kh0.github.io/js/main.js". The script is added to the head of the document.
-
-// Tab Data Retrieval:
-// The code retrieves tab data from the local storage using localStorage.getItem("tab"). If the tab data exists, it is parsed into a JSON object. If the tab data doesn't exist, an empty object is created.
-
-// Tab Title and Icon Update:
-// If the tab data has a title property, the document title is updated. If the tab data has an icon property, the href attribute of the link element with the rel attribute set to "icon" is updated.
-
-// Color Contrast and Color Hex Functions:
-// The code defines two functions, getContrastHex and getColorHex, which calculate the contrast color and the text color, respectively, based on a given hexadecimal color value.
-
-// Theme Handling:
-// The code retrieves the theme from local storage using localStorage.getItem("theme") or sets the theme to "default" if it does not exist. The themes are defined as an array of objects, each with a theme and a color property.
-
-// Custom Theme:
-// If the theme is set to "custom", the theme color is retrieved from local storage using localStorage.getItem("theme_color"), and the body element is updated with the custom theme color.
-
-// Custom Elements:
-// The code defines three custom elements, <changelog-added>, <changelog-removed>, and <changelog-changed>, which are used to display information about changes made to the web page.
-
-// Secret Themes:
-// The code implements secret themes using the createSecretThemeType function, which takes two arguments: the name of the theme and an array of key patterns. The function listens for key events on the document and updates the theme if the correct pattern of keys is pressed. The code also defines the secretThemeButton function, which displays the secret theme if it has been unlocked previously.
-
-// Overall, this code is part of a larger web page that implements various functionalities, including theme handling, custom elements, and secret themes.
 
 async function isBlocked(url) {
   try {
@@ -111,7 +86,7 @@ window.onerror = (e) => {
 }
 
 const jsdelivr = document.createElement("script");
-jsdelivr.setAttribute("src", "https://gamelist1990.github.io/gamelist1990/gamesite/js/main.js");
+jsdelivr.setAttribute("src", "");
 document.head.append(jsdelivr);
 
 var tab = localStorage.getItem("tab");

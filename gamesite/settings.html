@@ -11,7 +11,7 @@
   <meta content="3kh0" property="og:title" />
   <meta content="The better unblocked games website." property="og:description" />
   <meta content="/images/logo.png" property="og:image" />
-  <title>Settings | 3kh0</title>
+  <title>科学を知ろう五</title>
   <link href="./images/logo.png" rel="icon" />
   <link href="./css/index.css" rel="stylesheet" />
 </head>
@@ -19,71 +19,76 @@
 <body>
   <div class="navbar">
     <div class="navitems">
-      <img onclick="location.href='https://www.youtube.com/watch?v=dQw4w9WgXcQ'" src="./images/logo.png" class="navlogo"
+      <img onclick="location.href='https://gamelist1990.github.io/gamelist1990/gamelist2023.html'" src="./images/logo.png" class="navlogo"
         draggable="false" />
       <a href="./">
-        <div class="navitem">Home</div>
+        <div class="navitem">ホーム</div>
       </a>
       <a href="./projects">
-        <div class="navitem">Games</div>
+        <div class="navitem">ゲーム</div>
       </a>
       <a href="./extras">
-        <div class="navitem">Extras</div>
+        <div class="navitem">色々</div>
       </a>
       <a href="./blog">
-        <div class="navitem">Blog</div>
+        <div class="navitem">更新履歴</div>
       </a>
       <a href="./settings">
-        <div class="navitem" current>Settings</div>
+        <div class="navitem" current>今ここ【設定】</div>
       </a>
       <a href="./about">
-        <div class="navitem">About</div>
+        <div class="navitem">概要</div>
       </a>
     </div>
   </div>
 
-  <div class="section-title">Tab Cloak</div>
+  <div class="section-title">タブの名前とアイコンを変更できる</div>
   <div class="buttons">
-    <input id="title" class="input" placeholder="Title" onkeyup="setTitle(this.value)" />
-    <input id="icon" class="input" placeholder="Favicon" onkeyup="setFavicon(this.value.trim())" />
+    <input id="title" class="input" placeholder="名前" onkeyup="setTitle(this.value)" />
+    <input id="icon" class="input" placeholder="アイコンの画像URL" onkeyup="setFavicon(this.value.trim())" />
     <button class="button" onclick="resetTab()">Reset</button>
   </div>
 
-  <div class="section-title">Theme</div>
+  <div class="section-title">テーマ</div>
   <div class="buttons">
-    <button class="button" onclick="setTheme('default')">Default</button>
-    <button class="button" onclick="setTheme('light')">Light</button>
-    <button class="button" onclick="setTheme('orchid')">Orchid</button>
-    <button class="button" onclick="setTheme('sky')">Sky</button>
-    <button class="button" onclick="setTheme('sunset')">Sunset</button>
-    <button class="button" onclick="setTheme('fracital')">Fracital</button>
-    <button class="button" onclick="setTheme('concrete')">Concrete</button>
-    <button class="button" onclick="setTheme('monotonium')">Monotonium</button>
-    <button class="button" onclick="setTheme('monotonium-dark')">Monotonium Dark</button>
-    <button class="button" onclick="setTheme('northernfish')">Northernfish</button>
-    <button hidden class="button forternish" onclick="setTheme('forternish')">Forternish</button>
-    <button class="button" onclick="setTheme('winter')">Winter</button>
-    <button hidden class="button nebelung" onclick="setTheme('nebelung')">Nebelung</button>
-    <button hidden class="button hacker" onclick="setTheme('hacker')">Nebelung is a hacker</button>
-    <button hidden class="button piplup" onclick="setTheme('piplup')">Piplup</button>
+    <button class="button" onclick="setTheme('default')">デフォルト</button>
+    <button class="button" onclick="setTheme('light')">白</button>
+    <button class="button" onclick="setTheme('orchid')">紫</button>
+    <button class="button" onclick="setTheme('sky')">青</button>
+    <button class="button" onclick="setTheme('sunset')">赤</button>
+    <button class="button" onclick="setTheme('fracital')">ピンク</button>
+    <button class="button" onclick="setTheme('concrete')">グレー</button>
+    <button class="button" onclick="setTheme('monotonium')">白黒</button>
+    <button class="button" onclick="setTheme('monotonium-dark')">黒白</button>
+    <button class="button" onclick="setTheme('northernfish')">水色青</button>
+    <button class="button forternish" onclick="setTheme('forternish')">綺麗</button>
+    <button class="button" onclick="setTheme('winter')">緑水色</button>
+    <button class="button nebelung" onclick="setTheme('nebelung')">茶色</button>
+    <button class="button hacker" onclick="setTheme('hacker')">かっこよくなる</button>
+    <button class="button piplup" onclick="setTheme('piplup')">水色濃い青</button>
   </div>
   <br>
   <div class="buttons">
     <input type="color" id="theme_color" name="Theme picker" value="#4caf50" oninput="setThemeColor(this.value)">
-    <label for="head">Set custom color</label>
+    <label for="head">カスタムカラー</label>
   </div>
 
-  <footer>© 3kh0 2023</footer>
+  <footer>© Gamelist1990</footer>
 
   <script src="./js/index.js"></script>
   <script src="./js/settings.js"></script>
-  <script src='https://cdn.jsdelivr.net/npm/@widgetbot/crate@3' async defer>
+  <widgetbot
+  server="1069498529866842173"
+  channel="1069498529866842173"
+  width="auto"
+  height="auto"
+></widgetbot>
+<script src='https://cdn.jsdelivr.net/npm/@widgetbot/crate@3' async defer>
     new Crate({
-        server: '971769908205604864', // EchoDev
-        channel: '1017203047388160050', // #guest-chat
-        notifications: false,
+        server: '1069498529866842173', // 
+        channel: '1069498532068872193' // htmlコードを勝手に使わないでね
     })
-  </script>
+</script>
 </body>
 
 </html>

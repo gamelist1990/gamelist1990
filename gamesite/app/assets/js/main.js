@@ -19,7 +19,7 @@ console.warn(
   }
   
   // ====================================
-  // SCRIPT INJECTION
+  // SCRIPT INJECTIO
   // ====================================
   
   var gaenabled = window.localStorage.getItem("ga");

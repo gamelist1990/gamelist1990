@@ -1,7 +1,7 @@
 function go(value) {
   let iframe = document.querySelector(".iframe.active");
   window.navigator.serviceWorker
-    .register("/sw.js", {
+    .register("sw.js", {
       scope: __uv$config.prefix,
     })
     .then(() => {

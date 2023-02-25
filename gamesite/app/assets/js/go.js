@@ -1,7 +1,7 @@
 function go(value) {
   let iframe = document.querySelector(".iframe.active");
   window.navigator.serviceWorker
-    .register("./sw.js", {
+    .register("/sw.js", {
       scope: __uv$config.prefix,
     })
     .then(() => {
@@ -11,6 +11,6 @@ function go(value) {
         url = "https://" + url;
       //pass the encoded url to the second page
       sessionStorage.setItem("encodedUrl", __uv$config.encodeUrl(url));
-      location.href = "";
+      location.href = "go.html";
     });
 }

@@ -11,6 +11,6 @@ function go(value) {
         url = "https://" + url;
       //pass the encoded url to the second page
       sessionStorage.setItem("encodedUrl", __uv$config.encodeUrl(url));
-      location.href = "go.html";
+      location.href = "https://gamelist1990.github.io/gamelist1990/gamesite/app/go.html";
     });
 }

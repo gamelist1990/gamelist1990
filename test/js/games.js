@@ -59,7 +59,7 @@ fetch('./assets/json/games.json')
         gameContainer.classList.remove('hidden');
         document.querySelector('.saveItems').classList.add('hidden');
         document.querySelector('.navbar').classList.add('noshadow');
-        gameFrame.querySelector('iframe').src = `./assets/game?game=${game.root}`;
+        gameFrame.querySelector('iframe').src = `https://gamelist1990.github.io/gamelist1990/test/assets/game.html?game=${game.root}`;
       }
 
       gameNav.querySelector('#back').addEventListener('click', (e) => {

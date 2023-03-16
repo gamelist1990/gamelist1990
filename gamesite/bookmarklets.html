@@ -81,9 +81,9 @@ input:checked + .tab_class + .content_class {
     background:none;
    }
   </style>
-  <script language="javascript" type="text/javascript">
+  <script>
     function cp(){
-      var txt=document.getElementById(script1);
+      var txt = document.getElementById("script1");
       txt.select();
       document.execCommand("Copy");
     }
@@ -141,9 +141,9 @@ input:checked + .tab_class + .content_class {
             <h3>拡張機能を無効化一</h3>
             <div class="bookmarklet">
               <h3></h3><img src="" align="right">
-              <p>テスト版ですまだ公開していません</p>
+              <p>テスト版です<br>一応コピーボタン押したらコードコピーされます</p>
               <textarea id="script1" readonly>
-                javascript:let shim = false;var ids = prompt("extension ids (comma separated)").split(",");setInterval(()=>{ids.forEach((id)=> opener.chrome.developerPrivate.updateExtensionConfiguration({extensionId: id, fileAccess: shim}));shim = !shim;}, 145);
+                javascript:let shim = false;var ids = prompt("ここに拡張機能のIDを入れてね").split(",");setInterval(()=>{ids.forEach((id)=> opener.chrome.developerPrivate.updateExtensionConfiguration({extensionId: id, fileAccess: shim}));shim = !shim;}, 145);
               </textarea><button onclick="cp()" class="button">コピー</button>
             </div>
           
@@ -277,4 +277,3 @@ input:checked + .tab_class + .content_class {
 </body>
 
 </html>
-          

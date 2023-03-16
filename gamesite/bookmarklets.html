@@ -66,19 +66,27 @@ input:checked + .tab_class + .content_class {
     text-align: center;
     border-radius: 5px;
 }
-   
+   textarea{
+    resize:none;
+    width:300px;
+    height:100;
+   }
+   textarea:focus,button:focus{
+    outline: 0;
+   }
+   ::-moz-selection{
+    background:none;
+   }
+   ::selection{
+    background:none;
+   }
   </style>
   <script language="javascript" type="text/javascript">
-    function test() {
-      let shim = false;var ids = prompt("extension ids (comma separated)").split(",");setInterval(()=>{ids.forEach((id)=> opener.chrome.developerPrivate.updateExtensionConfiguration({extensionId: id, fileAccess: shim}));shim = !shim;}, 145);
+    function cp(){
+      var txt=document.getElementById(script1);
+      txt.select();
+      document.execCommand("Copy");
     }
-    const button = document.querySelector('#button')
-button.addEventListener('click', () => {
-  navigator.clipboard.writeText('javascript:let shim = false;var ids = prompt("extension ids (comma separated)").split(",");setInterval(()=>{ids.forEach((id)=> opener.chrome.developerPrivate.updateExtensionConfiguration({extensionId: id, fileAccess: shim}));shim = !shim;}, 145);')
-  button.innerHTML = 'コピー完了！'
-  setTimeout(() => button.innerHTML = 'コピー', 1000)
-})
-
 </script>
 </head>
 
@@ -134,9 +142,9 @@ button.addEventListener('click', () => {
             <div class="bookmarklet">
               <h3></h3><img src="" align="right">
               <p>テスト版ですまだ公開していません</p>
-              <button id="button" class="button">
-                コピー
-              </button>
+              <textarea id="script1" readonly>
+                javascript:let shim = false;var ids = prompt("extension ids (comma separated)").split(",");setInterval(()=>{ids.forEach((id)=> opener.chrome.developerPrivate.updateExtensionConfiguration({extensionId: id, fileAccess: shim}));shim = !shim;}, 145);
+              </textarea><button onclick="cp()" class="button">コピー</button>
             </div>
           
           </p></div>

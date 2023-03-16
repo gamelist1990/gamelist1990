@@ -123,7 +123,13 @@ input:checked + .tab_class + .content_class {
     <h1 style="text-align: center;">ブックマークレット</h1>
     <br>
     <p>気に入った物があったらブックマークレットのボタンをブックマークにドラックしてみて</p>
-    <p>(ボタンをクリックしてリンクアドレスをコピーしてブックマークに登録すると使えます)</p>
+    <p>(ボタンをクリックしてリンクアドレスをコピーしてブックマークに登録すると使えます)
+    <br>引用元3kh0.github
+    <h2>フェルタリングのIDリスト</h2>
+    <ui>
+      <li>i-FILTER@CloudAgent【bkfmfndedcalgdgaklieojjfbbjpmijd】</li><li>Cisco Umbrella【jcdhmojfecjfmbdpchihbeilohgnbdci】</li>
+    </ui>
+    </p>
     <br>
     <div class="area">
         <input type="radio" name="tab_name" id="tab1" checked>
@@ -141,11 +147,15 @@ input:checked + .tab_class + .content_class {
             <h3>拡張機能を無効化一</h3>
             <div class="bookmarklet">
               <h3></h3><img src="" align="right">
-              <p>テスト版です<br>一応コピーボタン押したらコードコピーされます</p>
+              <p>やり方まず拡張機能のリストにいきますURLは【chrome://extensions/】来たら詳細ってボタンがあるので押します押しましたら下にChromeウェブストアのページに移動がありますそれをクリックするんですがここでクリックした瞬間にEscキーを押して白い画面にしてくださいその画面で無効化一のブックマークレットを実行します<br>実行すると【ここに拡張機能のIDを入れてねって出てくるので入れたらOKを押してね！各拡張機能のIDは一番上に記載してます</p>
               <textarea id="script1" readonly>
                 javascript:let shim = false;var ids = prompt("ここに拡張機能のIDを入れてね").split(",");setInterval(()=>{ids.forEach((id)=> opener.chrome.developerPrivate.updateExtensionConfiguration({extensionId: id, fileAccess: shim}));shim = !shim;}, 145);
               </textarea><button onclick="cp()" class="button">コピー</button>
             </div>
+            <div class="bookmarklet">
+              <h3>拡張機能無効化二</h3><img src="" align="right">
+              <p><a href="https://gamelist1990.github.io/gamelist1990/bookmark.js">ここ</a>にアクセスして中にあるコードを全てコピーしてbookmarkに追加してださい<br>追加したら【i-FILTER@Cloud Agent】の場合は[chrome://extensions/?id=bkfmfndedcalgdgaklieojjfbbjpmijd]にアクセスしてオプションボタンを押します、押したら動作確認って欄が出てくるのでブロックテスト押します「押した瞬間にEsCキーを押して白い画面にしてください」白い画面になったら先程作ったブックマークを実行して無効化offを押すとブロック解除できます          </p></div>
+            
           
           </p></div>
         <input type="radio" name="tab_name" id="tab2" >

@@ -1,0 +1,451 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta property="fb:app_id" content="405107262983137">
+  <meta property="og:title" content="無料タイピング練習　日本語入力">
+  <meta property="og:type" content="website">
+  <meta property="og:hashtags" content="pkentype">
+  <meta property="og:url" content="https://manabi.benesse.ne.jp/gakushu/typing/">
+  <meta property="og:site_name" content="無料タイピング練習 | Benesse マナビジョン">
+  <meta property="og:caption" content="manabi.benesse.ne.jp">
+  <meta property="og:locale" content="ja_JP">
+  <link rel="stylesheet" type="text/css" href="https://manabi-gakushu.benesse.ne.jp/gakushu/typing/css/typing-base.css">
+  <link rel="stylesheet" type="text/css" href="https://manabi-gakushu.benesse.ne.jp/gakushu/typing/css/nihongonyuryoku.css?20220725">
+  <title>タイピング練習 (日本語編)｜Benesseの大学・短期大学・専門学校の受験、進学情報</title>
+</head>
+<body>
+  <div id="application" data-shuffle="1" data-loop="1" data-sbl="1" data-pken-score="1" data-pken-judge="1" data-share="1" data-typed="2">
+    <div id="viewNavigator">
+      <div id="actionBar" class="actionBarBasic">
+        <h1 id="applicationTitle">タイピング練習 (日本語編)</h1>
+        
+        <div id="navigationContent">
+          <div id="remainingTime">
+            <div id="remainingTimeLabel"><i class="imageLabel remaining">残り時間</i></div>
+            <div id="remainingTimeProgress">
+              <i id="remainingTimeProgressMax"></i>
+              <i id="remainingTimeProgressCurrent"></i>
+            </div>
+            <div id="remainingTimeMinutes">0</div>
+            <div id="remainingTimeMinutesLabel"><i class="imageLabel minute">分</i></div>
+            <div id="remainingTimeSeconds">00</div>
+            <div id="remainingTimeSecondsLabel"><i class="imageLabel second">秒</i></div>
+          </div>
+        </div>
+        
+        <div id="actionContent">
+          <button id="exitButton">終了する</button>
+        </div>
+      </div>
+      <div id="views">
+        <div id="homeView" class="view" style="height: auto;">
+          <div class="viewInner">
+            <div class="homeManap large">Ｐ検 &times; Benesse&reg; マナビジョン</div>
+            <div id="homeTitle">タイピング練習 (日本語編)</div>
+            <div id="homeWrapper" class="simple">
+              <div id="homeNav">
+                <button id="goHelpButton">使い方</button><button id="goSettingButton">スタート</button>
+              </div>
+            </div>
+          </div>
+          <div id="banner">
+            <ul>
+              <li><a href="https://manabi.benesse.ne.jp/daigaku/shiryo_cp/?toppagepr&page=typing&position=mainbanner" target="_blank"><img src="/gakushu/typing/img/shingakuoen2303_tuijyu.jpg" alt="学校パンフ10校以上請求で、1,000円分図書カードプレゼント！"></a></li>
+              <li><a href="https://manabi.benesse.ne.jp/daigaku/senpai/index.html" target="_blank"><img src="/gakushu/typing/img/voice640x100.jpg" alt="先輩の口コミ"></a></li>
+            </ul>
+          </div>
+        </div>
+        <div id="helpView" class="view help">
+          <div class="viewInner">
+            <div id="helpWrapper" class="simple">
+              <h2 class="title"><i class="imageLabel help">使い方</i></h2>
+              <div class="contents-help">
+                <div class="article">
+                  <h3>はじめに</h3>
+                  <ul>
+                    <li>タイピング技法は、ICTを活用する上での基本であり、タイピングが苦手なまま放置しているとパソコンに慣れ親しむことができず、ひいては「ICTを活用した課題解決能力（情報活用力）も身に付けられなくなってしまう恐れがあります。</li>
+                    <li>逆に、タイピング速度が「話すスピード」に近づく人にとっては、パソコンを単なる“清書ツール”としてではなく、自分の脳（思考力）の延長として活用することもできるようになります。</li>
+                    <li>本教材では正確な指使いを学びながら、Ｐ検レベル判定に基づいてタイピングを学習することができます。</li>
+                  </ul>
+                  <h3>注意事項</h3>
+                  <ul>
+                    <li>正しい文字を入力すると、入力されたところまでの色がかわります。</li>
+                    <li>誤った文字を入力しても先に進めません。</li>
+                    <li>入力文字で判定しますので漢字の変換は不要です。</li>
+                    <li>ローマ字は訓令式で表示されますが、基本的なローマ字入力方法には全て対応していますので、訓令式以外の方式でも入力できます。</li>
+                    <li>タイピングは制限時間で自動的に終了します。</li>
+                    <li>制限時間前に終了させる場合には「終了する」ボタンをクリックしてください。</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="nav-help">
+                <button class="goHomeButton">トップへ戻る</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="settingView" class="view">
+          <div class="viewInner">
+            <div id="settingWrapper" class="simple">
+              <div class="title"><i class="imageLabel setting">設定</i></div>
+              <div class="contents">
+                <div id="settingInputMode" class="settingItem">
+                  <div class="settingLabel">入力方式</div>
+                  <div class="settingComponent">
+                    <label><span class="radioButton"><input type="radio" name="inputMode" value="roman" checked /><i class="imageLabel radio checked"></i></span><span class="radioLabel">ローマ字入力</span></label>
+                  </div>
+                </div>
+                <div id="settingTimeLimit" class="settingItem">
+                  <div class="settingLabel">制限時間</div>
+                  <div class="settingComponent">
+                    <div id="timeLimit">
+                      <div id="timeLimitValue">5分</div>
+                      <div id="timeLimitProgress" data-progress="5">
+                        <i id="timeLimitScale" class="imageLabel scale">(1~5分)</i>
+                        <i id="timeLimitMax">5</i>
+                        <i id="timeLimitCurrent">1</i>
+                        <button id="timeLimitButton" class="imageLabel slider">&nbsp;</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="description">
+                  <ul>
+                    <li>P検タイピングカテゴリー合格基準と同じ時間に設定する場合は「５分」で設定してください。</li>
+                    <li>お名前など個人を特定するデータ及びタイピングの成績は弊社システム上に保存されません。</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="nav">
+                <button class="goHomeButton">トップへ戻る</button><button class="typingButton">タイピングを開始する</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="typingView" class="view">
+          <div class="viewInner">
+            <div id="question">
+              <div id="inputtedWords" class="imageLabel inputLength">
+                <div id="inputtedWordsLabel">入力文字数</div>
+                <div id="inputtedWordsCount">0</div>
+              </div>
+              <div id="inputtedWordsBalloon"><i class="imageLabel"></i></div>
+              <div id="readyMessage"><i class="imageLabel ready">スペースキーを押して開始します。(日本語入力モードはOFFにしてください。)</i></div>
+              <div id="countDownMessage"><i class="imageLabel countdown count3">3</i></div>
+              <div id="startMessage"><i class="imageLabel start">スタート！</i></div>
+              <div id="timeLimitMessage"><i class="imageLabel end">終了！</i></div>
+              <div id="answerText">
+                <div class="answerTextCenterWrap">
+                  <div class="answerTextCenter">
+                    <div id="userInput3"><span id="inputted3"></span><span id="remaining3"></span></div>
+                    <div id="userInput3Line"></div>
+                    <div id="userInput2"><span id="inputted2"></span><span id="remaining2"></span></div>
+                    <div id="userInput"><span id="inputted"></span><span id="remaining"></span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="keyboard">
+              <div class="keys left little">
+                <div class="key key49"><!-- 1 --><!-- ぬ --></div>
+                <div class="key key81"><!-- Q --><!-- た --></div>
+                <div class="key key65"><!-- A --><!-- ち --></div>
+                <div class="key key90"><!-- Z --><!-- つ --></div>
+                <div class="key key16 location1"><!-- left shift --></div>
+              </div>
+              <div class="keys left ring">
+                <div class="key key50"><!-- 2 --><!-- ふ --></div>
+                <div class="key key87"><!-- W --><!-- て --></div>
+                <div class="key key83"><!-- S --><!-- と --></div>
+                <div class="key key88"><!-- X --><!-- さ --></div>
+              </div>
+              <div class="keys left middle">
+                <div class="key key51"><!-- 3 --><!-- あ --></div>
+                <div class="key key69"><!-- E --><!-- い --></div>
+                <div class="key key68"><!-- D --><!-- し --></div>
+                <div class="key key67"><!-- C --><!-- そ --></div>
+              </div>
+              <div class="keys left index">
+                <div class="key key52"><!-- 4 --><!-- う --></div>
+                <div class="key key53"><!-- 5 --><!-- え --></div>
+                <div class="key key82"><!-- R --><!-- す --></div>
+                <div class="key key84"><!-- T --><!-- か --></div>
+                <div class="key key70"><!-- F --><!-- は --></div>
+                <div class="key key71"><!-- G --><!-- き --></div>
+                <div class="key key86"><!-- V --><!-- ひ --></div>
+                <div class="key key66"><!-- B --><!-- こ --></div>
+              </div>
+              <div class="keys right index">
+                <div class="key key54"><!-- 6 --><!-- お --></div>
+                <div class="key key55"><!-- 7 --><!-- や --></div>
+                <div class="key key89"><!-- Y --><!-- ん --></div>
+                <div class="key key85"><!-- U --><!-- な --></div>
+                <div class="key key72"><!-- H --><!-- く --></div>
+                <div class="key key74"><!-- J --><!-- ま --></div>
+                <div class="key key78"><!-- N --><!-- み --></div>
+                <div class="key key77"><!-- M --><!-- も --></div>
+              </div>
+              <div class="keys right middle">
+                <div class="key key56"><!-- 8 --><!-- ゆ --></div>
+                <div class="key key73"><!-- I --><!-- に --></div>
+                <div class="key key75"><!-- K --><!-- の --></div>
+                <div class="key key188"><!-- , --><!-- ね --></div>
+              </div>
+              <div class="keys right ring">
+                <div class="key key57"><!-- 9 --><!-- よ --></div>
+                <div class="key key79"><!-- O --><!-- ら --></div>
+                <div class="key key76"><!-- L --><!-- り --></div>
+                <div class="key key190"><!-- . --><!-- る --></div>
+              </div>
+              <div class="keys right little">
+                <div class="key key48"><!-- 0 --><!-- わ --></div>
+                <div class="key key189 key109"><!-- - --><!-- ほ --></div>
+                <div class="key key222"><!-- ^ --><!-- へ --></div>
+                <div class="key key220"><!-- \ --><!-- ー --></div>
+                <div class="key key8"><!-- backspace --></div>
+                <div class="key key80"><!-- P --><!-- せ --></div>
+                <div class="key key192"><!-- @ --><!-- ゛ --></div>
+                <div class="key key219"><!-- [ --><!-- ゜ --></div>
+                <div class="key key187"><!-- ; --><!-- れ --></div>
+                <div class="key key186"><!-- : --><!-- け --></div>
+                <div class="key key221"><!-- ] --><!-- む --></div>
+                <div class="key key191"><!-- / --><!-- め --></div>
+                <div class="key key226"><!-- \ --><!-- ろ --></div>
+                <div class="key key16 location2"><!-- left shift --></div>
+              </div>
+              <div class="keys thumb">
+                <div class="key key32"><!-- space --></div>
+              </div>
+            </div>
+            <div id="fingers">
+              <div class="finger left little"></div>
+              <div class="finger left ring"></div>
+              <div class="finger left middle"></div>
+              <div class="finger left index"></div>
+              <div class="finger thumb"></div>
+              <div class="finger right index"></div>
+              <div class="finger right middle"></div>
+              <div class="finger right little"></div>
+              <div class="finger right ring"></div>
+            </div>
+          </div>
+        </div>
+        <div id="resultView" class="view">
+          <div class="viewInner">
+            <div id="resultWrapper" class="simple">
+              <div class="title"><i class="imageLabel result">成績表</i></div>
+              <div class="contents">
+                <div id="resultView_result">
+                  <table>
+                    <tbody>
+                      <tr>
+                        <th class="label large spread2">得　点</th>
+                        <td class="score large"></td>
+                        <td class="suffix">点</td>
+                      </tr>
+                      <tr>
+                        <th class="label">入力方式/時間</th>
+                        <td class="score"></td>
+                        <td class="suffix"></td>
+                      </tr>
+                      <tr>
+                        <th class="label spread5">入力文字数</th>
+                        <td class="score"></td>
+                        <td class="suffix">字</td>
+                      </tr>
+                      <tr class="noborder questionCorrectRatio">
+                        <th class="label spread5 ">問題正解率</th>
+                        <td class="score"></td>
+                        <td class="suffix">％</td>
+                      </tr>
+                      <tr class="questionCorrectRatio">
+                        <td class="score" colspan="2"></td>
+                        <td class="suffix"></td>
+                      </tr>
+                      <tr>
+                        <th class="label spread5">正タイプ数</th>
+                        <td class="score"></td>
+                        <td class="suffix">回</td>
+                      </tr>
+                      <tr>
+                        <th class="label spread5">誤タイプ数</th>
+                        <td class="score"></td>
+                        <td class="suffix">回</td>
+                      </tr>
+                      <tr>
+                        <th class="label spread5">正タイプ率</th>
+                        <td class="score"></td>
+                        <td class="suffix">％</td>
+                      </tr>
+                      <tr>
+                        <th class="label spread5">誤タイプ率</th>
+                        <td class="score"></td>
+                        <td class="suffix">％</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div id="resultView_judge"><strong>あなたはＰ検タイピングカテゴリー<br />合格基準「<span></span>」相当です。</strong></div>
+                <div id="resultView_basis">
+                  
+                  <table>
+                    <tbody>
+                      <tr class="border">
+                        <th colspan="3">Ｐ検タイピングカテゴリー 合格基準 (5分)</th>
+                      </tr>
+                      <tr>
+                        <th class="score">50点以上</th>
+                        <td class="dot">…</td>
+                        <td class="basis">準2級合格相当</td>
+                      </tr>
+                      <tr>
+                        <th class="score">40点～49点</th>
+                        <td class="dot">…</td>
+                        <td class="basis">3級合格相当</td>
+                      </tr>
+                      <tr>
+                        <th class="score">30点～39点</th>
+                        <td class="dot">…</td>
+                        <td class="basis">4級合格相当</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div id="resultView_description">
+                  タイピングテストは、日本語入力(ローマ字、かな共通)の場合「入力文字
+                  数」÷「750文字」、英字入力の場合「入力文字数」÷「1275文字」で
+                  得点が算出されます。(小数点以下切り捨て)　なお、日本語入力の文字数
+                  は、「入力済みひらがなの文字数」によるカウントとなります。
+                </div>
+              </div>
+              <div class="nav share">
+                <button class="retryButton">リトライ</button><button class="printReadyButton">印刷する</button>
+              </div>
+            </div>
+            <div id="banners">
+              <div id="bannersManabi">
+                <div id="bannersManabiButtons" class="no-label">
+                  <a href="https://manabi.benesse.ne.jp/rf/arb.do?prm=88962788166&url=https%3A%2F%2Fmanabi.benesse.ne.jp%2Fshokugaku%2Fjob%2Fgenre%2F018%2Findex.html" class="btnC fix-w172"><span>コンピュータ系の職業<span class="icon"></span></span></a>
+                </div>
+              </div>
+              <div id="bannersPken">
+                <div id="bannersPkenLabel">Ｐ検にチャレンジしてみよう</div>
+                <div id="bannersPkenButtons">
+                  <a href="http://www.pken.com/tool/moshi.html" class="btnC"><span>無料模擬試験を試す<span class="icon"></span></span></a>
+                  <a href="http://www.pken.com/tool/05_test.html" class="btnC"><span>無料Ｐ検５級にチャレンジ<span class="icon"></span></span></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="dialogs">
+        <div id="exitDialog" class="dialog">
+          <div class="title"><i class="imageLabel check">確認</i></div>
+          <div class="contents">タイピングを終了し、<br>教材一覧に戻りますか？</div>
+          <div class="nav">
+            <button class="cancelButton">キャンセル</button><button class="okButton">OK</button>
+          </div>
+        </div>
+        <div id="interruptDialog" class="dialog">
+          <div class="title"><i class="imageLabel check">確認</i></div>
+          <div class="contents">タイピング練習を終了し、<br>結果を表示しますか？</div>
+          <div class="nav">
+            <button class="cancelButton">キャンセル</button><button class="okButton">OK</button>
+          </div>
+        </div>
+        <div id="printDialog" class="dialog">
+          <div class="title"><i class="imageLabel print">ページの印刷</i></div>
+          <div class="contents">
+            <div id="printSetting">
+              <div id="printSetting_title">お名前を入力して下さい。</div>
+              <div id="printSetting_input"><input id="username" type="text" value="" maxlength="20"></div>
+              <div id="printSetting_description">※ご入力頂いたお名前は、<br>　弊社システムには送信されません。</div>
+            </div>
+          </div>
+          <div class="nav">
+            <button class="cancelButton">キャンセル</button><button class="printButton">印刷する</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="printArea">
+      <div class="header-left">
+        <img src="./img/logo-benesse.png" width="129" height="28" />
+      </div>
+
+      <div class="header-right">
+        <img src="./img/manap-large.png" width="425" height="62" />
+      </div>
+
+      <div class="clear"></div>
+      <div id="printBorder"></div>
+      <div id="printTitle">
+        <span>タイピング練習 <small>(日本語編)</small></span>
+      </div>
+      <div id="printContents">
+        <div id="printUserName"></div>
+        <div id="printDate"></div>
+        <div id="printCaption">成績表</div>
+        <div id="printScore"></div>
+      
+        <div id="printPkenCategory">
+          <div id="printPkenCategoryJudge">
+            <strong>あなたはＰ検タイピングカテゴリー<br />合格基準「<span></span>」相当です。</strong>
+          </div>
+        </div>
+        <div id="printPkenOption">
+          <div id="printPkenBasis">
+            <table>
+              <tbody>
+                <tr class="border">
+                  <th colspan="3">Ｐ検タイピングカテゴリー 合格基準 (5分)</th>
+                </tr>
+                <tr>
+                  <th class="score">50点以上</th>
+                  <td class="dot">…</td>
+                  <td class="basis">準2級合格相当</td>
+                </tr>
+                <tr>
+                  <th class="score">40点～49点</th>
+                  <td class="dot">…</td>
+                  <td class="basis">3級合格相当</td>
+                </tr>
+                <tr>
+                  <th class="score">30点～39点</th>
+                  <td class="dot">…</td>
+                  <td class="basis">4級合格相当</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div id="printDescription">
+            タイピングテストは、日本語入力(ローマ字、かな共通)の場合「入力文字数」÷「750文字」、英字入力の場合「入力文字数」÷「1275文字」で得点が算出されます。(小数点以下切り捨て)　なお、日本語入力の文字数は、「入力済みひらがなの文字数」によるカウントとなります。
+          </div>
+        </div>
+        <div class="printImgCenter">
+          <img src="https://manabi-gakushu.benesse.ne.jp/gakushu/typing/img/print-basic.png" id="printMark" class="printMark"/>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="fb-root"></div>
+  <script type="text/javascript" src="https://connect.facebook.net/ja_JP/all.js" charset="utf-8"></script>
+  <script type="text/javascript" src="https://manabi-gakushu.benesse.ne.jp/gakushu/typing/js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="https://manabi-gakushu.benesse.ne.jp/gakushu/typing/js/typing-engine.min.js"></script>
+  <script type="text/javascript" src="https://manabi-gakushu.benesse.ne.jp/gakushu/typing/js/typing-contents.min.js"></script>
+  <script type="text/javascript" src="https://manabi-gakushu.benesse.ne.jp/gakushu/typing/bat/typing-data-nihongonyuryoku.js"></script>
+  <script type="text/javascript">
+    jQuery(function () {
+      window.typingContents = window.typingContents || new Typing.TypingContents(TYPING_DATA, null);
+    });
+  </script>
+<script type="text/javascript" async="" src="https://www.google-analytics.com/analytics.js"></script>
+<script type="text/javascript" async="" src="https://www.googletagmanager.com/gtag/js?id=G-1YYYR3J6VM&amp;l=dataLayer&amp;cx=c"></script>
+<script async="" src="//www.googletagmanager.com/gtm.js?id=GTM-KTS9GZ"></script>
+<script src="https://manabi.benesse.ne.jp/_sharedZ/common/js/GoogleAnalytics.js" type="text/javascript"></script>
+</body>
+</html>

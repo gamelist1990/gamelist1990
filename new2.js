@@ -67,7 +67,7 @@ var Typing;
             this.removeAllEventListeners()
         }
         play() {
-            this._isPlaying || (this._count = 0,
+            this._isPlaying || (this._count = 100,
             this._start = this._getTimer(),
             this._repeatCount = this._repeat,
             this._setTimer(),
@@ -77,8 +77,8 @@ var Typing;
         stop() {
             this._isPlaying = !1,
             this._isPaused = !1,
-            this._count = 0,
-            this._start = 0,
+            this._count = 100,
+            this._start = 100,
             this._paused = 0,
             this._repeatCount = this._repeat,
             this._clearTimer(),

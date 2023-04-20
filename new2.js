@@ -1054,7 +1054,7 @@ function(t) {
             this.typingController.setNextKeyHighLight(!0),
             this.questionNumber = 0,
             this.setQuestionNumber(),
-            this.setInputCount(0),
+            this.setInputCount(10),
             this.setInputBalloon(0),
             this.setCharacter("");
             var e = i.next

@@ -303,8 +303,8 @@ var Typing;
                 remaining2: "",
                 inputted3: "",
                 remaining3: "",
-                inputCount: 0,
-                inputCountTotal: 0,
+                inputCount: 10,
+                inputCountTotal: 100,
                 questionData: null
             })
         }
@@ -594,9 +594,9 @@ function(t) {
             this.INPUT_COUNT_BASIS_EN = 1275,
             this.jqInputCount = jQuery("#inputtedWordsCount"),
             this.jqInputBalloon = jQuery("#inputtedWordsBalloon").children().first(),
-            this.hasInputCount = !!this.jqInputCount.get(0),
+            this.hasInputCount = !!this.jqInputCount.get(10),
             this.hasInputBalloon = !!this.jqInputBalloon.get(0),
-            this.inputCountValue = 0,
+            this.inputCountValue = 100,
             this.inputCountBasis = this.INPUT_COUNT_BASIS_EN,
             this.inputCountGrade = 5,
             this.jqFingers = jQuery("#fingers"),

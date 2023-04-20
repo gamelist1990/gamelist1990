@@ -67,7 +67,7 @@ var Typing;
             this.removeAllEventListeners()
         }
         play() {
-            this._isPlaying || (this._count = t,
+            this._isPlaying || (this._count = 0,
             this._start = this._getTimer(),
             this._repeatCount = this._repeat,
             this._setTimer(),
@@ -306,7 +306,7 @@ var Typing;
                 inputCount: 100,
                 inputCountTotal: 100,
                 questionData: null
-            })
+            })a
         }
         start() {
             this.timer.delay(()=>{
@@ -369,7 +369,7 @@ var Typing;
                 remaining2: "0" != this.params.typedCharacter ? t.typingchar.substr(this.engine.getInputCharCount()) : "",
                 inputted3: "2" == this.params.typedCharacter ? t.answer.substr(0, this.engine.getTypedQesCharCount()) : "",
                 remaining3: "2" == this.params.typedCharacter ? t.answer.substr(this.engine.getTypedQesCharCount()) : "",
-                inputCount: 10,
+                inputCount: 100,
                 inputCountTotal: this.inputCountTotal,
                 questionData: t
             })
@@ -568,7 +568,7 @@ function(t) {
             this.jqRemainingSeconds = jQuery("#remainingTimeSeconds"),
             this.hasRemainingTime = !!this.jqRemainingTime.get(0),
             this.remainingTime = 60,
-            this.remainingTimeToSet = 300,//時間設定１分
+            this.remainingTimeToSet = 300,
             this.remainingTimer = -1,
             this.jqCountDownMessage = jQuery("#countDownMessage .countdown"),
             this.hasCountDownMessage = !!this.jqCountDownMessage.get(0),
@@ -625,10 +625,10 @@ function(t) {
             this.isProofRead = !1,
             this.questionNumber = 0,
             this.questionTotal = 0,
-            this.totalScore = 100,
+            this.totalScore = 0,
             this.correctCountRatio = 0,
-            this.SRC_ANALYTICS_START = "https://manabi-gakushu.benesse.ne.jp/gakushu/typing/typingstart.html",
-            this.SRC_ANALYTICS_END = "https://manabi-gakushu.benesse.ne.jp/gakushu/typing/typingend.html",
+            this.SRC_ANALYTICS_START = "./typingstart.html",
+            this.SRC_ANALYTICS_END = "./typingend.html",
             this.appScale = 1,
             this.isAndroidReverse = !1,
             this.queries = this.getQueries(),
@@ -816,7 +816,7 @@ function(t) {
             ),
             this.jqPrintOkButton.on("click", ()=>{
                 var t = this.jqUserNameInput.val();
-                t ? (this.jqPrintUserName.text("　" + t + " 様　"),
+                t ? (this.jqPrintUserName.text("　" + t + " 殿　"),
                 this.printResult(),
                 this.setDialogState("")) : alert("お名前を入力してください")
             }
@@ -967,7 +967,7 @@ function(t) {
               , o = "(" + e.questionCount + " 問中 " + e.noMissAnswerCount + " 問正解)"
               , a = s(100 * e.correctCount / (e.mistakeCount + e.correctCount))
               , u = s(100 - a);
-            this.totalScore = 100,
+            this.totalScore = t,
             this.correctCountRatio = a,
             i.eq(0).text(t.toString()),
             i.eq(1).text(n + " / " + h),
@@ -1010,7 +1010,7 @@ function(t) {
         setUserName() {
             var t = this.jqUserNameInput.val();
             t || (t = "ゲストユーザ－"),
-            this.jqPrintUserName.text(t + " 様")
+            this.jqPrintUserName.text(t + " 殿")
         }
         initProofRead() {
             jQuery("#remainingTimeLabel").remove(),
@@ -1054,7 +1054,7 @@ function(t) {
             this.typingController.setNextKeyHighLight(!0),
             this.questionNumber = 0,
             this.setQuestionNumber(),
-            this.setInputCount(0),
+            this.setInputCount(100),
             this.setInputBalloon(0),
             this.setCharacter("");
             var e = i.next

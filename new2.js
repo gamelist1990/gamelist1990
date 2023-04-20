@@ -303,8 +303,8 @@ var Typing;
                 remaining2: "",
                 inputted3: "",
                 remaining3: "",
-                inputCount: 100,
-                inputCountTotal: 100,
+                inputCount: 0,
+                inputCountTotal: 0,
                 questionData: null
             })
         }
@@ -369,7 +369,7 @@ var Typing;
                 remaining2: "0" != this.params.typedCharacter ? t.typingchar.substr(this.engine.getInputCharCount()) : "",
                 inputted3: "2" == this.params.typedCharacter ? t.answer.substr(0, this.engine.getTypedQesCharCount()) : "",
                 remaining3: "2" == this.params.typedCharacter ? t.answer.substr(this.engine.getTypedQesCharCount()) : "",
-                inputCount: 100,
+                inputCount: 10,
                 inputCountTotal: this.inputCountTotal,
                 questionData: t
             })
@@ -568,7 +568,7 @@ function(t) {
             this.jqRemainingSeconds = jQuery("#remainingTimeSeconds"),
             this.hasRemainingTime = !!this.jqRemainingTime.get(0),
             this.remainingTime = 60,
-            this.remainingTimeToSet = 300,
+            this.remainingTimeToSet = 300,//時間設定１分
             this.remainingTimer = -1,
             this.jqCountDownMessage = jQuery("#countDownMessage .countdown"),
             this.hasCountDownMessage = !!this.jqCountDownMessage.get(0),
@@ -1054,7 +1054,7 @@ function(t) {
             this.typingController.setNextKeyHighLight(!0),
             this.questionNumber = 0,
             this.setQuestionNumber(),
-            this.setInputCount(100),
+            this.setInputCount(0),
             this.setInputBalloon(0),
             this.setCharacter("");
             var e = i.next

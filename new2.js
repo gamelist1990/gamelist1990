@@ -77,7 +77,7 @@ var Typing;
         stop() {
             this._isPlaying = !1,
             this._isPaused = !1,
-            this._count = 100,
+            this._count = 0,
             this._start = 0,
             this._paused = 0,
             this._repeatCount = this._repeat,

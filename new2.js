@@ -265,7 +265,7 @@ var Typing;
             this.created = 0,
             this.isProofRead = r,
             e && (this.methodType = e.methodType,
-            this.timeLimitSec = 60 e.time,
+            this.timeLimitSec = 60 * e.time,
             this.showAnswer = e.showAnswer),
             this.data = i,
             this.params = h,
@@ -465,8 +465,8 @@ var Typing;
             if (!this.isProofRead) {
                 var i = this.timeLimitSec;
                 t && (i -= 1 * t.data.count);
-                var e = i % 600
-                  , s = (i - e) / 600;
+                var e = i % 60
+                  , s = (i - e) / 60;
                 this.dispatchEvent(h.UPDATE_LIMIT, {
                     minute: s,
                     second: e,
@@ -625,10 +625,10 @@ function(t) {
             this.isProofRead = !1,
             this.questionNumber = 0,
             this.questionTotal = 0,
-            this.totalScore = 0,
+            this.totalScore = 10,
             this.correctCountRatio = 0,
-            this.SRC_ANALYTICS_START = "https://manabi-gakushu.benesse.ne.jp/gakushu/typing/typingstart.html",//よくわからん
-            this.SRC_ANALYTICS_END = "https://manabi-gakushu.benesse.ne.jp/gakushu/typing//typingend.html",
+            this.SRC_ANALYTICS_START = "https://manabi-gakushu.benesse.ne.jp/gakushu/typing/typingstart.html",
+            this.SRC_ANALYTICS_END = "https://manabi-gakushu.benesse.ne.jp/gakushu/typing/typingend.html",
             this.appScale = 1,
             this.isAndroidReverse = !1,
             this.queries = this.getQueries(),
@@ -816,7 +816,7 @@ function(t) {
             ),
             this.jqPrintOkButton.on("click", ()=>{
                 var t = this.jqUserNameInput.val();
-                t ? (this.jqPrintUserName.text("　" + t + " 殿　"),
+                t ? (this.jqPrintUserName.text("　" + t + " 様　"),
                 this.printResult(),
                 this.setDialogState("")) : alert("お名前を入力してください")
             }

@@ -265,7 +265,7 @@ var Typing;
             this.created = 0,
             this.isProofRead = r,
             e && (this.methodType = e.methodType,
-            this.timeLimitSec = 600 * e.time,
+            this.timeLimitSec = 60 e.time,
             this.showAnswer = e.showAnswer),
             this.data = i,
             this.params = h,

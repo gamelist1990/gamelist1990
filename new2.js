@@ -67,7 +67,7 @@ var Typing;
             this.removeAllEventListeners()
         }
         play() {
-            this._isPlaying || (this._count = 100,
+            this._isPlaying || (this._count = t,
             this._start = this._getTimer(),
             this._repeatCount = this._repeat,
             this._setTimer(),
@@ -303,8 +303,8 @@ var Typing;
                 remaining2: "",
                 inputted3: "",
                 remaining3: "",
-                inputCount: 0,
-                inputCountTotal: 0,
+                inputCount: 100,
+                inputCountTotal: 100,
                 questionData: null
             })
         }

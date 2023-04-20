@@ -283,7 +283,7 @@ var Typing;
             this.engine = new t.TypingEngine(this.method,this.data,this,this.params),
             this.timer.init(1e3),
             this.typingKeyboard.resetKeys(),
-            this.inputCountTotal = 0,
+            this.inputCountTotal = 100,
             this.updateLimit(),
             this.isStartkeyDown = !1,
             this.keyEnabled = !0,
@@ -369,7 +369,7 @@ var Typing;
                 remaining2: "0" != this.params.typedCharacter ? t.typingchar.substr(this.engine.getInputCharCount()) : "",
                 inputted3: "2" == this.params.typedCharacter ? t.answer.substr(0, this.engine.getTypedQesCharCount()) : "",
                 remaining3: "2" == this.params.typedCharacter ? t.answer.substr(this.engine.getTypedQesCharCount()) : "",
-                inputCount: 0,
+                inputCount: 100,
                 inputCountTotal: this.inputCountTotal,
                 questionData: t
             })

@@ -567,8 +567,8 @@ function(t) {
             this.jqRemainingMinutes = jQuery("#remainingTimeMinutes"),
             this.jqRemainingSeconds = jQuery("#remainingTimeSeconds"),
             this.hasRemainingTime = !!this.jqRemainingTime.get(0),
-            this.remainingTime = 300,
-            this.remainingTimeToSet = 600,
+            this.remainingTime = 10,
+            this.remainingTimeToSet = 50,
             this.remainingTimer = -1,
             this.jqCountDownMessage = jQuery("#countDownMessage .countdown"),
             this.hasCountDownMessage = !!this.jqCountDownMessage.get(0),
@@ -627,8 +627,8 @@ function(t) {
             this.questionTotal = 0,
             this.totalScore = 0,
             this.correctCountRatio = 0,
-            this.SRC_ANALYTICS_START = "./typingstart.html",
-            this.SRC_ANALYTICS_END = "./typingend.html",
+            this.SRC_ANALYTICS_START = "https://manabi-gakushu.benesse.ne.jp/gakushu/typing/typingstart.html",//よくわからん
+            this.SRC_ANALYTICS_END = "https://manabi-gakushu.benesse.ne.jp/gakushu/typing//typingend.html",
             this.appScale = 1,
             this.isAndroidReverse = !1,
             this.queries = this.getQueries(),
@@ -1010,7 +1010,7 @@ function(t) {
         setUserName() {
             var t = this.jqUserNameInput.val();
             t || (t = "ゲストユーザ－"),
-            this.jqPrintUserName.text(t + " 殿")
+            this.jqPrintUserName.text(t + " 様")
         }
         initProofRead() {
             jQuery("#remainingTimeLabel").remove(),

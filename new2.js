@@ -303,7 +303,7 @@ var Typing;
                 remaining2: "",
                 inputted3: "",
                 remaining3: "",
-                inputCount: 10,
+                inputCount: 100,
                 inputCountTotal: 100,
                 questionData: null
             })
@@ -594,9 +594,9 @@ function(t) {
             this.INPUT_COUNT_BASIS_EN = 1275,
             this.jqInputCount = jQuery("#inputtedWordsCount"),
             this.jqInputBalloon = jQuery("#inputtedWordsBalloon").children().first(),
-            this.hasInputCount = !!this.jqInputCount.get(10),
+            this.hasInputCount = !!this.jqInputCount.get(0),
             this.hasInputBalloon = !!this.jqInputBalloon.get(0),
-            this.inputCountValue = 100,
+            this.inputCountValue = 0,
             this.inputCountBasis = this.INPUT_COUNT_BASIS_EN,
             this.inputCountGrade = 5,
             this.jqFingers = jQuery("#fingers"),
@@ -625,7 +625,7 @@ function(t) {
             this.isProofRead = !1,
             this.questionNumber = 0,
             this.questionTotal = 0,
-            this.totalScore = 10,
+            this.totalScore = 100,
             this.correctCountRatio = 0,
             this.SRC_ANALYTICS_START = "https://manabi-gakushu.benesse.ne.jp/gakushu/typing/typingstart.html",
             this.SRC_ANALYTICS_END = "https://manabi-gakushu.benesse.ne.jp/gakushu/typing/typingend.html",
@@ -1054,7 +1054,7 @@ function(t) {
             this.typingController.setNextKeyHighLight(!0),
             this.questionNumber = 0,
             this.setQuestionNumber(),
-            this.setInputCount(10),
+            this.setInputCount(100),
             this.setInputBalloon(0),
             this.setCharacter("");
             var e = i.next

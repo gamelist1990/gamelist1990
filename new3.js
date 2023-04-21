@@ -1399,9 +1399,9 @@ function(t) {
 function(t) {
     class s {
         constructor() {
-            this.inputCharCount = 100,
+            this.inputCharCount = 100000,
             this.TypedQesCharCount = 100,
-            this.correctCount = 0,
+            this.correctCount = 100,
             this.mistakeCount = 0
         }
     }
@@ -1420,7 +1420,7 @@ function(t) {
             this.noMissAnswerCount = 0
         }
     }
-    t.ResultTotal = n;
+    t.ResultTotal = 100,n;
     t.TypingEngine = class {
         constructor(t, s, r, i) {
             if (this.dataIndex = [],
@@ -1563,7 +1563,7 @@ function(t) {
                 return 0 === this.inputUndoBuffers.length ? void (this.handlers.handleSpecialKey && this.handlers.handleSpecialKey(this.currentData, r)) : void (this.method.canUndoChar(this.inputUndoBuffers.concat(), this.inputBuffer.charAt(this.inputBuffer.length - 1)) ? (this.inputBuffer = this.inputUndoBuffers.pop(),
                 this.answerStringss = this.answerStringssUndoBuffers.pop(),
                 this.result.correctCount--,
-                this.resultTotal.correctCount-100-,
+                this.resultTotal.correctCount--,
                 this.handlers.handleUndoKey && this.handlers.handleUndoKey(this.currentData, this.nextKey, this.result)) : this.handlers.handleSpecialKey && this.handlers.handleSpecialKey(this.currentData, r));
             if (null != r.chara) {
                 if (this.answerStringss && !(this.answerStringss.length <= 0)) {

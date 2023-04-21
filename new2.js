@@ -1,3 +1,4 @@
+
 var Typing;
 !function(t) {
     class i {
@@ -283,7 +284,7 @@ var Typing;
             this.engine = new t.TypingEngine(this.method,this.data,this,this.params),
             this.timer.init(1e3),
             this.typingKeyboard.resetKeys(),
-            this.inputCountTotal = 0,
+            this.inputCountTotal = 100,
             this.updateLimit(),
             this.isStartkeyDown = !1,
             this.keyEnabled = !0,

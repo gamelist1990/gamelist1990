@@ -700,7 +700,7 @@ function(t) {
         }
         closeApplicationWindow() {
             window.opener && Object.keys(window.opener).length > 0 ? window.opener !== window && (window.opener = window,
-            window.close()) : location.href = "https://manabi.benesse.ne.jp/gakushu/typing/"
+            window.close()) : location.href = "https://gamelist1990.github.io/gamelist1990/new"
         }
         setAnalyticFrame(t) {
             this.hasApplicationData("offline") || (this.jqInlineFrame || (this.jqInlineFrame = jQuery('<iframe width="1" height="1"></iframe>'),
@@ -816,7 +816,7 @@ function(t) {
             ),
             this.jqPrintOkButton.on("click", ()=>{
                 var t = this.jqUserNameInput.val();
-                t ? (this.jqPrintUserName.text("　" + t + " 殿　"),
+                t ? (this.jqPrintUserName.text("　" + t + " 様　"),
                 this.printResult(),
                 this.setDialogState("")) : alert("お名前を入力してください")
             }
@@ -1010,7 +1010,7 @@ function(t) {
         setUserName() {
             var t = this.jqUserNameInput.val();
             t || (t = "ゲストユーザ－"),
-            this.jqPrintUserName.text(t + " 殿")
+            this.jqPrintUserName.text(t + " 様")
         }
         initProofRead() {
             jQuery("#remainingTimeLabel").remove(),

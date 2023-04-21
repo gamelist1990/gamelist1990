@@ -1401,7 +1401,7 @@ function(t) {
         constructor() {
             this.inputCharCount = 100,
             this.TypedQesCharCount = 100,
-            this.correctCount = 0,
+            this.correctCount = 100,
             this.mistakeCount = 0
         }
     }

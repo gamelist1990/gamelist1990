@@ -1399,7 +1399,7 @@ function(t) {
 function(t) {
     class s {
         constructor() {
-            this.inputCharCount = 1000,//入力文字100000にすると-の位に突入するぞ
+            this.inputCharCount = 100,//入力文字100000にすると-の位に突入するぞ
             this.TypedQesCharCount = 100,//↓のcountと同じにする
             this.correctCount = 100,//正解数下のmistakecountはいじらない
             this.mistakeCount = 0

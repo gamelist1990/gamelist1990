@@ -1401,7 +1401,7 @@ function(t) {
         constructor() {
             this.inputCharCount = 100,
             this.TypedQesCharCount = 100,
-            this.correctCount = 100,
+            this.correctCount = 0,
             this.mistakeCount = 0
         }
     }
@@ -1492,7 +1492,7 @@ function(t) {
             this.inputUndoBuffers = [],
             this.answerStringssUndoBuffers = [],
             null != this.currentData ? (this.currentData.cnttypedfont && (this.cnttypedArr = this.currentData.cnttypedfont.split(",")),
-            this.result.TypedQesCharCount = 0,
+            this.result.TypedQesCharCount = 100,
             this.answerStringss = this.method.getAnswers(this.currentData, this.params),
             this.handlers.handleQuestionStart && this.handlers.handleQuestionStart(this.currentData, this.nextKey)) : this.params && (this.params.loop ? (this.dataIndex = this.dataIndexForRepeat.concat(),
             this.next()) : this.handlers.handleTypingEnd && this.handlers.handleTypingEnd(this.resultTotal))
@@ -1563,7 +1563,7 @@ function(t) {
                 return 0 === this.inputUndoBuffers.length ? void (this.handlers.handleSpecialKey && this.handlers.handleSpecialKey(this.currentData, r)) : void (this.method.canUndoChar(this.inputUndoBuffers.concat(), this.inputBuffer.charAt(this.inputBuffer.length - 1)) ? (this.inputBuffer = this.inputUndoBuffers.pop(),
                 this.answerStringss = this.answerStringssUndoBuffers.pop(),
                 this.result.correctCount--,
-                this.resultTotal.correctCount--,
+                this.resultTotal.correctCount-100-,
                 this.handlers.handleUndoKey && this.handlers.handleUndoKey(this.currentData, this.nextKey, this.result)) : this.handlers.handleSpecialKey && this.handlers.handleSpecialKey(this.currentData, r));
             if (null != r.chara) {
                 if (this.answerStringss && !(this.answerStringss.length <= 0)) {

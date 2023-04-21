@@ -1716,7 +1716,7 @@ function(t) {
             this.jqRemainingSeconds = jQuery("#remainingTimeSeconds"),
             this.hasRemainingTime = !!this.jqRemainingTime.get(0),
             this.remainingTime = 600,
-            this.remainingTimeToSet = 600,
+            this.remainingTimeToSet = 1200,
             this.remainingTimer = -1,
             this.jqCountDownMessage = jQuery("#countDownMessage .countdown"),
             this.hasCountDownMessage = !!this.jqCountDownMessage.get(0),

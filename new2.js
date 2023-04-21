@@ -1,4 +1,3 @@
-
 var Typing;
 !function(t) {
     class i {
@@ -568,8 +567,8 @@ function(t) {
             this.jqRemainingMinutes = jQuery("#remainingTimeMinutes"),
             this.jqRemainingSeconds = jQuery("#remainingTimeSeconds"),
             this.hasRemainingTime = !!this.jqRemainingTime.get(0),
-            this.remainingTime = 60,
-            this.remainingTimeToSet = 300,
+            this.remainingTime = 60,     //ここも
+            this.remainingTimeToSet = 300,//いじらない
             this.remainingTimer = -1,
             this.jqCountDownMessage = jQuery("#countDownMessage .countdown"),
             this.hasCountDownMessage = !!this.jqCountDownMessage.get(0),
@@ -625,8 +624,8 @@ function(t) {
             this.chkPkenCategory = !1,
             this.isProofRead = !1,
             this.questionNumber = 0,
-            this.questionTotal = 0,
-            this.totalScore = 0,
+            this.questionTotal = 100,
+            this.totalScore = 100,
             this.correctCountRatio = 0,
             this.SRC_ANALYTICS_START = "https://manabi-gakushu.benesse.ne.jp/gakushu/typing/typingstart.html",
             this.SRC_ANALYTICS_END = "https://manabi-gakushu.benesse.ne.jp/gakushu/typing/typingend.html",

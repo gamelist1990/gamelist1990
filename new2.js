@@ -304,7 +304,7 @@ var Typing;
                 inputted3: "",
                 remaining3: "",
                 inputCount: 1,
-                inputCountTotal: 0,
+                inputCountTotal: 100,
                 questionData: null
             })
         }
@@ -967,7 +967,7 @@ function(t) {
               , o = "(" + e.questionCount + " 問中 " + e.noMissAnswerCount + " 問正解)"
               , a = s(100 * e.correctCount / (e.mistakeCount + e.correctCount))
               , u = s(100 - a);
-            this.totalScore = t,
+            this.totalScore = 100,t,
             this.correctCountRatio = a,
             i.eq(0).text(t.toString()),
             i.eq(1).text(n + " / " + h),

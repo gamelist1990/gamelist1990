@@ -283,7 +283,7 @@ var Typing;
             this.engine = new t.TypingEngine(this.method,this.data,this,this.params),
             this.timer.init(1e3),
             this.typingKeyboard.resetKeys(),
-            this.inputCountTotal = 100,
+            this.inputCountTotal = 1000,
             this.updateLimit(),
             this.isStartkeyDown = !1,
             this.keyEnabled = !0,
@@ -303,8 +303,8 @@ var Typing;
                 remaining2: "",
                 inputted3: "",
                 remaining3: "",
-                inputCount: 1,
-                inputCountTotal: 100,
+                inputCount: 1000,
+                inputCountTotal: 0,
                 questionData: null
             })
         }

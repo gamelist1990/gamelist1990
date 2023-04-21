@@ -306,7 +306,7 @@ var Typing;
                 inputCount: 100,
                 inputCountTotal: 100,
                 questionData: null
-            })a
+            })
         }
         start() {
             this.timer.delay(()=>{
@@ -1454,7 +1454,7 @@ function(t) {
                 inputCount: 100,
                 inputCountTotal: 100,
                 questionData: null
-            })a
+            })
         }
         start() {
             this.timer.delay(()=>{
@@ -1715,8 +1715,8 @@ function(t) {
             this.jqRemainingMinutes = jQuery("#remainingTimeMinutes"),
             this.jqRemainingSeconds = jQuery("#remainingTimeSeconds"),
             this.hasRemainingTime = !!this.jqRemainingTime.get(0),
-            this.remainingTime = 10,
-            this.remainingTimeToSet = 600,
+            this.remainingTime = 60,
+            this.remainingTimeToSet = 300,
             this.remainingTimer = -1,
             this.jqCountDownMessage = jQuery("#countDownMessage .countdown"),
             this.hasCountDownMessage = !!this.jqCountDownMessage.get(0),

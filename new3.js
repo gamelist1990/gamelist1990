@@ -1399,9 +1399,9 @@ function(t) {
 function(t) {
     class s {
         constructor() {
-            this.inputCharCount = 100000,
-            this.TypedQesCharCount = 100,
-            this.correctCount = 100,
+            this.inputCharCount = 1000,//入力文字100000にすると-の位に突入するぞ
+            this.TypedQesCharCount = 100,//↓のcountと同じにする
+            this.correctCount = 100,//正解数下のmistakecountはいじらない
             this.mistakeCount = 0
         }
     }
@@ -1492,7 +1492,7 @@ function(t) {
             this.inputUndoBuffers = [],
             this.answerStringssUndoBuffers = [],
             null != this.currentData ? (this.currentData.cnttypedfont && (this.cnttypedArr = this.currentData.cnttypedfont.split(",")),
-            this.result.TypedQesCharCount = 100,
+            this.result.TypedQesCharCount = 100,//できればここも上と同じようにそろえる
             this.answerStringss = this.method.getAnswers(this.currentData, this.params),
             this.handlers.handleQuestionStart && this.handlers.handleQuestionStart(this.currentData, this.nextKey)) : this.params && (this.params.loop ? (this.dataIndex = this.dataIndexForRepeat.concat(),
             this.next()) : this.handlers.handleTypingEnd && this.handlers.handleTypingEnd(this.resultTotal))

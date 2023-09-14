@@ -1,125 +1,76 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-	<title>Minecraft</title>
-	<link href="favicon.ico" rel="shortcut icon" type="image/x-icon" />
-	<meta charset="UTF-8" />
-	<meta content="海賊版Minecraftです" name="description" />
-	<meta content="//precisionclient.vercel.app" name="url" />
-	<meta content="EtcherFX" name="author" />
-	<meta content="海賊版Minecraft" property="og:title" />
-	<meta content="en-US" property="og:locale" />
-	<meta content="website" property="og:type" />
-	<meta content="https://gamelist1990.github.io/gamelist1990/Minecraft" property="og:url" />
-	<!--meta content="IMAGE" property="og:image"/>-->
-	<meta content="海賊版Minecraftです"
-		property="og:description" />
-	<script type="text/javascript" src="eagswebrtc.js"></script>
-	<script type="text/javascript" src="classes.js"></script>
-	<style>
-		@font-face {
-			font-family: "Product Sans";
-			src: url(ProductSans.ttf);
-		}
-	</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
+<title>Minecraft</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link type="image/png" rel="icon" href="/img/old.png">
+		<!-- Google tag (gtag.js) -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-FBK4SL6P92"></script>
+		<meta name="apple-itunes-app" content="app-id=693689912, app-argument=https://www.ixl.com/" >
+		<meta name="ixl-ios-app" data-itunes_id="693689912" data-name="IXL Math and English" data-author="IXL Learning" content="" >
+		<meta name="com.silverpop.brandeddomains" content="www.pages02.net,email.ixl.com,www.ixl.com,au.ixl.com,ca.ixl.com,eu.ixl.com,in.ixl.com,ie.ixl.com,nz.ixl.com,sg.ixl.com,za.ixl.com,uk.ixl.com">
+		<meta name="com.silverpop.cothost" content="pod2.ibmmarketingcloud.com">
+		<meta name="description" content="The BEST E​a​g​l​e​r​c​r​a​f​t site. Come and play M​i​n​e​c​r​a​f​t for free on your browser. We provide multiplayer so you can play M​i​n​e​c​r​a​f​t online with other people." />
+		<meta name="keywords" content="minecraft, eaglercraft, applet, singleplayer, replit, html5, chromebook, lax1dude, games, eaglercraft singleplayer, eagler, minecraft for free, free minecraft" />
+		<meta name="author" content="E​a​g​l​e​r​c​r​a​f​t​R​U" />
+		<meta property="og:title" content="M​i​n​e​c​r​a​f​t in the browser for FREE | EaglercraftRU" />
+		<meta property="og:locale" content="en-US" />
+		<meta property="og:type" content="website" />
+		<meta property="og:image" content="/img/titleBG.png" />
+		<meta property="og:description" content="The BEST E​a​g​l​e​r​c​r​a​f​t site. Come and play M​i​n​e​c​r​a​f​t for free on your browser. We provide multiplayer so you can play M​i​n​e​c​r​a​f​t online with other people." />
+<!-- Change this: <meta property="og:image" content="https://media.discordapp.net/attachments/378764518081429506/932053915061587978/thumbnail2.png" /> -->
+<!-- Change this: <meta property="og:url" content="https://g.eags.us/eaglercraft/" /> -->
+<script type="text/javascript" src="classes.js"></script>
+<script type="text/javascript" src="eagswebrtc.js"></script>
+<script type="text/javascript">
+if(document.location.href.startsWith("file:")) {
+alert("You cannot 'open' this file in your browser, the code doesn't work. Upload this folder to your HTTP(s) server and access it via the internet to launch the stable-download game. This is not a bug, please read the documentation");
+}else {
+window.addEventListener("load", function(){
+const relayId = Math.floor(Math.random() * 3);
+window.eaglercraftOpts = {
+container: "game_frame", assetsURI: "assets.epk", serverWorkerURI: "worker_bootstrap.js", worldsFolder: "MAIN",
+assetOverrides: {
+    // "title/no-pano-blur.flag": "",
+	"records/wait.mp3": "track.mp3",
+	"records/mellohi.mp3": "track.mp3",
+	"records/far.mp3": "track.mp3",
+	"records/cat.mp3": "track.mp3",
+	"records/ward.mp3": "track.mp3",
+	"records/chirp.mp3": "track.mp3",
+	"records/mall.mp3": "track.mp3",
+	"records/stal.mp3": "track.mp3",
+	"records/strad.mp3": "track.mp3",
+	"records/blocks.mp3": "track.mp3",
+	"records/11.mp3": "track.mp3",
+	"records/13.mp3": "track.mp3",
+	"records/ward.mp3": "track.mp3"
+},
+servers: [],
+relays: [
+	{ addr: "wss://relay.deev.is/", name: "lax1dude relay #1", primary: relayId == 0 },
+	{ addr: "wss://relay.lax1dude.net/", name: "lax1dude relay #2", primary: relayId == 1 },
+	{ addr: "wss://relay.shhnowisnottheti.me/", name: "ayunami relay #1", primary: relayId == 2 }
+],
+mainMenu: { splashes: [
+"More addictive than lemonade!", "Meeting expectations!", "Boots with the fur!", "Undocumented!!", "90% bug free!",
+"Not on steam!!", "Ask your doctor!!", "Now in 3D!", "OpenGL 1.2!", "Played by cowboys!", "Loved by millions!"
+], eaglerLogo: false }};
+(function(){
+var q = window.location.search;
+if(typeof q === 'string' && q.startsWith("?")) {
+	q = new URLSearchParams(q);
+	var s = q.get("server");
+	if(s) window.minecraftOpts.push(s);
+}
+})();
+setTimeout(function(){main();}, 2000);
+});}
+</script>
 </head>
-
-<body style="margin: 0; width: 100vw; height: 100vh; font-family:
-'Product Sans'" id="game_frame" class="gameframe">
-	<div id="Selection"
-		style="display: inline-block; position: absolute; top:50%; left: 50%; transform: translate(-50%, -50%)">
-		<style>
-			html {
-				color: #fff;
-			}
-
-			.starter {
-				border-radius: 5px;
-				border: 1px solid #fff;
-				background-color: #0d0c0c;
-				color: #fff;
-			}
-
-			.dropdown {
-				position: relative;
-				display: inline-block;
-				border-radius: 5px;
-				border: 1px solid #fff;
-				background-color: #0d0c0c;
-				color: #fff;
-			}
-
-			.gameframe {
-				background-image: url("bg.png");
-				background-size: cover;
-				background-repeat: no-repeat;
-			}
-		</style>
-		<h1>Minecraft!!</h1>
-		<h3>使いたいテクスチャを選んでね！:</h3>
-		<select id="Packs" class="dropdown">
-			<option>ここから選択！</option>
-			<option value="de">デフォルト1</option>
-            <option value="di">デフォルト2</option>
-		</select>
-		<br /><br />
-		<input class="starter" type="button" value="実行！" onclick="Start();" />
-	</div>
-	<script type="text/javascript">
-		if (document.location.href.startsWith("file:")) {
-			alert("このファイルをブラウザで「開く」ことはできません。このフォルダをHTTP(s)サーバーにアップロードし、インターネット経由でアクセスすると、stable-downloadゲームが起動します。これはバグではありません。");
-		} else {
-			var PackSelect = document.getElementById("Packs");
-			function Start() {
-				if (PackSelect.selectedIndex !== 0) {
-					var Selected = PackSelect.options[PackSelect.selectedIndex].value;
-					document.getElementById("Selection").style.display = "none";
-					localStorage.LastPack = Selected;
-					const relayId = Math.floor(Math.random() * 3);
-					window.eaglercraftOpts = {
-						container: "game_frame",
-						assetsURI: `packs/${Selected}.epk`,
-						serverWorkerURI: "worker_bootstrap.js",
-						worldsFolder: "MAIN",
-						servers: [
-							{ serverName: "spixel", serverAddress: "wss://web.asspixel.net/CAPixel/", hideAddress: true },
-							{ serverName: "バニラクラフト", serverAddress: "wss://play.vanillacraftsmp.org/", hideAddress: true },
-							{ serverName: "ArchMC", serverAddress: "wss://web.arch.lol/join", hideAddress: true },
-							{ serverName: "ハイピクセル", serverAddress: "wss://hyper-network.me", hideAddress: true },
-							{ serverName: "Ayunboom", serverAddress: "wss://sus.shhnowisnottheti.me", hideAddress: true },
-							{ serverName: "Aeon Network", serverAddress: "wss://aeon-network.net/aeon", hideAddress: true },
-							{ serverName: "Sealcraft", serverAddress: "wss://sealcraft.ddns.net:442/servers", hideAddress: true }
-						],
-						relays: [
-							{ addr: "wss://relay.deev.is/", name: "lax1dude relay #1", primary: relayId == 0 },
-							{ addr: "wss://relay.lax1dude.net/", name: "lax1dude relay #2", primary: relayId == 1 },
-							{ addr: "wss://relay.shhnowisnottheti.me/", name: "ayunami relay #1", primary: relayId == 2 }
-						],
-						mainMenu: {
-							splashes: [], eaglerLogo: false
-						}
-					};
-					(function () {
-						var q = window.location.search;
-						if (typeof q === 'string' && q.startsWith("?")) {
-							q = new URLSearchParams(q);
-							var s = q.get("server");
-							if (s) window.minecraftOpts.push(s);
-						}
-					})();
-					main();
-				} else
-					alert("パックを選択してね");
-			}
-		}
-		if (localStorage.LastPack)
-			for (Pack of PackSelect.children)
-				if (Pack.value === localStorage.LastPack) {
-					Pack.selected = "selected";
-					break;
-				}
-	</script>
+<body style="margin:0px;width:100vw;height:100vh;" id="game_frame">
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v52afc6f149f6479b8c77fa569edb01181681764108816" integrity="sha512-jGCTpDpBAYDGNYR5ztKt4BQPGef1P0giN6ZGVUi835kFF88FOmmn8jBQWNgrNd8g/Yu421NdgWhwQoaOPFflDw==" data-cf-beacon='{"rayId":"7c7f56e578753344","version":"2023.4.0","r":1,"b":1,"token":"ef17691dd2754ad48537cd5b4ca6b69f","si":100}' crossorigin="anonymous"></script>
 </body>
-
 </html>

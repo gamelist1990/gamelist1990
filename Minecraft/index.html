@@ -4,15 +4,15 @@
 <head>
 	<title>Minecraft</title>
 	<meta charset="UTF-8" />
-	<meta content="Precision Client is a custom eaglercraft client with QOL features, custom texture packs, and more." name="description" />
+	<meta content="海賊版Minecraftです" name="description" />
 	<meta content="//precisionclient.vercel.app" name="url" />
 	<meta content="EtcherFX" name="author" />
-	<meta content="Precision Client" property="og:title" />
+	<meta content="海賊版Minecraft" property="og:title" />
 	<meta content="en-US" property="og:locale" />
 	<meta content="website" property="og:type" />
-	<meta content="//precisionclient.vercel.app" property="og:url" />
+	<meta content="https://gamelist1990.github.io/gamelist1990/Minecraft" property="og:url" />
 	<!--meta content="IMAGE" property="og:image"/>-->
-	<meta content="Precision Client is a custom eaglercraft client with QOL features, custom texture packs, and more."
+	<meta content="海賊版Minecraftです"
 		property="og:description" />
 	<script type="text/javascript" src="eagswebrtc.js"></script>
 	<script type="text/javascript" src="classes.js"></script>
@@ -55,27 +55,27 @@
 				background-repeat: no-repeat;
 			}
 		</style>
-		<h1>Precision Client</h1>
-		<h3>Select a texture pack:</h3>
+		<h1>Minecraft!!</h1>
+		<h3>使いたいテクスチャを選んでね！:</h3>
 		<select id="Packs" class="dropdown">
-			<option>-- Choose one --</option>
-			<option value="defaultold">Default Old</option>
-			<option value="defaultnew">Default 1.17+</option>
-			<option value="bombies">Bombies 180k</option>
-			<option value="bones">Bare Bones</option>
-			<option value="modifiednew">Modified 1.17+</option>
-			<option value="miamiprivate">Miami Private</option>
-			<option value="nebula">Nebula</option>
-			<option value="ricefault">Ricefault</option>
-			<option value="tightfault">Tightfault</option>
-			<option value="walifault">Walifault</option>
+			<option>ここから選択！</option>
+			<option value="defaultold">デフォルト</option>
+			<option value="defaultnew">デフォルト1.17+</option>
+			<option value="bombies">ボーン180k</option>
+			<option value="bones">ボビーオロゴン</option>
+			<option value="modifiednew">MOD1.17+</option>
+			<option value="miamiprivate">クロちゃん</option>
+			<option value="nebula">ネビュラ</option>
+			<option value="ricefault">ライスフォールト</option>
+			<option value="tightfault">タイトフォルト</option>
+			<option value="walifault">ワリフォールト</option>
 		</select>
 		<br /><br />
-		<input class="starter" type="button" value="Launch" onclick="Start();" />
+		<input class="starter" type="button" value="実行！" onclick="Start();" />
 	</div>
 	<script type="text/javascript">
 		if (document.location.href.startsWith("file:")) {
-			alert("You cannot 'open' this file in your browser, the code doesn't work. Upload this folder to your HTTP(s) server and access it via the internet to launch the stable-download game. This is not a bug, please read the documentation.");
+			alert("このファイルをブラウザで「開く」ことはできません。このフォルダをHTTP(s)サーバーにアップロードし、インターネット経由でアクセスすると、stable-downloadゲームが起動します。これはバグではありません。");
 		} else {
 			var PackSelect = document.getElementById("Packs");
 			function Start() {
@@ -90,10 +90,10 @@
 						serverWorkerURI: "worker_bootstrap.js",
 						worldsFolder: "MAIN",
 						servers: [
-							{ serverName: "A*spixel", serverAddress: "wss://web.asspixel.net/CAPixel/", hideAddress: true },
-							{ serverName: "VanillaCraft", serverAddress: "wss://play.vanillacraftsmp.org/", hideAddress: true },
+							{ serverName: "spixel", serverAddress: "wss://web.asspixel.net/CAPixel/", hideAddress: true },
+							{ serverName: "バニラクラフト", serverAddress: "wss://play.vanillacraftsmp.org/", hideAddress: true },
 							{ serverName: "ArchMC", serverAddress: "wss://web.arch.lol/join", hideAddress: true },
-							{ serverName: "Hyper Network", serverAddress: "wss://hyper-network.me", hideAddress: true },
+							{ serverName: "ハイピクセル", serverAddress: "wss://hyper-network.me", hideAddress: true },
 							{ serverName: "Ayunboom", serverAddress: "wss://sus.shhnowisnottheti.me", hideAddress: true },
 							{ serverName: "Aeon Network", serverAddress: "wss://aeon-network.net/aeon", hideAddress: true },
 							{ serverName: "Sealcraft", serverAddress: "wss://sealcraft.ddns.net:442/servers", hideAddress: true }
@@ -117,7 +117,7 @@
 					})();
 					main();
 				} else
-					alert("You need to select a pack");
+					alert("パックを選択してね");
 			}
 		}
 		if (localStorage.LastPack)

@@ -1,0 +1,107 @@
+body{
+    background-color:black;
+    background-image:url(../img/bg_news_bl.png),url(../img/bg_body2.png);
+    background-repeat:no-repeat,repeat-y;
+    background-position:bottom,0% 0%;
+}
+.con0{
+    color:white;
+}
+/*------------------------------------menu------------------------------------*/
+.con1{
+    display:flex;
+    width:1080px;
+    height:72px;
+    background-image:url(../img/base_line.png);
+    margin:auto;
+    margin-top:50px;
+}
+#nabi0,#nabi1,#nabi2,#nabi3,#nabi4{
+    width:216px;
+    height:auto;
+    text-align:center;
+    font-style:italic;
+    font-size: 15px;
+    margin-top: 10px;
+}
+#nabi0:link,#nabi1:link,#nabi2:link,#nabi3:link,#nabi4:link,#nabi0:visited,#nabi1:visited,#nabi2:visited,#nabi3:visited,#nabi4:visited{
+    color: #00fee3;
+}
+#nabi0:hover,#nabi1:hover,#nabi2:hover,#nabi3:hover,#nabi4:hover{
+    color:purple;
+}
+/*------------------------------------/menu------------------------------------*/
+.con2{
+    display:grid;
+    grid-template-columns:540px 540px;
+    grid-template-rows:auto;
+    width:1080px;
+    height:auto;
+    margin:auto;
+    margin-top:100px;
+    margin-bottom:150px;
+}
+#news_mei{
+    grid-column:1/2;
+    grid-row:1/2;
+}
+#page_mei{
+    grid-column:2/3;
+    grid-row:1/2;
+}
+#news{
+    grid-column:1/2;
+    grid-row:2/3;
+    width:540px;
+    height:350px;
+    overflow: auto;
+}
+#page{
+    grid-column:2/3;
+    grid-row:2/3;
+    width:540px;
+    height:350px;
+    overflow: auto;
+}
+ul{
+    width:450px;
+    padding: 0px;
+    margin-left:60px;
+    list-style: none;
+}
+ul  p{
+    margin:0px;
+}
+li{
+    background-image:url(../img/line.png);
+    background-repeat:no-repeat;
+    background-position:bottom;
+    background-size:450px auto;
+    padding: 10px;
+}
+h2{
+    width:480px;
+    height:35px;
+    color:white;
+    background-image:url(../img/bg_charactor-sel_p.png);
+    background-repeat:no-repeat;
+    background-size: 480px 35px;
+    margin: auto;
+}
+a{
+    color:white;
+}
+a:link,a:visited{
+    color:rgb(19, 143, 201);
+}
+a:hover{
+    color:purple;
+}
+span{
+    color:white;
+    font-size: xx-small;
+}
+
+.log{
+    text-decoration: solid;
+}

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>チャット欄</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+  window.onload(loadComments)
+</script>
+</head>
+<body>
+<h1>コメント欄</h1>
+<p>名前の欄には何も入力しない事で匿名としてコメントできます</p>
+
+<form id="comment-form">
+  <label for="username">ユーザー名:</label><br>
+  <input type="text" id="username" name="username" required><br>
+  <label for="comment">コメント:</label><br>
+  <textarea id="comment" name="comment" required></textarea><br>
+  <input type="submit" value="コメントを送信">
+</form>
+
+<div id="comments"></div>
+
+<script>
+
+
+$("#comment-form").submit(function(e) {
+  e.preventDefault();
+  var username = $("#username").val();
+  var comment = $("#comment").val();
+  $.post("https://script.google.com/macros/s/AKfycbyB3EgV-oBg7Kvcz8f3PFLKyiM1NLTKHJxBgwev_jYY8KOfzpOYypECCTXUgMTG9TaBIw/exec", {username: username, comment: comment}, function(data) {
+    $("#comments").html(data);
+  });
+});
+
+// コメントをリアルタイムに読み込む
+setInterval(loadComments, 1000); // 5秒ごとに更新
+
+function loadComments() {
+  $.get("https://script.google.com/macros/s/AKfycbyB3EgV-oBg7Kvcz8f3PFLKyiM1NLTKHJxBgwev_jYY8KOfzpOYypECCTXUgMTG9TaBIw/exec", function(data) {
+    $("#comments").html(data);
+  });
+}
+
+</script>
+
+
+<p><a href="../index.html">ホームへ</a></p>
+<!-- 現在のURLと日時を表示するボタンを追加 -->
+</body>
+</html>

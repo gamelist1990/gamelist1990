@@ -4,13 +4,103 @@
 <meta charset="UTF-8">
 <title>チャット欄</title>
 <style>
-  #username, #comment {
-    font-family: Arial, sans-serif;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    margin-bottom: 10px;
-  }
+  /* 基本スタイル */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 20px;
+}
+
+h1 {
+  color: #333;
+}
+
+/* コメントフォームスタイル */
+#comment-form {
+  background-color: #fff;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#comment-form label,
+#comment-form input,
+#comment-form textarea {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+#comment-form input,
+#comment-form textarea {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 14px;
+}
+
+#comment-form input[type="submit"] {
+  background-color: #5cb85c;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#comment-form input[type="submit"]:hover {
+  background-color: #4cae4c;
+}
+
+/* コメント表示スタイル */
+#comments {
+  max-width: 700px;
+  margin: 20px auto;
+}
+
+.comment {
+  background-color: #fff;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.comment-header {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+.comment-content {
+  font-size: 14px;
+}
+
+/* リンクスタイル */
+a {
+  color: #337ab7;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* タイトルと説明文の中央揃え */
+h1, p {
+  text-align: center;
+}
+
+/* ページ下部のリンクの中央揃え */
+body > p:last-of-type {
+  text-align: center;
+}
+
+
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="Code.js"></script>
@@ -24,11 +114,11 @@
   <input type="text" id="username" name="username" required><br>
   <label for="comment">コメント:</label><br>
   <textarea id="comment" name="comment" required></textarea><br>
-  <input type="hidden" id="id" name="id" value="199022">
+  <input type="hidden" id="id" name="id" value="">
   <input type="submit" value="コメントを送信">
 </form>
 
-<div id="comments"></div>
+<div id="comments">只今読み込み中です...</div>
 
 <p><a href="../index.html">ホームへ</a></p>
 </body>

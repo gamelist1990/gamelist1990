@@ -69,8 +69,14 @@ $(document).ready(function() {
             return;
         }
     
-        // ユーザー名が入力されている場合に新しいIDを生成
-        if ($('#username').val()) {
+        // ユーザー名が入力されていない場合、ユーザー名を「匿名#」とランダムな番号に設定
+        var username = $('#username').val();
+        if (!username) {
+            $('#username').val('匿名 | ID:' + Math.random().toString(36).substr(2, 9));
+        }
+    
+        // 入力されている場合に新しいIDを生成
+        if ($('#comment').val()) {
             $('#id').val(Math.random().toString(36).substr(2, 9));
             $.getJSON('https://api.ipify.org?format=json', function(data) {
                 $('#ip').val(data.ip);
@@ -84,6 +90,7 @@ $(document).ready(function() {
             handleFormSubmit(event); 
         }
     });
+    
     
     
 

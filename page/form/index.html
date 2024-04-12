@@ -4,9 +4,17 @@
 <meta charset="UTF-8">
 <title>チャット欄</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
-  window.onload(loadComments)
-</script>
+<script src="https://apis.google.com/js/api.js"></script>
+<style>
+  /* ユーザー名とコメントのスタイルを追加 */
+  #username, #comment {
+    font-family: Arial, sans-serif;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+  }
+</style>
 </head>
 <body>
 <h1>コメント欄</h1>
@@ -17,34 +25,81 @@
   <input type="text" id="username" name="username" required><br>
   <label for="comment">コメント:</label><br>
   <textarea id="comment" name="comment" required></textarea><br>
+  <input type="hidden" id="id" name="id" value="199022"> <!-- ここに固有のIDを設定します -->
   <input type="submit" value="コメントを送信">
 </form>
 
 <div id="comments"></div>
 
 <script>
+// Google Sheets APIを使用するための設定
+var apiKey = 'AIzaSyAQBu1cc4H9q3Hl69DuQ3qQL2Dz3alf9U8';
+var clientId = '878226395715-9372mdu3vrkucvkeakjbgq9aegbg55fj.apps.googleusercontent.com';
+var discoveryDocs = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
+var spreadsheetId = '1eWZkknPJTN9VUDT95g5G4EPNR9kvnlTu2IEHgJuzfHM';
+var range = 'Sheet1!A1:B5'; // 適切な範囲を設定します
 
+// APIクライアントと認証ライブラリを初期化します
+function initClient() {
+  gapi.client.init({
+    apiKey: apiKey,
+    clientId: clientId,
+    discoveryDocs: discoveryDocs,
+  }).then(function () {
+    // リスナーを追加してサインイン状態を監視します
+    gapi.auth2.getAuthInstance().isSignedIn.listen(updateSignInStatus);
+    // 現在のサインイン状態を処理します
+    updateSignInStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+  });
+}
+
+// サインイン状態が変更されたときに呼び出されるリスナー
+function updateSignInStatus(isSignedIn) {
+  if (isSignedIn) {
+    // サインインしている場合、スプレッドシートを読み込みます
+    loadSpreadsheet();
+  } else {
+    // サインインしていない場合、サインインを要求します
+    gapi.auth2.getAuthInstance().signIn();
+  }
+}
+
+// スプレッドシートを読み込む関数
+function loadSpreadsheet() {
+  gapi.client.sheets.spreadsheets.values.get({
+    spreadsheetId: spreadsheetId,
+    range: range,
+  }).then(function(response) {
+    var result = response.result;
+    var numRows = result.values ? result.values.length : 0;
+    console.log(`${numRows} rows retrieved.`);
+  });
+}
+
+// スプレッドシートにデータを書き込む関数
+function writeToSpreadsheet(values) {
+  gapi.client.sheets.spreadsheets.values.update({
+    spreadsheetId: spreadsheetId,
+    range: range,
+    valueInputOption: 'RAW',
+    values: values,
+  }).then(function(response) {
+    var updatedCells = response.result.updatedCells;
+    console.log(`${updatedCells} cells updated.`);
+  });
+}
 
 $("#comment-form").submit(function(e) {
   e.preventDefault();
   var username = $("#username").val();
   var comment = $("#comment").val();
-  $.post("https://script.google.com/macros/s/AKfycbyB3EgV-oBg7Kvcz8f3PFLKyiM1NLTKHJxBgwev_jYY8KOfzpOYypECCTXUgMTG9TaBIw/exec", {username: username, comment: comment}, function(data) {
-    $("#comments").html(data);
-  });
+  var id = $("#id").val(); // フォームからIDを取得します
+  writeToSpreadsheet([[username, comment, id]]);
 });
 
 // コメントをリアルタイムに読み込む
-setInterval(loadComments, 1000); // 5秒ごとに更新
-
-function loadComments() {
-  $.get("https://script.google.com/macros/s/AKfycbyB3EgV-oBg7Kvcz8f3PFLKyiM1NLTKHJxBgwev_jYY8KOfzpOYypECCTXUgMTG9TaBIw/exec", function(data) {
-    $("#comments").html(data);
-  });
-}
-
+setInterval(loadSpreadsheet, 1000); // 5秒ごとに更新
 </script>
-
 
 <p><a href="../index.html">ホームへ</a></p>
 <!-- 現在のURLと日時を表示するボタンを追加 -->

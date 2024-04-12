@@ -3,8 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <title>チャット欄</title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://apis.google.com/js/api.js"></script>
 <style>
   #username, #comment {
     font-family: Arial, sans-serif;
@@ -14,6 +12,8 @@
     margin-bottom: 10px;
   }
 </style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="Code.js"></script>
 </head>
 <body>
 <h1>コメント欄(開発中です)</h1>
@@ -29,72 +29,6 @@
 </form>
 
 <div id="comments"></div>
-
-<script>
-var apiKey = 'AIzaSyAQBu1cc4H9q3Hl69DuQ3qQL2Dz3alf9U8';
-var clientId = '878226395715-63q1bnbaicfc72jue3indjc2l72sbfgv.apps.googleusercontent.com';
-var discoveryDocs = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
-var spreadsheetId = '1eWZkknPJTN9VUDT95g5G4EPNR9kvnlTu2IEHgJuzfHM';
-var range = 'load!A1:B5';
-
-function initClient() {
-  gapi.client.init({
-    apiKey: apiKey,
-    clientId: clientId,
-    discoveryDocs: discoveryDocs,
-    scope: 'https://www.googleapis.com/auth/spreadsheets' // ここにスコープを追加
-  }).then(function () {
-    gapi.auth2.getAuthInstance().isSignedIn.listen(updateSignInStatus);
-    updateSignInStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-  });
-}
-
-function updateSignInStatus(isSignedIn) {
-  if (isSignedIn) {
-    loadSpreadsheet();
-  } else {
-    gapi.auth2.getAuthInstance().signIn();
-  }
-}
-
-function loadSpreadsheet() {
-  gapi.client.sheets.spreadsheets.values.get({
-    spreadsheetId: spreadsheetId,
-    range: range,
-  }).then(function(response) {
-    var result = response.result;
-    var numRows = result.values ? result.values.length : 0;
-    console.log(`${numRows} rows retrieved.`);
-  });
-}
-
-function writeToSpreadsheet(values) {
-  gapi.client.sheets.spreadsheets.values.append({
-    spreadsheetId: spreadsheetId,
-    range: range,
-    valueInputOption: 'RAW',
-    insertDataOption: 'INSERT_ROWS',
-    values: values,
-  }).then(function(response) {
-    var updatedCells = response.result.updates.updatedCells;
-    console.log(`${updatedCells} cells updated.`);
-  });
-}
-
-$("#comment-form").submit(function(e) {
-  e.preventDefault();
-  var username = $("#username").val();
-  var comment = $("#comment").val();
-  var id = $("#id").val();
-  writeToSpreadsheet([[username, comment, id]]);
-});
-
-setInterval(loadSpreadsheet, 1000);
-
-$(document).ready(function() {
-  gapi.load('client:auth2', initClient);
-});
-</script>
 
 <p><a href="../index.html">ホームへ</a></p>
 </body>

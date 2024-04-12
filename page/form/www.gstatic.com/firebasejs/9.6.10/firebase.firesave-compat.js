@@ -1,1 +1,0 @@
-window.isoyasai = `dev1`

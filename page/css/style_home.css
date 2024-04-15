@@ -1,3 +1,5 @@
+@media screen and (max-width:480px) {
+}
 body {
     background-color: black;
     background-image: url(../img/window.jpg);
@@ -252,3 +254,4 @@ h2 {
     max-width: 300px;
 
 }
+

@@ -1,24 +1,13 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <!-- head -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="メインページv1.0">
     <title>Menu Client</title>
-	<link rel="icon" href="./img/icon.png" />
-
-    <!-- モバイルのスタイル -->
-    <style>
-        @media screen and (max-width:480px) {
-        }
-    </style>
-
-    <!-- CSS -->
+    <link rel="icon" href="./img/icon.png">
     <link rel="stylesheet" href="./css/style_home.css">
-
-    <!-- JavaScript -->
-    <script>
+    <script async>
         document.addEventListener('DOMContentLoaded', (event) => {
             var version = '1.0';
             document.getElementById('version').textContent = version;
@@ -26,8 +15,8 @@
     </script>
 </head>
 <body>
-    <br>
     <center>
+        <br>
         <div class="maintitle">
             <h3 class="log">Menu Client</h3>
         </div>
@@ -42,7 +31,6 @@
         </div>
     </div>
 
-    <!-- Menu -->
     <div class="menu">
         <div class="con1">
             <a href="./bookmarklet.html" class="nabi">app<br>ブックマークレット(壁紙)</a>
@@ -55,14 +43,14 @@
 
     <div class="con2">
         <div class="titles">
-            <h2>更新履歴 | 最新更新日：2024/4/12</h2>
+            <h2>更新履歴 | 最新更新日：2024/4/15</h2>
         </div>
         <div id="news">
             <ul>
                 <li>
                     <p class="box2"><a href="">gamesiteを閉鎖します</a><br><span>2024-04-15</span></p>
                 </li>
-				<li>
+                <li>
                     <p class="box2"><a href="">コメント欄のBETA版を解放します</a><br><span>2024-04-12</span></p>
                 </li>
                 <li>
@@ -74,9 +62,10 @@
             <h2>お知らせ</h2>
         </div>
         <div id="page">
-            <ul><li>
-				<p class="box2"><a href="https://github.com/gamelist1990/MenuClient">MenuClientのダウンロードリンクです</a><br><span>2024-04-12</span></p>
-			</li>
+            <ul>
+                <li>
+                    <p class="box2"><a href="https://github.com/gamelist1990/MenuClient">MenuClientのダウンロードリンクです</a><br><span>2024-04-12</span></p>
+                </li>
                 <li>
                     <p class="box2"><a href="../gamelist2023.html">リンクページ</a><br><span>2024-04-10</span></p>
                 </li>
@@ -86,7 +75,6 @@
 
     <hr>
 
-    <!-- Version -->
     <p style="color:black;">改Ver:<span id="version"></span></p>
 </body>
 </html>

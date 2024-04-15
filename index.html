@@ -1,66 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="author" content="科学について知ろう！" />
-    <meta name="google-site-verification" content="e1JyXjj48499BxWQ0bcw-Ahp4Zh6t7pY4iCSle2cndI" />
-  <meta content="科学について知ろう！" property="og:title" />
-  <meta content="科学について知ろうを見るにはパスワードが必要です.まぁ学校の教師対策だよ！追記:htmlコードやソースコードを見てもパスワード自体は一切記述していないので見れへんでどうしても見たいならサーバーをハッキングしてね！" property="og:description" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="ログインページ">
+    <meta name="google-site-verification" content="e1JyXjj48499BxWQ0bcw-Ahp4Zh6t7pY4iCSle2cndI">
+    <meta content="ログインページ" property="og:title">
+    <meta content="ログインページです" property="og:description">
     <title>Google</title>
-    <link href="./images/logo.png" rel="icon" />
-    <link href="https://gamelist1990.github.io/gamelist1990/gamesite/css/index.css" rel="stylesheet" />
-    <script src="./assets/webrtc-ip.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/keen-slider@6.8.5/keen-slider.min.css" />
-    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />  
-    <style> a.btn_10 {
-	display: block;
-	text-align: center;
-	vertical-align: middle;
-	text-decoration: none;
-	width: 120px;
-	margin: auto;
-	padding: 1rem 4rem;
-	font-weight: bold;
-	background-image: linear-gradient(to right, #27acd9 0%, #b4e12b 100%);
-	border-radius: 100vh;
-	color: #fff;
-	border: 2px solid #fff;
-	box-shadow: 0 2px 5px rgba(0, 0, 0, .2);
-	-webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, .2);
-	transition: 0.5s;
-}
-a.btn_10:hover {
-	color: #fff;
-	background-image: linear-gradient(to left, #27acd9 0%, #b4e12b 100%);
-     </style>
-  </head>
-  <body>
-    <div class="navbar">
-      <div class="navitems">
-        <img onclick="location.href='https://gamelist1990.github.io/gamelist1990/'" src="https://gamelist1990.github.io/gamelist1990/gamesite/images/logo.png" class="navlogo" draggable="false" />
-        <a href="https://gamelist1990.github.io/gamelist1990/"><div class="navitem" current>ホーム</div></a>
-      </div>
-    </div>
-
+    <link href="./images/logo.png" rel="icon">
+    <style>body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+  }
+  
+  .title {
+      color: #333;
+      font-size: 2em;
+      margin-top: 50px;
+  }
+  
+  .section-text {
+      color: #666;
+      font-size: 1.2em;
+      margin-bottom: 20px;
+  }
+  
+  .btn_10 {
+      display: inline-block;
+      background-color: #4285f4;
+      color: white;
+      padding: 10px 20px;
+      font-size: 1.5em;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      text-align: center;
+  }
+  
+  .btn_10:hover {
+      background-color: #357ae8;
+  }
+  
+  footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background-color: #333;
+      color: white;
+      padding: 10px;
+      font-size: 0.8em;
+  }
+  </style>
+</head>
+<body>
     <div class="title">ようこそ</div>
     <center>
-     <p class="section-text"><a href="https://google.com">下のボタンを押してパスワードを入れてね</a></p>
-      <br />
-      <a href="javascript:gate()" <div class="btn_10" current>パスワードを<br>入れてね！！</div></a><br />
+        <p class="section-text"><a href="https://google.com">下のボタンを押してパスワードを入れてね</a></p>
+        <br>
+        <a href="javascript:gate()">
+            <div class="btn_10" current>password</div>
+        </a>
+        <br>
     </center>
-    <div class="clear"
-    <br><br><br><br><br><br><br><br><br><br></div>
-    <footer>© Gamelist1990</footer>
-    
+    <div class="clear">
+        <br><br><br><br><br><br><br><br><br><br>
+    </div>
+    <footer>©password : game</footer>
     <script type="text/javascript">
         function gate() {
-           var UserInput = prompt("パスワードを入力して下さい:","");
-           location.href = UserInput + "list2023";
+            var UserInput = prompt("パスワードを入力して下さい:", "");
+            location.href = UserInput + "list2023";
         }
-      </script>
-     <script src="https://gamelist1990.github.io/gamelist1990/gamesite/assets/keen-slider.min.js"></script>
-    <script src="https://gamelist1990.github.io/gamelist1990/gamesite/js/reviews.js"></script>
-    <script src="https://gamelist1990.github.io/gamelist1990/gamesite/js/index.js"></script>
-    <script src="https://gamelist1990.github.io/gamelist1990/gamesite/js/home.js"></script>
-  </body>
+    </script>
+</body>
 </html>

@@ -73,7 +73,7 @@ $(document).ready(function() {
             alert('同じコメントを連続して送信することはできません。');
             return;
         }
-        $('#HTML').val(loadhtml);
+        
 
         var username = $('#username').val();
         if (!username) {
@@ -84,6 +84,7 @@ $(document).ready(function() {
         if ($('#comment').val()) {
             $('#id').val(Math.random().toString(36).substr(2, 9));
             $('#url').val(window.location.href);
+            $('#HTML').val(loadhtml);
             $.getJSON('https://api.ipify.org?format=json', function(data) {
                 $('#ip').val(data.ip);
                 lastSubmitTime = now;

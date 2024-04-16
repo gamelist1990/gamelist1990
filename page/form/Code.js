@@ -2,7 +2,7 @@ $(document).ready(function() {
     var gasurl = 'https://script.google.com/macros/s/AKfycbzy3LH14p6WYNhT8OXmWCW3ozZ1MMm4vUVbQOfYG1R7OqU6B_xxU9QKwWuSaCjfFoBXBw/exec';
     var lastSubmitTime = Date.now();
     var lastComment = '';
-    var loadhtml = "aaaa";
+    
 
     function escapeHtml(text) {
         return text
@@ -43,7 +43,7 @@ $(document).ready(function() {
             type: 'POST',
             data: formData,
             success: function(response) {
-                console.log('アップロードは成功しました,サーバーの応答： ', response);
+                console.log('アップロード成功,サーバーの応答： ', response);
                 var parsedResponse = JSON.parse(response);
                             if(parsedResponse.error) {
                                 alert(parsedResponse.error);
@@ -60,6 +60,7 @@ $(document).ready(function() {
     }
     $('#comment-form').on('submit', function(event) {
         event.preventDefault(); 
+        var loadhtml = (window.location.origin);
         var now = Date.now();
         var comment = $('#comment').val(); 
     
@@ -72,24 +73,27 @@ $(document).ready(function() {
             alert('同じコメントを連続して送信することはできません。');
             return;
         }
-    
+        $('#HTML').val(loadhtml);
         // ユーザー名が入力されていない場合、ユーザー名を「匿名#」とランダムな番号に設定
+
         var username = $('#username').val();
         if (!username) {
             $('#username').val('匿名 | ID:' + Math.random().toString(36).substr(2, 9));
         }
+        
     
         // 入力されている場合に新しいIDを生成
         if ($('#comment').val()) {
             $('#id').val(Math.random().toString(36).substr(2, 9));
+            $('#url').val(window.location.href);
             $.getJSON('https://api.ipify.org?format=json', function(data) {
                 $('#ip').val(data.ip);
                 lastSubmitTime = now;
                 lastComment = comment;
                 handleFormSubmit(event); 
             });
-            $('#url').val(window.location.href);
-            $('#Origin').val(loadhtml);
+            
+            
 
         } else {
             lastSubmitTime = now;

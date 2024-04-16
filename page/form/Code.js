@@ -74,7 +74,6 @@ $(document).ready(function() {
             return;
         }
         $('#HTML').val(loadhtml);
-        // ユーザー名が入力されていない場合、ユーザー名を「匿名#」とランダムな番号に設定
 
         var username = $('#username').val();
         if (!username) {
@@ -82,7 +81,6 @@ $(document).ready(function() {
         }
         
     
-        // 入力されている場合に新しいIDを生成
         if ($('#comment').val()) {
             $('#id').val(Math.random().toString(36).substr(2, 9));
             $('#url').val(window.location.href);
@@ -150,7 +148,7 @@ $(document).ready(function() {
                             'action': action,
                             'id': id,
                             'url': url,
-                            'password': password // パスワードをPOSTデータに追加
+                            'password': password
                         },
                         success: function(response) {
                             console.log('削除成功:', response);

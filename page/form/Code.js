@@ -2,7 +2,6 @@ $(document).ready(function() {
     var gasurl = 'https://script.google.com/macros/s/AKfycbzy3LH14p6WYNhT8OXmWCW3ozZ1MMm4vUVbQOfYG1R7OqU6B_xxU9QKwWuSaCjfFoBXBw/exec';
     var lastSubmitTime = Date.now();
     var lastComment = '';
-    var load = '2024/4/12';
 
     function escapeHtml(text) {
         return text
@@ -44,6 +43,10 @@ $(document).ready(function() {
             data: formData,
             success: function(response) {
                 console.log('アップロードは成功しました,サーバーの応答： ', response);
+                var parsedResponse = JSON.parse(response);
+                            if(parsedResponse.error) {
+                                alert(parsedResponse.error);
+                            }
                 $.ajax({
                     url: gasurl,
                     type: 'GET',
@@ -84,12 +87,14 @@ $(document).ready(function() {
                 lastComment = comment;
                 handleFormSubmit(event); 
             });
+            $('#url').val(window.location.href); // 現在のURLを挿入
         } else {
             lastSubmitTime = now;
             lastComment = comment;
             handleFormSubmit(event); 
         }
     });
+    
     
     
     
@@ -117,37 +122,53 @@ $(document).ready(function() {
     
     $('#comments').on('dblclick', 'p', function() {
         var id = $(this).data('id');
+        var url = (window.location.href);
         var password = getCookie('password');
         if (!password) {
             password = prompt('パスワードを入力してください');
             setCookie('password', password, 7); 
         }
-        if (password === load) { 
-            var confirmation = confirm('本当にこのコメントを削除しますか？');
-            if (confirmation) {
-                $.ajax({
-                    url: gasurl, 
-                    type: 'POST',
-                    data: {
-                        'action': 'delete',
-                        'id': id
-                    },
-                    success: function(response) {
-                        console.log('削除成功:', response);
-                        $.ajax({
-                            url: gasurl, 
-                            type: 'GET',
-                            success: handleSuccess,
-                            error: handleError
-                        });
-                    },
-                    error: handleError
-                });
+        if (password) { 
+            var action = confirm('本当にこのコメントを削除しますか？') ? 'delete' : confirm('パスワードを変更しますか？') ? 'change_password' : null;
+            if (action) {
+                if (action === 'change_password') {
+                    password = prompt('新しいパスワードを入力してください');
+                    setCookie('password', password, 7);
+                    alert('パスワードが変更されました');
+                } else {
+                    $.ajax({
+                        url: gasurl, 
+                        type: 'POST',
+                        data: {
+                            'action': action,
+                            'id': id,
+                            'url': url,
+                            'password': password // パスワードをPOSTデータに追加
+                        },
+                        success: function(response) {
+                            console.log('削除成功:', response);
+                            var parsedResponse = JSON.parse(response);
+                            if(parsedResponse.AccessError) {
+                                alert(parsedResponse.AccessError);
+                            }
+                            $.ajax({
+                                url: gasurl, 
+                                type: 'GET',
+                                success: handleSuccess,
+                                error: handleError
+                            });
+                        },
+                        error: handleError
+                    });
+                }
             }
         } else {
             alert('パスワードが間違っています');
         }
     });
+    
+    
+    
     
 
     setInterval(function() {

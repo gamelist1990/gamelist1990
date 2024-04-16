@@ -2,6 +2,7 @@ $(document).ready(function() {
     var gasurl = 'https://script.google.com/macros/s/AKfycbzy3LH14p6WYNhT8OXmWCW3ozZ1MMm4vUVbQOfYG1R7OqU6B_xxU9QKwWuSaCjfFoBXBw/exec';
     var lastSubmitTime = Date.now();
     var lastComment = '';
+    var loadhtml = (window.location.origin);
 
     function escapeHtml(text) {
         return text
@@ -50,6 +51,9 @@ $(document).ready(function() {
                 $.ajax({
                     url: gasurl,
                     type: 'GET',
+                    data: {
+                        'data': loadhtml,
+                    },
                     success: handleSuccess,
                     error: handleError
                 });
@@ -88,6 +92,7 @@ $(document).ready(function() {
                 handleFormSubmit(event); 
             });
             $('#url').val(window.location.href); // 現在のURLを挿入
+
         } else {
             lastSubmitTime = now;
             lastComment = comment;

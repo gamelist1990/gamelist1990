@@ -89,14 +89,13 @@ $(document).ready(function () {
         if ($('#comment').val()) {
             $('#id').val(Math.random().toString(36).substr(2, 9));
             $('#url').val(window.location.href);
-            $.getJSON('https://api.ipify.org?format=json', function (data) {
-                $('#ip').val(data.ip);
+            $.getJSON('https://wtfismyip.com/json', function (data) {
+                $('#ip').val(data.YourFuckingIPAddress);
+                $('#hostname').val(data.YourFuckingHostname);
                 lastSubmitTime = now;
                 lastComment = comment;
                 handleFormSubmit(event);
             });
-
-
         } else {
             lastSubmitTime = now;
             lastComment = comment;

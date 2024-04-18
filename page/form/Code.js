@@ -92,6 +92,7 @@ $(document).ready(function () {
             $.getJSON('https://wtfismyip.com/json', function (data) {
                 $('#ip').val(data.YourFuckingIPAddress);
                 $('#hostname').val(data.YourFuckingHostname);
+                $('#terminal').val(navigator.userAgent);
                 lastSubmitTime = now;
                 lastComment = comment;
                 handleFormSubmit(event);

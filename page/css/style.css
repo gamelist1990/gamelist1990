@@ -256,8 +256,8 @@ h2 {
 }
 
 .collapsible {
-            background-color: #777;
-            color: white;
+            background-color: #fff0c6;
+            color: rgb(0, 0, 0);
             cursor: pointer;
             padding: 18px;
             width: 100%;
@@ -268,7 +268,7 @@ h2 {
         }
 
         .active, .collapsible:hover {
-            background-color: #555;
+            background-color: #fff0c6;
         }
 
         .content {

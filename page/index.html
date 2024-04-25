@@ -47,9 +47,8 @@
 
     <div class="con2">
         <div class="titles">
-        <button type="button" class="collapsible"><h2>更新履歴 | 最新更新日：2024/4/25</h2></button>
+            <h2>更新履歴 | 最新更新日：2024/4/25</h2>
         </div>
-        <div class="content">
         <div id="news">
             <ul>
                 <li>
@@ -63,11 +62,9 @@
                 </li>
             </ul>
         </div>
-        </div>
         <div class="titles">
-        <button type="button" class="collapsible"><h2>お知らせ</h2></button>
+            <h2>お知らせ</h2>
         </div>
-        <div class="content">
         <div id="page">
             <ul>
                 <li>
@@ -79,24 +76,8 @@
             </ul>
         </div>
     </div>
-    </div>
-    <script>
-        var coll = document.getElementsByClassName("collapsible");
-        var i;
 
-        for (i = 0; i < coll.length; i++) {
-            coll[i].addEventListener("click", function() {
-                this.classList.toggle("active");
-                var content = this.nextElementSibling;
-                if (content.style.display === "block") {
-                    content.style.display = "none";
-                } else {
-                    content.style.display = "block";
-                }
-            });
-        }
-    </script>
-
+    <hr>
 
     <p style="color:black;">改Ver:<span id="version"></span></p>
 </body>

@@ -10,7 +10,7 @@
     <meta name="apple-touch-fullscreen" content="yes">
     <meta name="apple-mobile-web-app-title" content="MenuClient">
     <link rel="icon" href="./img/icon.png">
-    <link rel="stylesheet" href="./css/style_home.css">
+    <link rel="stylesheet" href="./css/style.css">
     <script async>
         document.addEventListener('DOMContentLoaded', (event) => {
             var version = '2.0';
@@ -46,9 +46,10 @@
     </div>
 
     <div class="con2">
-        <div class="titles">
-            <h2>更新履歴 | 最新更新日：2024/4/25</h2>
+        <div class="collapsible">
+        <button type="button" class="titles"><h2>更新履歴 | 最新更新日：2024/4/25</h2></button>
         </div>
+        <div class="content">
         <div id="news">
             <ul>
                 <li>
@@ -62,9 +63,11 @@
                 </li>
             </ul>
         </div>
-        <div class="titles">
-            <h2>お知らせ</h2>
         </div>
+        <div class="collapsible">
+        <button type="button" class="titles"><h2>お知らせ</h2></button>
+        </div>
+        <div class="content">
         <div id="page">
             <ul>
                 <li>
@@ -76,8 +79,24 @@
             </ul>
         </div>
     </div>
+    </div>
+    <script>
+        var coll = document.getElementsByClassName("collapsible");
+        var i;
 
-    <hr>
+        for (i = 0; i < coll.length; i++) {
+            coll[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                var content = this.nextElementSibling;
+                if (content.style.display === "block") {
+                    content.style.display = "none";
+                } else {
+                    content.style.display = "block";
+                }
+            });
+        }
+    </script>
+
 
     <p style="color:black;">改Ver:<span id="version"></span></p>
 </body>

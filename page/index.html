@@ -1,82 +1,118 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="MenuClient| 最終更新日:2024/04/25">
-    <title>Menu Client</title>
-    <link rel="icon" id="appIcon" type="image/png" href="./img/icon.png">       
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-touch-fullscreen" content="yes">
-    <meta name="apple-mobile-web-app-title" content="MenuClient">
-    <link rel="apple-touch-icon" href="./img/icon.png">
-    <link rel="icon" href="./img/icon.png">
-    <link rel="stylesheet" href="./css/style.css">
-    <script async>
-        document.addEventListener('DOMContentLoaded', (event) => {
-            var version = '2.0';
-            document.getElementById('version').textContent = version;
-        });
-    </script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu Client</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <center>
+  <header>
+    <div class="container">
+      <a href="#" class="logo">
+         <p>ℹ️ Menu Client</p>
+      </a>
+      <nav>
+        <ul>
+          <li><a href="./bookmarklet.html"><i class="fas fa-bookmark"></i> Bookmarklet</a></li>
+          <li><a href="https://webapi-8trs.onrender.com/"><i class="fas fa-robot"></i> ChatGPT AIchat</a></li>
+          <li><a href="./mine"><i class="fas fa-gamepad"></i> ゲーム(mine)</a></li>
+          <li><a href="./form"><i class="fas fa-comment-dots"></i> コメント欄(β)</a></li>
+          <li><a href="./game"><i class="fas fa-flag-checkered"></i> ゲーム(slope β)</a></li>
+        </ul>
+      </nav>
+      <div class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
         <br>
-        <div class="maintitle">
-            <h3 class="log">Menu Client</h3>
-        </div>
-    </center>
+        <h1>MenuClient v3.0</h1>
+        <p>Menu Clientはこう君が作成した各サービスへのURLをまとめたページです</p>
+      </div>
+    </section>
 
-    <div class="con0">
-        <div class="subtitle-wrapper">
-            <span class="subtitle">★</span>
-            <div>
-                <h2>開発中</h2>
-            </div>
+    <section class="info section">
+      <div class="container">
+        <h2><i class="fas fa-bullhorn"></i> お知らせ</h2>
+        <div class="card-grid">
+          <article class="card">
+            <div class="icon"><i class="fas fa-download"></i></div>
+            <h3><a href="https://github.com/gamelist1990/MenuClient">MenuClientダウンロード</a></h3>
+            <p class="date">2024-04-12</p>
+            <p>Menu Clientの最新バージョンは、以下のリンクからダウンロードできます。</p>
+          </article>
+
+          <article class="card">
+            <div class="icon"><i class="fas fa-link"></i></div>
+            <h3><a href="../gamelist2023.html">便利なリンク集</a></h3>
+            <p class="date">2024-04-10</p>
+            <p>日々の作業効率アップに繋がる便利なウェブサイトをまとめたリンク集はこちらです。</p>
+          </article>
         </div>
+      </div>
+    </section>
+
+    <section class="updates section">
+      <div class="container">
+        <h2><i class="fas fa-sync"></i> 更新履歴</h2>
+        <div class="card-grid">
+
+          <article class="card">
+            <div class="icon"><i class="fa-brands fa-github"></i></div>
+            <h3><a href="">MenuClientの大幅なUIの更新</a></h3>
+            <p class="date">2024-07-04</p>
+            <p>13:28時点で新MenuClientのUIは完成しました次にもう機能しないファイル等を廃棄します<a href="https://gamelist1990.github.io/gamelist1990">URL</a></p>
+          </article>
+
+          <article class="card">
+            <div class="icon"><i class="fas fa-tools"></i></div>
+            <h3><a href="">MenuCLientをさらに使いやすく改善！</a></h3>
+            <p class="date">2024-07-04</p>
+            <p>お久しぶりです。ここ5ヶ月ほどWebAPI等の開発に注力していましたが、ようやく安定してきたので、次はMenuCLientの更なる改善を進めていきます。</p>
+          </article>
+
+          <article class="card">
+            <div class="icon"><i class="fas fa-comments"></i></div>
+            <h3><a href="">AIchatサービス開始</a></h3>
+            <p class="date">2024-04-25</p>
+            <p>最新AI技術を活用したAIchatサービスを開始しました！WEB APIとしても利用可能です。</p>
+          </article>
+
+          <article class="card">
+            <div class="icon"><i class="fas fa-comments"></i></div>
+            <h3><a href="">コメント欄β版公開</a></h3>
+            <p class="date">2024-04-12</p>
+            <p>ユーザーの皆様からのフィードバックをお待ちしております！コメント欄のベータ版を公開しましたので、ぜひご利用ください。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>改Ver: <span id="version">3.0</span></p>
+      <p>© 2023 Menu Client. All rights reserved.</p>
     </div>
+  </footer>
 
-    <div class="menu">
-        <div class="con1">
-            <a href="./bookmarklet.html" class="nabi">app<br>Bookmarklet</a>
-            <a href="https://webapi-8trs.onrender.com/" class="nabi">ChatGPT<br>AIchat</a>
-            <a href="./mine" class="nabi">ゲーム(mine)<br>Minecraft</a>
-            <a href="./form" class="nabi">BETA<br>コメント欄</a>
-            <a href="./game" class="nabi">ゲーム(slope)<br>Beta版</a>
-        </div>
-    </div>
+  <script>
+    // ハンバーガーメニューの動作
+    const hamburger = document.querySelector('.hamburger');
+    const nav = document.querySelector('nav');
 
-    <div class="con2">
-        <div class="titles">
-            <h2>更新履歴 | 最終更新日：2024/4/25</h2>
-        </div>
-        <div id="news">
-            <ul>
-                <li>
-                    <p class="box2"><a href="">AIchatサービスを開始WEBAPIとして使用できるます</a><br><span>2024-04-25</span></p>
-                </li>
-                <li>
-                    <p class="box2"><a href="">コメント欄のBETA版を解放します</a><br><span>2024-04-12</span></p>
-                </li>
-            </ul>
-        </div>
-        <div class="titles">
-            <h2>お知らせ</h2>
-        </div>
-        <div id="page">
-            <ul>
-                <li>
-                    <p class="box2"><a href="https://github.com/gamelist1990/MenuClient">MenuClientのダウンロードリンクです</a><br><span>2024-04-12</span></p>
-                </li>
-                <li>
-                    <p class="box2"><a href="../gamelist2023.html">リンクページ</a><br><span>2024-04-10</span></p>
-                </li>
-            </ul>
-        </div>
-    </div>
-
-    <hr>
-
-    <p style="color:black;">改Ver:<span id="version"></span></p>
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('active');
+      nav.classList.toggle('active');
+    });
+  </script>
 </body>
 </html>

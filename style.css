@@ -1,262 +1,79 @@
-.ribbon2 {
-  display: inline-block;
-  position: relative;
-  height: 60px;
-  line-height: 60px;
-  text-align: center;
-  padding: 7px 0;
-  font-size: 18px;/*フォントサイズ*/
-  background: #78d0f5;/*背景色*/
-  color: #FFF;/*文字色*/
-  box-sizing: border-box;
-}
+/* style.css */
 
-.ribbon2 h3 {
+body {
+  font-family: sans-serif;
   margin: 0;
-  padding: 0 30px;
-  border-top: dashed 1px #FFF;/*上の破線*/
-  border-bottom: dashed 1px #FFF;/*下の破線*/
-  line-height: 46px;
+  background: linear-gradient(135deg, #f0f0f5, #e0e0e5); /* グラデーション背景 */
+  color: #333;
+  line-height: 1.6;
 }
 
-.ribbon2:before, .ribbon2:after {
-  position: absolute;
-  content: '';
-  width: 0px;
-  height: 0px;
-  z-index: 1;
+header {
+  background: #3498db; /* ヘッダーの背景色 */
+  color: #fff;
+  padding: 1em 0;
+  text-align: center;
 }
 
-.ribbon2:before {
-  /*左端の山形*/
-  top: 0;
-  left: 0;
-  border-width: 30px 0px 30px 15px;
-  border-color: transparent transparent transparent #fff;
-  border-style: solid;
-}
-
-.ribbon2:after {
-  /*右端の山形*/
-  top: 0;
-  right: 0;
-  border-width: 30px 15px 30px 0px;
-  border-color: transparent #fff transparent transparent;
-  border-style: solid;
-}
 h1 {
-  color: #505050;/*文字色*/
-  padding: 0.5em;/*文字周りの余白*/
-  display: inline-block;/*おまじない*/
-  line-height: 1.3;/*行高*/
-  background: #dbebf8;/*背景色*/
-  vertical-align: middle;
-  border-radius: 25px 0px 0px 25px;/*左側の角を丸く*/
-}
-
-h1:before {
-  content: '●';
-  color: white;
-  margin-right: 8px;
-}
-.ribbon7 {
-  display: inline-block;
-  position: relative;
-  padding: 15px 20px;
-  font-size: 18px;/*フォントサイズ*/
-  color: #FFF;/*フォントカラー*/
-  background: #a6d3c8;/*リボンの色*/
-}
-
-.ribbon7:before {
-  position: absolute;
-  content: '';
-  top: 100%;
-  left: 0;
-  border: none;
-  border-bottom: solid 15px transparent;
-  border-right: solid 20px rgb(149, 158, 155);/*折り返し部分*/
-}
-.ribbon4 {
-  display: inline-block;
-  position: relative;
-  height: 60px;/*高さ*/
-  line-height: 60px;/*高さ*/
-  text-align: center;
-  padding: 0 40px 0 18px;/*文字の左右の余白*/
-  font-size: 18px;/*文字サイズ*/
-  background: #ffc668;/*背景色*/
-  color: #FFF;/*文字色*/
-  box-sizing: border-box;
-}
-
-.ribbon4:after {
-  position: absolute;
-  content: '';
-  width: 0px;
-  height: 0px;
-  z-index: 1;
-}
-
-.ribbon4:after {
-  top: 0;
-  right: 0;
-  border-width: 30px 15px 30px 0px;
-  border-color: transparent #fff transparent transparent;
-  border-style: solid;
-}
-.ribbon6 {
-  display: inline-block;
-  position: relative;
-  height: 60px;
-  line-height: 60px;
-  text-align: center;
-  padding: 7px 0;
-  font-size: 18px;
-  background: #acd879;
-  color: #FFF;
-  box-sizing: border-box;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.25);
-}
-
-.ribbon6 h3 {
   margin: 0;
-  padding: 0 30px;
-  border-top: dashed 2px rgba(255, 255, 255, 0.5);
-  border-bottom: dashed 2px rgba(255, 255, 255, 0.5);
-  line-height: 42px;
+  font-size: 2em;
 }
 
-.ribbon6:before, .ribbon6:after {
-  position: absolute;
-  content: '';
-  width: 0px;
-  height: 0px;
-  z-index: 1;
+main {
+  padding: 2em;
 }
 
-.ribbon6:before {
-  top: -2px;
-  left: -2px;
-  border-width: 32px 0px 32px 15px;
-  border-color: transparent transparent transparent #fff;
-  border-style: solid;
+section {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2em;
+  overflow: hidden; /* 疑似要素を含むため */
 }
 
-.ribbon6:after {
-  top: -2px;
-  right: -2px;
-  border-width: 32px 15px 32px 0px;
-  border-color: transparent #fff transparent transparent;
-  border-style: solid;
-}
-.btn-gradient-radius {
-  display: inline-block;
-  padding: 7px 20px;
-  border-radius: 25px;
-  text-decoration: none;
-  color: #FFF;
-  background-image: linear-gradient(45deg, #FFC107 0%, #ff8b5f 100%);
-  transition: .4s;
+h2 {
+  background: #eee;
+  padding: 0.8em 1em;
+  margin: 0;
+  font-size: 1.4em;
+  border-bottom: 1px solid #ddd;
 }
 
-.btn-gradient-radius:hover {
-  background-image: linear-gradient(45deg, #FFC107 0%, #f76a35 100%);
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 1em;
 }
-ul,　ol {
-  background: #fffcf4;
-  border-radius :8px;/*角の丸み*/
-  box-shadow :0px 0px 5px silver;/*5px=影の広がり具合*/
-  padding: 0.5em 0.5em 0.5em 2em;
-}
-ul li, ol li {
-  line-height: 1.5;
+
+li {
   padding: 0.5em 0;
-}
-blockquote {
-    position: relative;
-    padding: 10px 15px 10px 60px;
-    box-sizing: border-box;
-    font-style: italic;
-    background: #f5f5f5;
-    color: #777777;
-    border-left: 4px solid #9dd4ff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.14);
+  border-bottom: 1px solid #eee;
 }
 
-blockquote:before{
-    display: inline-block;
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    content: "\f10d";
-    font-family: FontAwesome;
-    color: #9dd4ff;
-    font-size: 30px;
-    line-height: 1;
-    font-weight: 900;
+li:last-child {
+  border-bottom: none;
 }
 
-blockquote p {
-    padding: 0;
-    margin: 7px 0;
-    line-height: 1.7;
+a {
+  color: #3498db;
+  text-decoration: none;
+  transition: color 0.3s ease;
 }
 
-blockquote cite {
-    display: block;
-    text-align: right;
-    color: #888888;
-    font-size: 0.9em;
+a:hover {
+  color: #2980b9;
 }
-.g1{
-      width:600px;
-    }
-.g2{
-      width:500px;
-    }
-.g3{
-      width:500px;
-    }
-.g4{
-      width:500px;
-    }
-.g2 {
-    padding: 0.5em 1em;
-    margin: 2em 0;
-    font-weight: bold;
-    color: #6091d3;/*文字色*/
-    background: #6091d3;
-    border: solid 3px #6091d3;/*線*/
-    border-radius: 40px;/*角の丸み*/
+
+footer {
+  text-align: center;
+  padding: 1em 0;
+  background: #f5f5f5;
+  font-size: 0.8em;
+  color: #777;
 }
-.g2 p {
-    margin: 0; 
-    padding: 0;
-}
-.g3 {
-    padding: 0.5em 1em;
-    margin: 2em 0;
-    font-weight: bold;
-    color: #673AB7;/*文字色*/
-    background: #92d1ed;
-    border: solid 3px #171723;/*線*/
-    border-radius: 40px;/*角の丸み*/
-}
-.g3 p {
-    margin: 0; 
-    padding: 0;
-}
-.g4 {
-    padding: 0.5em 1em;
-    margin: 2em 0;
-    font-weight: bold;
-    color: #ff9800;/*文字色*/
-    background: #48b65b;
-    border: solid 3px #ff9800;/*線*/
-    border-radius: 40px;/*角の丸み*/
-}
-.g4 p {
-    margin: 0; 
-    padding: 0;
+
+/* アイコンのスタイル */
+i {
+  margin-right: 0.5em;
 }

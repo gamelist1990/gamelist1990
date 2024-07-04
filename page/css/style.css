@@ -1,279 +1,225 @@
-@media screen and (max-width:480px) {
+/* 全体設定 */
+* {
+  box-sizing: border-box;
 }
+
 body {
-    background-color: black;
-    background-image: url(../img/window.jpg);
-    color: white;
+  font-family: 'Arial', sans-serif;
+  color: #333;
+  margin: 0;
+  line-height: 1.6;
+  background-color: #f4f4f4; /* 背景色を薄いグレーに */
+}
+
+a {
+  color: #007bff;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ヘッダー */
+header {
+  background-color: #fff;
+  padding: 15px 0; /* ヘッダーの高さを少し狭く */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 20px; /* ロゴのフォントサイズを少し小さく */
+  font-weight: bold;
+  color: #333;
+}
+
+.logo i {
+  margin-right: 5px;
+}
+
+/* ナビゲーション */
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+nav li {
+  margin-left: 25px; /* ナビゲーションの項目間隔を少し狭く */
+}
+
+nav a {
+  color: #333;
+  transition: color 0.3s ease;
+}
+
+nav a:hover {
+  color: #0056b3;
+}
+
+/* ハンバーガーメニュー */
+.hamburger {
+  display: none; /* デフォルトでは非表示 */
+  cursor: pointer;
+}
+
+.hamburger span {
+  display: block;
+  width: 25px;
+  height: 3px;
+  background-color: #333;
+  margin: 6px 0;
+  transition: all 0.3s ease-in-out;
+}
+
+/* ハンバーガーメニュー展開時 */
+.hamburger.active span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/*  hero  */
+.hero {
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://cdn.pixabay.com/photo/2016/03/03/08/40/banner-1233711_1280.jpg") center/cover no-repeat; 
+  padding: 80px 0; /* heroセクションの高さを少し狭く */
+  color: #fff;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 2.5rem; /* heroの見出しのフォントサイズを少し小さく */
+  margin-bottom: 15px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+/* コンテンツセクション */
+.section {
+  padding: 50px 0; /* セクションのパディングを少し狭く */
+}
+
+.section h2 {
+  font-size: 1.8rem; /* セクションの見出しのフォントサイズを少し小さく */
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.section h2 i {
+  margin-right: 10px;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px; /* カードの間隔を少し狭く */
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 25px; /* カードのパディングを少し狭く */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px); 
+}
+
+.card .icon {
+  font-size: 2.5rem; /* アイコンのサイズを少し小さく */
+  color: #007bff;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.card h3 {
+  color: #333;
+  margin-bottom: 8px;
+  font-size: 1.2rem; /* カードのタイトルのフォントサイズを少し小さく */
+}
+
+.card p {
+  color: #555;
+  line-height: 1.5;
+}
+
+.card .date {
+  font-size: 0.9rem;
+  color: #777;
+  margin-bottom: 15px;
+}
+
+/* フッター */
+footer {
+  background-color: #333;
+  color: #fff;
+  padding: 15px 0; /* フッターの高さを少し狭く */
+  text-align: center;
+}
+
+
+/* スマホ版(768px以下) */
+@media (max-width: 768px) {
+  .hamburger {
+    display: block; /* ハンバーガーメニューを表示 */
+  }
+
+  nav ul {
+    display: none; /* デスクトップ版のナビゲーションを非表示 */
+    flex-direction: column; /* メニュー項目を縦に並べる */
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  nav.active ul {
+    display: flex;
+  }
+
+  nav li {
     margin: 0;
-    padding: 0;
-    font-family: 'Arial', sans-serif;
-}
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+  }
 
-.con0, .titles, .con1, .con2 {
-    max-width: 1080px;
-    margin: auto;
-}
-
-.con0 h1, .con0  {
-    text-align: center;
-    color: black;
-}
-
-
-
-
-.subtitle-wrapper {  
+  nav a {
     display: block;
-    position: relative;
-    margin: 20px 0%;
-    padding: 15px 0;
-    width: 200px;
-    background: #f1f1f1;
-    box-sizing: border-box;
-    }
-  
-  .subtitle {  
-    display: inline-block;
-    position: absolute;
-    top: -6px;
-    right: 10px;
-    margin: 0;
-    padding: 10px 0;
-    z-index: 2;
-    width: 40px;
-    text-align: center;
-    color: white;
-    font-size: 17px;
-    background: linear-gradient(#ff785b 0%, #e95738 100%);
-    border-radius: 2px 0 0 0;
-    }
-  
-  .subtitle:before {
-    position: absolute;
-    content: '';
-    top: 0;
-    right: -6px;
-    border: none;
-    border-bottom: solid 6px #cf4a2d;
-    border-right: solid 6px transparent;
-  }
-  .subtitle:after {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 100%;
-    height: 0;
-    width: 0;
-    border-left: 20px solid #e95738;
-    border-right: 20px solid #e95738;
-    border-bottom: 10px solid transparent;
   }
 
-  .menu {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    background: #d6ebff;
-    box-shadow: 0px 0px 0px 10px #d6ebff;
-    border: dashed 2px white;
-    padding: 0.2em 0.5em;
-    margin: auto; /* 中央揃えにする */
-    max-width: 1080px; /* 最大幅を設定 */
-    width: 100%; /* 画面の幅に合わせて自動調整 */
-    box-sizing: border-box; /* パディングとボーダーを幅に含める */
-}
-
-
-
-.con1 {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    max-width: 1080px; /* 最大幅を設定 */
-    margin: auto; /* 中央揃えにする */
-    width: 100%;
-}
-
-
-.nabi {
-    width: 216px;
-    margin: 10px;
-    text-align: center;
-    font-style: italic;
-    font-size: 15px;
-    color: #a367e7;
-}
-
-.nabi:hover {
-    color: purple;
-}
-
-.titles {
-    position: relative;
-    margin: 2em 0;
-    padding: 15px;
-    background: #fff0c6;
-    border-radius: 30px;
-}
-
-.titles:before, .titles:after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    background: #fff0c6;
-    border-radius: 50%;
-}
-
-.titles:before {
-    left: -38px;
-    width: 13px;
-    height: 12px;
-}
-
-.titles:after {
-    left: -24px;
-    width: 20px;
-    height: 18px;
-}
-
-.con2 {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(540px, 1fr));
-    grid-gap: 20px;
-}
-
-#news, #page {
-    overflow: auto;
-    color: black;
-}
-
-ul {
-    list-style: none;
-    padding: 0;
-}
-
-li {
-    background-repeat: no-repeat;
-    background-position: bottom;
-    background-size: 450px auto;
-    padding: 10px;
-}
-
-h2 {
-    color: black;
-    background-size: cover;
-    margin: auto;
-}
-
-.log {
-    color: black;
-    text-decoration: solid;
-    display: flex;
-    justify-content: center; /* コンテンツを中央揃えに */
-    align-items: center;
-    margin: auto;
-    max-width: 1080px;
-    width: 100%;
-    
-}
-
-
-.maintitle {
-    display: inline-block;
-    position: relative;
-    height: 45px;
-    text-align: center;
-    box-sizing: border-box;
+  /* その他スマホ版スタイル調整 */
+  .hero h1 {
+    font-size: 2rem;
   }
-  
-  .maintitle:before {
-    content: '';
-    position: absolute;
-    width: 10px;
-    bottom: -10px;
-    left: -35px;
-    z-index: -2;
-    border: 20px solid #a5cff3;
-    border-left-color: transparent;
+  .section h2 {
+    font-size: 1.6rem;
   }
-  
-  .maintitle:after {
-    content: '';
-    position: absolute;
-    width: 10px;
-    bottom: -10px;
-    right: -35px;
-    z-index: -2;
-    border: 20px solid #a5cff3;
-    border-right-color: transparent;
-  }
-  
-  .maintitle h3 {
-    display: inline-block;
-    position: relative;
-    margin: 0;
-    padding: 0 20px;
-    line-height: 45px;
-    font-size: 39px;
-    color: #008eff;
-    text-shadow: 0 0 2px #FFF;
-    background: -webkit-repeating-linear-gradient(-45deg, #b0daff, #b0daff 3px,#cfe8ff 3px, #cfe8ff 7px);
-    background: repeating-linear-gradient(-45deg, #b0daff, #b0daff 3px,#cfe8ff 3px, #cfe8ff 7px);
-  }
-  
-  .maintitle h3:before {
-    position: absolute;
-    content: '';
-    top: 100%;
-    left: 0;
-    border: none;
-    border-bottom: solid 10px transparent;
-    border-right: solid 15px #7fafd9;
-  }
-  
-  .maintitle h3:after {
-    position: absolute;
-    content: '';
-    top: 100%;
-    right: 0;
-    border: none;
-    border-bottom: solid 10px transparent;
-    border-left: solid 15px #7fafd9;
-  }
-
-
-  .box2 {
-    padding: 0.5em 1em;
-    margin: 2em 0;
-    font-weight: bold;
-    color: #6091d3;/*文字色*/
-    background: #FFF;
-    border: solid 3px #6091d3;/*線*/
-    border-radius: 10px;/*角の丸み*/
-    max-width: 300px;
-
 }
-
-.collapsible {
-            background-color: #fff0c6;
-            color: rgb(0, 0, 0);
-            cursor: pointer;
-            padding: 18px;
-            width: 100%;
-            border: none;
-            text-align: left;
-            outline: none;
-            font-size: 15px;
-        }
-
-        .active, .collapsible:hover {
-            background-color: #fff0c6;
-        }
-
-        .content {
-            padding: 0 18px;
-            display: none;
-            overflow: hidden;
-            background-color: #f1f1f1;
-        }

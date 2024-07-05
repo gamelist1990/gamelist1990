@@ -1,180 +1,145 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="チャット欄で会話できる掲示板です">
-  <link rel="icon" href="../img/icon.png" />
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-touch-fullscreen" content="yes">
-  <meta name="apple-mobile-web-app-title" content="MenuClient|チャット欄">
-  <link rel="apple-touch-icon" href="../img/icon.png">
-  <title>チャット欄</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      background-color: #f8f8f8;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh; 
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="チャット欄で会話できる掲示板です">
+<link rel="icon" href="../img/icon.png" />
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-touch-fullscreen" content="yes">
+<meta name="apple-mobile-web-app-title" content="MenuClient|チャット欄">
+<link rel="apple-touch-icon" href="../img/icon.png">
+<title>チャット欄</title>
+<style>
+  body {
+    font-family: 'Segoe Rounded', 'Arial Rounded MT Bold', 'Helvetica Rounded', Arial, sans-serif;
+    background-color: #f8f5f2;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+  }
 
-    .container {
-      max-width: 800px;
-      width: 100%;
-      padding: 20px;
-    }
+  h1 {
+    color: #3b5998;
+  }
 
-    h1 {
-      color: #333;
-      text-align: center;
-      margin-bottom: 20px;
-    }
+  #comment-form {
+    background-color: #fff;
+    max-width: 700px;
+    margin: 20px auto;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
 
-    /* フォームスタイル */
-    #comment-form {
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
+  #comment-form label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+    font-weight: 600;
+  }
 
-    #comment-form label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: 600;
-    }
+  #comment-form input[type="text"],
+  #comment-form textarea {
+    display: block;
+    width: 100%;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 16px;
+  }
 
-    #comment-form input[type="text"],
-    #comment-form textarea {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      margin-bottom: 10px;
-      box-sizing: border-box; 
-    }
+  #comment-form textarea {
+    min-height: 120px; 
+    resize: vertical;
+  }
 
-    #comment-form textarea {
-      min-height: 120px; 
-    }
+  #comment-form input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+  }
 
-    #comment-form input[type="submit"] {
-      background-color: #008CBA;
-      color: white;
-      padding: 12px 20px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: background-color 0.3s;
-    }
+  #comment-form input[type="submit"]:hover {
+    background-color: #45a049;
+  }
 
-    #comment-form input[type="submit"]:hover {
-      background-color: #006080; 
-    }
+  #comments {
+    max-width: 700px;
+    margin: 20px auto;
+  }
 
-    /* コメント表示スタイル */
+  .comment {
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .comment:nth-child(even) { 
+    background-color: #f9f9f9; 
+  }
+
+  .comment .username {
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+
+  .comment .timestamp {
+    font-size: 12px;
+    color: #777;
+    margin-bottom: 10px; 
+  }
+  
+  a {
+    color: #3b5998; 
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 700px) { 
+    #comment-form, 
     #comments {
-      margin-top: 20px;
+      max-width: 95%;
     }
-
-    .comment {
-      background-color: #fff;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      margin-bottom: 15px;
-    }
-
-    .comment .user {
-      font-weight: 600;
-      margin-bottom: 5px;
-    }
-
-    .comment .timestamp {
-      font-size: 0.8em;
-      color: #777;
-      margin-bottom: 10px;
-    }
-
-    .comment .message {
-      word-break: break-word; /* 単語の途中で改行 */
-    }
-
-    .comment:nth-child(even) {
-      background-color: #f5f5f5;
-    }
-
-    /* フッター */
-    footer {
-      background-color: #333;
-      color: #fff;
-      text-align: center;
-      padding: 10px 0;
-      position: fixed; 
-      bottom: 0;
-      left: 0;
-      width: 100%;
-    }
-
-    footer a {
-      color: #fff;
-      text-decoration: none;
-    }
-
-    /* ローディングアニメーション */
-    .loading {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 200px; /* 必要に応じて調整 */
-    }
-
-    .loading i {
-      font-size: 48px;
-      color: #008CBA;
-      animation: spin 2s linear infinite;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-  </style>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="Code.js"></script> </head>
+  }
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="Code.js"></script>
+</head>
 <body>
-  <div class="container"> 
-    <h1>コメント欄</h1>
+<h1>コメント欄</h1>
+<p>更新履歴: VPNの検出テスト</p>
+<p>名前の欄には何も入力しない事で匿名としてコメントできます</p>
 
-    <form id="comment-form">
-      <div>
-        <label for="username">ユーザー名 (任意):</label><br>
-        <input type="text" id="username" name="username" placeholder="匿名"> 
-      </div>
-      <div>
-        <label for="comment">コメント:</label><br>
-        <textarea id="comment" name="comment" placeholder="コメントを入力..." required></textarea>
-      </div>
-      <input type="hidden" id="id" name="id" value="">
-      <input type="hidden" id="terminal" name="terminal" value="">
-      <input type="hidden" id="hostname" name="hostname" value="">
-      <input type="hidden" id="url" name="url" value="">
-      <input type="submit" value="コメントを送信">
-    </form>
+<form id="comment-form">
+  <label for="username">ユーザー名:</label>
+  <input type="text" id="username" name="username">
 
-    <div id="comments">
-      <div class="loading">
-        <i class="fas fa-spinner fa-spin"></i>
-      </div> 
-    </div>
-  </div>
-  <footer>
-    <p><a href="../index.html">ホームへ</a></p>
-  </footer> 
+  <label for="comment">コメント:</label>
+  <textarea id="comment" name="comment" required></textarea>
+
+  <input type="hidden" id="id" name="id" value="">
+  <input type="hidden" id="ip" name="ip" value="">
+  <input type="hidden" id="terminal" name="terminal" value="">
+  <input type="hidden" id="hostname" name="hostname" value="">
+  <input type="hidden" id="url" name="url" value="">
+
+  <input type="submit" value="コメントを送信">
+</form>
+
+<div id="comments">只今読み込み中です少しお待ち下さい...</div>
+<p><a href="../index.html">ホームへ</a></p>
 </body>
 </html>

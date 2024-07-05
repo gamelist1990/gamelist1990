@@ -1,0 +1,99 @@
+/* 全体的なスタイル */
+body {
+    font-family: sans-serif;
+    display: flex;
+    flex-direction: column; /* 画面全体を使うように変更 */
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f0f0;
+    margin: 0;
+  }
+  
+  .chat-container {
+    width: 100%;
+    max-width: 700px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* ヘッダーとフッターの線を隠す */
+    margin-bottom: 20px; /* ホームへのリンクとの間隔 */
+  }
+  
+  /* ヘッダー */
+  .chat-header {
+    background-color: #008CBA;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  /* メッセージ表示エリア */
+  .chat-body {
+    padding: 20px;
+    height: 400px;
+    overflow-y: auto;
+  }
+  
+  .message {
+    margin-bottom: 15px;
+  }
+  
+  .message .user {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .message .text {
+    background-color: #f2f2f2;
+    padding: 10px;
+    border-radius: 8px;
+    word-break: break-word;
+  }
+  
+  /* メッセージ入力エリア */
+  .chat-footer {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+  }
+  
+  .chat-footer input[type="text"], 
+  .chat-footer textarea {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+    resize: none; /* テキストエリアのリサイズ不可 */
+  }
+  
+  .chat-footer button {
+    background-color: #008CBA;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .chat-footer button i { /* 送信ボタンのアイコン */
+    margin-right: 5px; 
+  }
+  
+  
+  /* ホームへのリンク */
+  .page-footer { 
+    background-color: #333; 
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed; 
+    bottom: 0;
+    left: 0;
+    width: 100%; 
+  }
+  
+  .page-footer a {
+    color: #fff;
+    text-decoration: none;
+  }

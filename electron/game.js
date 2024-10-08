@@ -1,130 +1,820 @@
-// ZzFX - Zuper Zmall Zound Zynth - Micro Edition
-// MIT License - Copyright 2019 Frank Force
-// https://github.com/KilledByAPixel/ZzFX
+< !DOCTYPE html >
+    <html>
 
-// This is a minified build of zzfx for use in size coding projects.
-// You can use zzfxV to set volume.
-// Feel free to minify it further for your own needs!
+        <head>
+            <title>避け避けゲーム</title>
+            <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <style>
+        /* 共通スタイル */
+                        * {
+                            margin: 0;
+                        padding: 0;
+                        box-sizing: border-box;
+        }
 
-'use strict';
+                        body {
+                            overflow: hidden;
+                        font-family: 'Press Start 2P', cursive;
+                        background-color: #222;
+                        background-image:
+                        url('https://flowerillust.com/img/flower/flower-back1262.jpg');
+                        background-repeat: repeat;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        min-height: 100vh;
+            /* 画面全体を覆う */
+        }
 
-///////////////////////////////////////////////////////////////////////////////
+                        #gameArea {
+                            position: relative;
+                        background-color: #eee;
+                        border-radius: 5px;
+                        overflow: hidden;
+        }
 
-// ZzFXMicro - Zuper Zmall Zound Zynth - v1.3.0 by Frank Force
+                        .block {
+                            background - color: #e74c3c;
+                        position: absolute;
+                        border-radius: 3px;
+                        animation: blockFall 1s linear infinite;
+        }
 
-// ==ClosureCompiler==
-// @compilation_level ADVANCED_OPTIMIZATIONS
-// @output_file_name ZzFXMicro.min.js
-// @js_externs zzfx, zzfxG, zzfxP, zzfxV, zzfxX
-// @language_out ECMASCRIPT_2019
-// ==/ClosureCompiler==
+                        @keyframes blockFall {
 
-const zzfx = (...z) => zzfxP(zzfxG(...z)); // generate and play sound
-const zzfxV = .3;    // volume
-const zzfxR = 44100; // sample rate
-const zzfxX = new AudioContext; // audio context
-const zzfxP = (...samples) =>  // play samples
-{
-    // create buffer and source
-    let buffer = zzfxX.createBuffer(samples.length, samples[0].length, zzfxR),
-        source = zzfxX.createBufferSource();
+                            0 %,
+                            100 % {
+                                transform: translateY(0) rotate(0);
+                            }
 
-    // copy samples to buffer and play
-    samples.map((d, i) => buffer.getChannelData(i).set(d));
-    source.buffer = buffer;
-    source.connect(zzfxX.destination);
-    source.start();
-    return source;
-}
-const zzfxG = // generate samples
-    (
-        // parameters
-        volume = 1, randomness = .05, frequency = 220, attack = 0, sustain = 0,
-        release = .1, shape = 0, shapeCurve = 1, slide = 0, deltaSlide = 0,
-        pitchJump = 0, pitchJumpTime = 0, repeatTime = 0, noise = 0, modulation = 0,
-        bitCrush = 0, delay = 0, sustainVolume = 1, decay = 0, tremolo = 0, filter = 0
-    ) => {
-        // init parameters
-        let PI2 = Math.PI * 2, sign = v => v < 0 ? -1 : 1,
-            startSlide = slide *= 500 * PI2 / zzfxR / zzfxR,
-            startFrequency = frequency *=
-                (1 + randomness * 2 * Math.random() - randomness) * PI2 / zzfxR,
-            b = [], t = 0, tm = 0, i = 0, j = 1, r = 0, c = 0, s = 0, f, length,
-
-            // biquad LP/HP filter
-            quality = 2, w = PI2 * Math.abs(filter) * 2 / zzfxR,
-            cos = Math.cos(w), alpha = Math.sin(w) / 2 / quality,
-            a0 = 1 + alpha, a1 = -2 * cos / a0, a2 = (1 - alpha) / a0,
-            b0 = (1 + sign(filter) * cos) / 2 / a0,
-            b1 = -(sign(filter) + cos) / a0, b2 = b0,
-            x2 = 0, x1 = 0, y2 = 0, y1 = 0;
-
-        // scale by sample rate
-        attack = attack * zzfxR + 9; // minimum attack to prevent pop
-        decay *= zzfxR;
-        sustain *= zzfxR;
-        release *= zzfxR;
-        delay *= zzfxR;
-        deltaSlide *= 500 * PI2 / zzfxR ** 3;
-        modulation *= PI2 / zzfxR;
-        pitchJump *= PI2 / zzfxR;
-        pitchJumpTime *= zzfxR;
-        repeatTime = repeatTime * zzfxR | 0;
-        volume *= zzfxV;
-
-        // generate waveform
-        for (length = attack + decay + sustain + release + delay | 0;
-            i < length; b[i++] = s * volume)               // sample
-        {
-            if (!(++c % (bitCrush * 100 | 0)))                   // bit crush
-            {
-                s = shape ? shape > 1 ? shape > 2 ? shape > 3 ?      // wave shape
-                    Math.sin(t * t) :                        // 4 noise
-                    Math.max(Math.min(Math.tan(t), 1), -1) :  // 3 tan
-                    1 - (2 * t / PI2 % 2 + 2) % 2 :                     // 2 saw
-                    1 - 4 * Math.abs(Math.round(t / PI2) - t / PI2) : // 1 triangle
-                    Math.sin(t);                           // 0 sin
-
-                s = (repeatTime ?
-                    1 - tremolo + tremolo * Math.sin(PI2 * i / repeatTime) // tremolo
-                    : 1) *
-                    sign(s) * (Math.abs(s) ** shapeCurve) *      // curve
-                    (i < attack ? i / attack :                 // attack
-                        i < attack + decay ?                     // decay
-                            1 - ((i - attack) / decay) * (1 - sustainVolume) : // decay falloff
-                            i < attack + decay + sustain ?          // sustain
-                                sustainVolume :                          // sustain volume
-                                i < length - delay ?                     // release
-                                    (length - i - delay) / release *           // release falloff
-                                    sustainVolume :                          // release volume
-                                    0);                                      // post release
-
-                s = delay ? s / 2 + (delay > i ? 0 :           // delay
-                    (i < length - delay ? 1 : (length - i) / delay) * // release delay 
-                    b[i - delay | 0] / 2 / volume) : s;              // sample delay
-
-                if (filter)                                   // apply filter
-                    s = y1 = b2 * x2 + b1 * (x2 = x1) + b0 * (x1 = s) - a2 * y2 - a1 * (y2 = y1);
-            }
-
-            f = (frequency += slide += deltaSlide) *// frequency
-                Math.cos(modulation * tm++);          // modulation
-            t += f + f * noise * Math.sin(i ** 5);        // noise
-
-            if (j && ++j > pitchJumpTime)           // pitch jump
-            {
-                frequency += pitchJump;             // apply pitch jump
-                startFrequency += pitchJump;        // also apply to start
-                j = 0;                              // stop pitch jump time
-            }
-
-            if (repeatTime && !(++r % repeatTime))  // repeat
-            {
-                frequency = startFrequency;         // reset frequency
-                slide = startSlide;                 // reset slide
-                j = j || 1;                         // reset pitch jump time
+            50% {
+                            transform: translateY(-5px) rotate(5deg);
             }
         }
 
-        return b;
-    }
+                        #player {
+                            background - color: #3498db;
+                        position: absolute;
+                        bottom: 10px;
+                        border-radius: 5px;
+                        transition: transform 0.1s ease;
+        }
+
+                        .screen {
+                            position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background-color: rgba(0, 0, 0, 0.7);
+                        color: white;
+                        display: none;
+                        justify-content: center;
+                        align-items: center;
+                        flex-direction: column;
+                        text-align: center;
+                        transition: opacity 0.5s ease;
+                        opacity: 0;
+                        z-index: 10;
+        }
+
+                        .screen.show {
+                            opacity: 1;
+                        display: flex;
+        }
+
+                        #startScreen button,
+                        #resultScreen button {
+                            padding: 15px 30px;
+                        margin-top: 30px;
+                        background-color: #2ecc71;
+                        border: none;
+                        color: white;
+                        text-align: center;
+                        text-decoration: none;
+                        display: inline-block;
+                        cursor: pointer;
+                        border-radius: 5px;
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                        transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+
+                        #startScreen button:hover,
+                        #resultScreen button:hover {
+                            background - color: #27ae60;
+                        transform: translateY(-2px);
+        }
+
+                        #scoreContainer {
+                            position: absolute;
+                        top: 10px;
+                        left: 10px;
+                        color: white;
+        }
+
+                        #waveContainer {
+                            position: absolute;
+                        top: 10px;
+                        right: 10px;
+                        color: white;
+        }
+
+                        /* レスポンシブデザイン */
+                        @media (max-width: 768px) {
+
+                            /* スマホ */
+                            #gameArea {
+                            width: 95vw;
+                        height: 60vh;
+            }
+
+                        .block {
+                            width: 30px;
+                        height: 30px;
+            }
+
+                        #player {
+                            width: 60px;
+                        height: 10px;
+            }
+
+            /* ... その他のスマホ用スタイル */
+        }
+
+                        @media (min-width: 768px) {
+
+                            /* PC */
+                            #gameArea {
+                            width: 800px;
+                        height: 600px;
+            }
+
+                        .block {
+                            width: 50px;
+                        height: 50px;
+            }
+
+                        #player {
+                            width: 100px;
+                        height: 15px;
+            }
+
+            /* ... その他のPC用スタイル */
+        }
+
+
+                        .event-background {
+                            animation: eventBackground 1s linear infinite;
+        }
+
+                        @keyframes eventBackground {
+                            0 % {
+                                background- color: #eee;
+            }
+
+                        50% {
+                            background - color: #f0f0f0;
+            }
+
+                        100% {
+                            background - color: #eee;
+            }
+        }
+
+                        .fast-block {
+                            background - color: #9b59b6;
+                        animation: fastBlockFall 0.5s linear infinite;
+        }
+
+                        @keyframes fastBlockFall {
+
+                            0 %,
+                            100 % {
+                                transform: translateY(0) rotate(0);
+                            }
+
+            50% {
+                            transform: translateY(-10px) rotate(10deg);
+            }
+        }
+
+                        .slow-block {
+                            background - color: #2980b9;
+                        animation: slowBlockFall 2s linear infinite;
+        }
+
+                        @keyframes slowBlockFall {
+
+                            0 %,
+                            100 % {
+                                transform: translateY(0) rotate(0);
+                            }
+
+            50% {
+                            transform: translateY(-2px) rotate(2deg);
+            }
+        }
+
+                        .barrier {
+                            box - shadow: 0 0 10px 5px #ffff00;
+        }
+
+                        .bonus-block {
+                            /* オレンジ色のバリア付与ブロック */
+                            background - color: #ff9f43;
+                        animation: bonusBlockPulse 1s linear infinite;
+        }
+
+                        @keyframes bonusBlockPulse {
+                            0 % {
+                                transform: scale(1);
+                            }
+
+            50% {
+                            transform: scale(1.1);
+            }
+
+                        100% {
+                            transform: scale(1);
+            }
+        }
+                    </style>
+                </head>
+
+                <body>
+                    <div id="gameArea">
+                        <div id="scoreContainer" style="color:black">スコア: <span id="score">0</span></div>
+                        <div id="waveContainer" style="color:black">Wave: <span id="wave">1</span></div>
+                        <div id="player"></div>
+                        <div id="startScreen" class="screen show">
+                            <h1>避け避けゲームv1</h1>
+                            <button id="startGame">ゲームスタート</button>
+                        </div>
+                        <div id="resultScreen" class="screen">
+                            <h2>ゲームオーバー！</h2>
+                            <p>スコア: <span id="finalScore"></span></p>
+                            <p>ハイスコア: <span id="highScore"></span></p>
+                            <button id="restartGame">再挑戦</button>
+                            <button id="resetHighScore">ハイスコアをリセット</button>
+                        </div>
+                    </div>
+
+                    <script>
+                        const gameModule = (function () {
+            const gameArea = document.getElementById('gameArea');
+                        const player = document.getElementById('player');
+                        const startScreen = document.getElementById('startScreen');
+                        const resultScreen = document.getElementById('resultScreen');
+                        const finalScoreElement = document.getElementById('finalScore');
+                        const highScoreElement = document.getElementById('highScore');
+                        const scoreElement = document.getElementById('score');
+                        const waveElement = document.getElementById('wave');
+                        const startGameButton = document.getElementById('startGame');
+                        const restartGameButton = document.getElementById('restartGame');
+                        const resetHighScoreButton = document.getElementById('resetHighScore');
+
+
+                        let playerX;
+                        let score = 0;
+                        let wave = 1;
+                        let highScore = localStorage.getItem('highScore') || 0;
+                        let blockSpeed = 5;
+                        let blocks = [];
+                        let maxBlocks = 1;
+                        let startTime;
+                        let waveDuration = 10000;
+                        let gameOver = false;
+                        let isEventActive = false;
+                        let hasBarrier = false;
+                        let audioContext;
+                        let isBonusEventActive = false;
+                        let bonusEventStartTime;
+                        let bonusEventDuration = 5000;
+                        let pastScores = [];
+                        const maxPastScores = 5;
+                        let baseEventProbability = 0.2;
+                        let baseBarrierProbability = 0.05;
+                        let baseBonusEventProbability = 0.005;
+                        let bonusEventProbability = baseBonusEventProbability;
+                        let losingStreak = 0;
+                        let eventProbabilityIncreaseFactor = 0.1; // 難易度調整の増加率
+                        let barrierProbabilityIncreaseFactor = 0.05;
+                        let bonusEventProbabilityIncreaseFactor = 0.0025;
+                        let devlog = true;
+
+
+
+                        const soundSettings = {
+                            start: {
+                            notes: [[880, 0.1, 'sine'], [1174.66, 0.1, 'sine'], [1318.51, 0.1, 'sine']],  // ドミソの和音
+                        gain: 0.5
+                },
+                        gameOver: {
+                            frequency: 220,
+                        duration: 1,
+                        type: 'triangle', // 少し寂しい雰囲気
+                        gain: 0.4,
+                        decay: 0.5 // 徐々に音量を下げる
+                },
+                        waveUp: {
+                            frequency: 440,
+                        duration: 0.1,
+                        type: 'square', // キリッとした音
+                        gain: 0.3
+                },
+                        barrierGrant: {
+                            frequency: 1760,
+                        duration: 0.1,
+                        type: 'sine',
+                        gain: 0.2, // 優しい音
+                        tremolo: 10 // トレモロ効果でキラキラ感
+                },
+                        barrierBreak: {
+                            frequency: 110, duration: 0.5, type: 'sawtooth', gain: 0.5, // 壊れる音
+                        decay: 0.3, // 徐々に音量を下げる
+                        distortion: 0.2 // 歪みを加える
+                },
+                        scoreUp10: {
+                            notes: [[440, 0.05], [523.25, 0.05], [659.25, 0.05]],  // 短い上昇音
+                        gain: 0.2
+                },
+                        bonusGet: {
+                            frequency: 1760,
+                        duration: 0.2,
+                        type: 'sine',
+                        gain: 0.3,
+                        tremolo: 8 // キラキラ感
+                },
+                        eventStart: {
+                            notes: [[261.63, 0.1], [329.63, 0.1], [392.00, 0.1]],  // イベント開始を知らせる音
+                        gain: 0.4
+                },
+                        bonusEventStart: {
+                            notes: [[783.99, 0.1], [659.25, 0.1], [554.37, 0.1], [440.00, 0.1]],
+                        gain: 0.5
+                }
+            };
+
+
+                        function playSound(name) {
+                if (!audioContext) {
+                            audioContext = new AudioContext();
+                } else if (audioContext.state === 'suspended') {
+                            audioContext.resume();
+                }
+
+                        const settings = soundSettings[name];
+                        if (!settings) {
+                            console.warn(`Sound '${name}' not found.`);
+                        return;
+                }
+
+                        if (settings.notes) {
+                            let startTime = audioContext.currentTime;
+                    settings.notes.forEach(([frequency, duration, type]) => { // typeも受け取る
+                        const oscillator = audioContext.createOscillator();
+                        const gainNode = audioContext.createGain();
+
+                        oscillator.type = type || settings.type || 'sine'; // 個別、全体、デフォルトの順でtypeを設定
+                        oscillator.frequency.value = frequency;
+                        gainNode.gain.setValueAtTime(settings.gain || 0.2, startTime);
+                        gainNode.gain.linearRampToValueAtTime(0, startTime + duration);
+
+
+                        // トレモロ効果
+                        if (settings.tremolo) {
+                            const tremolo = audioContext.createOscillator();
+                        const tremoloGain = audioContext.createGain();
+                        tremolo.frequency.value = settings.tremolo;
+                        tremoloGain.gain.value = settings.gain / 2;
+                        tremolo.connect(tremoloGain);
+                        tremoloGain.connect(gainNode.gain);
+                        tremolo.start(startTime);
+                        tremolo.stop(startTime + duration);
+                        }
+
+
+                        oscillator.connect(gainNode);
+                        gainNode.connect(audioContext.destination);
+                        oscillator.start(startTime);
+                        oscillator.stop(startTime + duration);
+
+
+                        startTime += duration;
+                    });
+                } else {
+                    const oscillator = audioContext.createOscillator();
+                        const gainNode = audioContext.createGain();
+
+                        oscillator.type = settings.type;
+                        oscillator.frequency.value = settings.frequency;
+
+
+                        gainNode.gain.setValueAtTime(settings.gain || 0.2, audioContext.currentTime);
+
+
+                        if (settings.decay) {
+                            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + settings.decay);
+                    }
+
+                        // トレモロ効果
+                        if (settings.tremolo) {
+                        const tremolo = audioContext.createOscillator();
+                        const tremoloGain = audioContext.createGain();
+                        tremolo.frequency.value = settings.tremolo;
+                        tremoloGain.gain.value = settings.gain / 2;
+                        tremolo.connect(tremoloGain);
+                        tremoloGain.connect(gainNode.gain);
+                        tremolo.start();
+                        tremolo.stop(audioContext.currentTime + settings.duration);
+                    }
+
+
+                        // 歪み効果
+                        if (settings.distortion) {
+                        const distortion = audioContext.createWaveShaper();
+                        distortion.curve = makeDistortionCurve(settings.distortion * 400);
+                        oscillator.connect(distortion);
+                        distortion.connect(gainNode);
+                    } else {
+                            oscillator.connect(gainNode);
+                    }
+
+                        gainNode.connect(audioContext.destination);
+
+                        oscillator.start();
+                        oscillator.stop(audioContext.currentTime + settings.duration);
+                }
+            }
+
+
+                        function makeDistortionCurve(amount) {
+                            let k = typeof amount === 'number' ? amount : 50,
+                        n_samples = 44100,
+                        curve = new Float32Array(n_samples),
+                        deg = Math.PI / 180,
+                        i = 0,
+                        x;
+                        for (; i < n_samples; ++i) {
+                            x = i * 2 / n_samples - 1;
+                        curve[i] = (3 + k) * x * 20 * deg / (Math.PI + k * Math.abs(x));
+                }
+                        return curve;
+            }
+
+
+
+
+
+
+                        function initGame() {
+                            playerX = (gameArea.offsetWidth - player.offsetWidth) / 2;
+                        score = 0;
+                        wave = 1;
+                        blockSpeed = 5;
+                        gameOver = false;
+                        isEventActive = false;
+                        hasBarrier = false;
+                        isBonusEventActive = false;
+                        scoreElement.textContent = score;
+                        waveElement.textContent = wave;
+                        player.style.transform = `translateX(${playerX}px)`;
+                        gameArea.classList.remove('event-background');
+                        player.classList.remove('barrier');
+
+                blocks.forEach(block => block.remove());
+                        blocks = [];
+
+                        maxBlocks = 1;
+                        for (let i = 0; i < maxBlocks; i++) {
+                            createBlock();
+                }
+
+                        startTime = Date.now();
+            }
+
+                        function createBlock() {
+                const block = document.createElement('div');
+                        block.classList.add('block');
+
+                        if (isBonusEventActive) {
+                    if (Math.random() < 0.5) {
+                            block.classList.add('bonus-block');
+                    }
+                } else if (isEventActive) {
+                    const eventTypes = ['fast', 'slow'];
+                        const eventType = eventTypes[Math.floor(Math.random() * eventTypes.length)];
+                        block.classList.add(`${eventType}-block`);
+                }
+
+
+                        resetBlockPosition(block);
+                        gameArea.appendChild(block);
+                        blocks.push(block);
+            }
+
+
+                        function moveBlocks() {
+                            blocks.forEach((block) => {
+                                let blockY = block.offsetTop + (block.classList.contains('fast-block') ? blockSpeed * 2 : (block.classList.contains('slow-block') ? blockSpeed * 0.5 : blockSpeed));
+                                block.style.top = blockY + 'px';
+
+                                if (blockY > gameArea.clientHeight - block.offsetHeight) {
+                                    resetBlockPosition(block);
+                                    updateScore(score + 1);
+                                }
+
+                                if (checkCollision(block)) {
+                                    gameOver = true;
+                                    playSound('gameOver');
+                                    showResult();
+                                    return;
+                                }
+                            });
+            }
+
+                        function resetBlockPosition(block) {
+                const maxX = gameArea.offsetWidth - block.offsetWidth; // ブロックが配置可能な最大X座標
+                        const x = Math.floor(Math.random() * maxX); // 0 から maxX までのランダムな値
+                        block.style.left = x + 'px';
+                        block.style.top = -block.offsetHeight + 'px';
+
+
+                        if (!isEventActive) {
+                            block.classList.remove('fast-block', 'slow-block');
+                }
+            }
+
+
+                        function nextWave() {
+                            wave++;
+                        waveElement.textContent = wave;
+                        blockSpeed *= 1.1;
+                        maxBlocks = Math.min(wave, 5);
+
+                        let eventProbability = baseEventProbability;
+                        let barrierProbability = baseBarrierProbability;
+                        let bonusEventProbability = baseBonusEventProbability;
+
+                        if (pastScores.length === maxPastScores) {
+                    const latestScore = pastScores[pastScores.length - 1];
+                    const averageScore = pastScores.reduce((sum, score) => sum + score, 0) / pastScores.length;
+
+                        if (latestScore < averageScore * 0.9 || latestScore < pastScores[0] * 1.1) {
+                            eventProbability += 0.3;
+                        barrierProbability += 0.15;
+                        bonusEventProbability += 0.005;
+                    }
+                }
+
+                        eventProbability = Math.min(0.8, eventProbability);
+                        barrierProbability = Math.min(0.3, barrierProbability);
+                        bonusEventProbability = Math.min(0.05, bonusEventProbability);
+
+                        if (devlog) {
+                            console.log(`Wave ${wave}: Event Probability = ${eventProbability.toFixed(2)}, Barrier Probability = ${barrierProbability.toFixed(2)}, Bonus Probability = ${bonusEventProbability.toFixed(2)}`);
+                }
+
+                        if (Math.random() < eventProbability) {
+                            startEvent();
+                }
+
+                        if (Math.random() < barrierProbability && !hasBarrier) {
+                            grantBarrier();
+                }
+
+                        while (blocks.length < maxBlocks) {
+                            createBlock();
+                }
+                        playSound('waveUp');
+            }
+
+
+
+                        function checkCollision(block) {
+                const playerRect = player.getBoundingClientRect();
+                        const blockRect = block.getBoundingClientRect();
+
+                        if (
+                    playerRect.bottom > blockRect.top &&
+                    playerRect.right > blockRect.left &&
+                        playerRect.left < blockRect.right &&
+                        playerRect.top < blockRect.bottom
+                ) {
+                    if (block.classList.contains('bonus-block')) {
+                            playSound('bonusGet');
+                        grantBarrier();
+
+                        block.remove();
+                        blocks = blocks.filter(b => b !== block);
+
+                        return false;
+                    } else if (hasBarrier) {
+                            hasBarrier = false;
+                        player.classList.remove('barrier');
+                        playSound('barrierBreak');
+
+                        block.remove();
+                        blocks = blocks.filter(b => b !== block);
+
+                        return false;
+                    } else {
+                        return true;
+                    }
+                } else {
+                    return false;
+                }
+            }
+
+
+
+                        function movePlayer(event) {
+                if (event.key === 'a' && playerX > 0) {
+                            playerX -= 20;
+                } else if (event.key === 'd' && playerX < gameArea.clientWidth - player.offsetWidth) {
+                            playerX += 20;
+                }
+                        player.style.transform = `translateX(${playerX}px)`;
+            }
+
+
+                        function handleTouchStart(event) {
+                const touchX = event.touches[0].clientX;
+                        const gameAreaRect = gameArea.getBoundingClientRect();
+
+                        playerX = touchX - gameAreaRect.left - player.offsetLeft;
+
+
+                        if (playerX < 0) {
+                            playerX = 0;
+                } else if (playerX > gameArea.clientWidth - player.offsetWidth) {
+                            playerX = gameArea.clientWidth - player.offsetWidth;
+                }
+
+                        player.style.transform = `translateX(${playerX}px)`;
+            }
+
+                        function handleTouchMove(event) {
+                const touchX = event.touches[0].clientX;
+                        const gameAreaRect = gameArea.getBoundingClientRect();
+
+                        playerX = touchX - gameAreaRect.left - player.offsetLeft;
+
+                        if (playerX < 0) {
+                            playerX = 0;
+                } else if (playerX > gameArea.clientWidth - player.offsetWidth) {
+                            playerX = gameArea.clientWidth - player.offsetWidth;
+                }
+
+                        player.style.transform = `translateX(${playerX}px)`;
+            }
+
+
+                        function updateScore(newScore) {
+                            score = newScore;
+                        scoreElement.textContent = score;
+
+                if (score % 10 === 0 && score > 0) {
+                            playSound('scoreUp10');
+                }
+
+                        if (Math.random() < bonusEventProbability && !isBonusEventActive && !isEventActive) {
+                            startBonusEvent();
+                }
+
+                        // スコアを保存
+                        pastScores.push(newScore);
+                if (pastScores.length > maxPastScores) {
+                            pastScores.shift(); // 古いスコアを削除
+                }
+            }
+
+
+                        function showResult() {
+                if (score > highScore) {
+                            highScore = score;
+                        localStorage.setItem('highScore', highScore);
+                }
+                        finalScoreElement.textContent = score;
+                        highScoreElement.textContent = highScore;
+
+                        resultScreen.classList.add('show');
+            }
+
+
+                        function resetHighScore() {
+                            localStorage.removeItem('highScore');
+                        highScore = 0;
+                        highScoreElement.textContent = highScore;
+            }
+
+                        function startGame() {
+                            startScreen.classList.remove('show');
+                        playSound('start');
+                        initGame();
+                        gameLoop();
+            }
+
+                        function restartGame() {
+                            resultScreen.classList.remove('show');
+                        playSound('start');
+                        initGame();
+                        gameLoop();
+            }
+
+
+                        function startEvent() {
+                            isEventActive = true;
+                        gameArea.classList.add('event-background');
+                        playSound('eventStart');
+
+                        bonusBlockProbability = 0.2;
+
+                setTimeout(() => {
+                            isEventActive = false;
+                        gameArea.classList.remove('event-background');
+                        bonusBlockProbability = 0;
+                }, 5000);
+            }
+
+
+                        function grantBarrier() {
+                            hasBarrier = true;
+                        player.classList.add('barrier');
+                        playSound('barrierGrant');
+            }
+
+
+                        function gameLoop() {
+                if (!gameOver) {
+                            moveBlocks();
+
+                        const elapsedTime = Date.now() - startTime;
+                    if (elapsedTime >= waveDuration) {
+                            nextWave();
+                        startTime = Date.now();
+                    }
+
+
+                        if (Math.random() < bonusEventProbability && !isBonusEventActive && !isEventActive) { // bonusEventProbabilityを使用
+                            startBonusEvent();
+                    }
+
+                        setTimeout(gameLoop, 30);
+                }
+            }
+
+
+
+                        function startBonusEvent() {
+                            isBonusEventActive = true;
+                        bonusEventStartTime = Date.now();
+                        playSound('bonusEventStart');
+
+
+                        gameArea.classList.add('event-background');
+
+
+                setTimeout(() => {
+                            isBonusEventActive = false;
+                        gameArea.classList.remove('event-background');
+                }, bonusEventDuration);
+            }
+
+
+
+
+                        startGameButton.addEventListener('click', startGame);
+                        startGameButton.addEventListener('touchstart', startGame);
+
+                        restartGameButton.addEventListener('click', restartGame);
+                        restartGameButton.addEventListener('touchstart', restartGame);
+
+                        resetHighScoreButton.addEventListener('click', resetHighScore);
+                        resetHighScoreButton.addEventListener('touchstart', resetHighScore);
+
+
+                        gameArea.addEventListener('touchstart', handleTouchStart);
+                        gameArea.addEventListener('touchmove', handleTouchMove);
+
+
+                        document.addEventListener('keydown', movePlayer);
+
+
+
+
+                        return {
+                            init: function () {
+                            highScoreElement.textContent = highScore;
+                        startScreen.classList.add('show');
+                }
+            };
+        })();
+
+                        gameModule.init();
+
+                    </script>
+                </body>
+
+            </html>

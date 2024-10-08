@@ -13,12 +13,21 @@
             box-sizing: border-box;
         }
 
+        .bullet {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #2ecc71;
+            /* 弾の色 (例: 緑) */
+            border-radius: 50%;
+            /* 円形にする */
+        }
+
         body {
             overflow: hidden;
             font-family: 'Press Start 2P', cursive;
             background-color: #222;
-            background-image:
-                url('https://flowerillust.com/img/flower/flower-back1262.jpg');
+            background-image: url('https://flowerillust.com/img/flower/flower-back1262.jpg');
             background-repeat: repeat;
             display: flex;
             justify-content: center;
@@ -59,7 +68,6 @@
             bottom: 10px;
             border-radius: 5px;
             transition: transform 0.1s ease;
-            /* transformプロパティのアニメーション */
         }
 
         .screen {
@@ -121,8 +129,10 @@
             color: white;
         }
 
-        /* スマホ用スタイル (画面幅が768px以下の場合) */
+        /* レスポンシブデザイン */
         @media (max-width: 768px) {
+
+            /* スマホ */
             #gameArea {
                 width: 95vw;
                 height: 60vh;
@@ -138,54 +148,31 @@
                 height: 10px;
             }
 
-            #startScreen button,
-            #resultScreen button {
-                font-size: 0.8em;
-            }
-
-            #scoreContainer,
-            #waveContainer {
-                font-size: 1em;
-            }
+            /* ... その他のスマホ用スタイル */
         }
 
-        /* PC用スタイル (画面幅が768pxより大きい場合) */
         @media (min-width: 768px) {
+
+            /* PC */
             #gameArea {
                 width: 800px;
-                /* 幅を大きく */
                 height: 600px;
-                /* 高さを大きく */
             }
 
             .block {
                 width: 50px;
-                /* ブロックの幅を大きく */
                 height: 50px;
-                /* ブロックの高さを大きく */
             }
 
             #player {
                 width: 100px;
-                /* プレイヤーの幅を大きく */
                 height: 15px;
-                /* プレイヤーの高さを少し大きく */
             }
 
-            #startScreen button,
-            #resultScreen button {
-                font-size: 1.2em;
-                /* ボタンのフォントサイズを大きく */
-            }
-
-            #scoreContainer,
-            #waveContainer {
-                font-size: 1.5em;
-                /* スコアとウェーブのフォントサイズを大きく */
-            }
+            /* ... その他のPC用スタイル */
         }
 
-        /* イベント発生時の背景色 */
+
         .event-background {
             animation: eventBackground 1s linear infinite;
         }
@@ -204,7 +191,6 @@
             }
         }
 
-        /* 高速ブロック */
         .fast-block {
             background-color: #9b59b6;
             animation: fastBlockFall 0.5s linear infinite;
@@ -222,7 +208,6 @@
             }
         }
 
-        /* 低速ブロック */
         .slow-block {
             background-color: #2980b9;
             animation: slowBlockFall 2s linear infinite;
@@ -240,11 +225,41 @@
             }
         }
 
-        /* バリア */
         .barrier {
             box-shadow: 0 0 10px 5px #ffff00;
-            /* バリアの見た目を設定 (例: 黄色い光) */
         }
+
+        .bonus-block {
+            /* オレンジ色のバリア付与ブロック */
+            background-color: #ff9f43;
+            animation: bonusBlockPulse 1s linear infinite;
+        }
+
+        @keyframes bonusBlockPulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        #ammoContainer {
+  position: absolute;
+  top: 10px; /* 上端から 10px の位置に配置 */
+  left: 50%;
+  transform: translateX(-50%); /* 水平方向に中央寄せ */
+  color: white;
+  font-size: 16px;
+  background-color: rgba(128, 128, 128, 0.5);
+  padding: 5px 10px;
+  border-radius: 5px;
+}
     </style>
 </head>
 
@@ -253,8 +268,18 @@
         <div id="scoreContainer" style="color:black">スコア: <span id="score">0</span></div>
         <div id="waveContainer" style="color:black">Wave: <span id="wave">1</span></div>
         <div id="player"></div>
+        <div id="ammoContainer">弾数: <span id="ammo">100</span></div>
         <div id="startScreen" class="screen show">
             <h1>避け避けゲームv1</h1>
+            <p><b>遊び方:</b></p>
+            <ul>
+                <li>PC: AキーとDキーで左右に移動</li>
+                <li>スマホ: 画面左右をタッチして移動</li>
+                <li>PC: Rキー、スマホ: 画面上部タップで弾丸発射！</li>
+                <li>ブロックに当たるとゲームオーバー！</li>
+                <li>バリア獲得でブロック1つを無効化！</li>
+                <li>弾丸はブロックに当たると消滅</li>
+            </ul>
             <button id="startGame">ゲームスタート</button>
         </div>
         <div id="resultScreen" class="screen">
@@ -279,6 +304,7 @@
             const startGameButton = document.getElementById('startGame');
             const restartGameButton = document.getElementById('restartGame');
             const resetHighScoreButton = document.getElementById('resetHighScore');
+            const ammoElement = document.getElementById('ammo');
 
             let playerX;
             let score = 0;
@@ -293,14 +319,85 @@
             let isEventActive = false;
             let hasBarrier = false;
             let audioContext;
-           const soundSettings = {
-                start: { frequency: 880, duration: 0.3, type: 'sine', gain: 0.5 }, // 開始音: 明るい高音
-                gameOver: { frequency: 220, duration: 1, type: 'sawtooth', gain: 0.7 }, // ゲームオーバー音: 少し低い鋸歯状波で悲しい感じ
-                waveUp: { frequency: 440, duration: 0.1, type: 'triangle', gain: 0.4 }, // ウェーブアップ音: 短い三角波
-                barrierGrant: { frequency: 1760, duration: 0.2, type: 'sine', gain: 0.3 }, // バリア付与音: 高く短い音
-                barrierBreak: { frequency: 55, duration: 0.4, type: 'square', gain: 0.6 }, // バリア破壊音: 低い矩形波
-                scoreUp10: { notes: [[440, 0.1], [554.37, 0.1], [659.25, 0.1]], gain: 0.3 } // スコアアップ音: 上昇する3音
+            let isBonusEventActive = false;
+            let bonusEventStartTime;
+            let bonusEventDuration = 5000;
+            let pastScores = [];
+            const maxPastScores = 5;
+            let ammo = 100;
+            let baseEventProbability = 0.2;
+            let baseBarrierProbability = 0.05;
+            let baseBonusEventProbability = 0.005;
+            let bonusEventProbability = baseBonusEventProbability;
+            let devlog = true;
+            let eventProbabilityIncreaseFactor = 0.1;
+            let barrierProbabilityIncreaseFactor = 0.05;
+            let bonusEventProbabilityIncreaseFactor = 0.0025;
+
+            const soundSettings = {
+                start: {
+                    notes: [[880, 0.1, 'sine'], [1174.66, 0.1, 'sine'], [1318.51, 0.1, 'sine']],
+                    gain: 0.5
+                },
+                gameOver: {
+                    frequency: 220,
+                    duration: 1,
+                    type: 'triangle', // 少し寂しい雰囲気
+                    gain: 0.4,
+                    decay: 0.5 // 徐々に音量を下げる
+                },
+                waveUp: {
+                    frequency: 440,
+                    duration: 0.1,
+                    type: 'square', // キリッとした音
+                    gain: 0.3
+                },
+                barrierGrant: {
+                    frequency: 1760,
+                    duration: 0.1,
+                    type: 'sine',
+                    gain: 0.2, // 優しい音
+                    tremolo: 10 // トレモロ効果でキラキラ感
+                },
+                barrierBreak: {
+                    frequency: 110, duration: 0.5, type: 'sawtooth', gain: 0.5, // 壊れる音
+                    decay: 0.3, // 徐々に音量を下げる
+                    distortion: 0.2 // 歪みを加える
+                },
+                scoreUp10: {
+                    notes: [[440, 0.05], [523.25, 0.05], [659.25, 0.05]],  // 短い上昇音
+                    gain: 0.2
+                },
+                bonusGet: {
+                    frequency: 1760,
+                    duration: 0.2,
+                    type: 'sine',
+                    gain: 0.3,
+                    tremolo: 8 // キラキラ感
+                },
+                eventStart: {
+                    notes: [[261.63, 0.1], [329.63, 0.1], [392.00, 0.1]],  // イベント開始を知らせる音
+                    gain: 0.4
+                },
+                bonusEventStart: {
+                    notes: [[783.99, 0.1], [659.25, 0.1], [554.37, 0.1], [440.00, 0.1]],
+                    gain: 0.5
+                }
             };
+
+            function makeDistortionCurve(amount) {
+                let k = typeof amount === 'number' ? amount : 50,
+                    n_samples = 44100,
+                    curve = new Float32Array(n_samples),
+                    deg = Math.PI / 180,
+                    i = 0,
+                    x;
+                for (; i < n_samples; ++i) {
+                    x = i * 2 / n_samples - 1;
+                    curve[i] = (3 + k) * x * 20 * deg / (Math.PI + k * Math.abs(x));
+                }
+                return curve;
+            }
 
 
             function playSound(name) {
@@ -316,53 +413,96 @@
                     return;
                 }
 
-                if (settings.notes) { // notesプロパティがあれば
+                if (settings.notes) {
                     let startTime = audioContext.currentTime;
-                    settings.notes.forEach(([frequency, duration]) => {
+                    settings.notes.forEach(([frequency, duration, type]) => { // typeも受け取る
                         const oscillator = audioContext.createOscillator();
                         const gainNode = audioContext.createGain();
 
-                        oscillator.type = settings.type || 'sine';
+                        oscillator.type = type || settings.type || 'sine'; // 個別、全体、デフォルトの順でtypeを設定
                         oscillator.frequency.value = frequency;
                         gainNode.gain.setValueAtTime(settings.gain || 0.2, startTime);
                         gainNode.gain.linearRampToValueAtTime(0, startTime + duration);
 
+
+                        // トレモロ効果
+                        if (settings.tremolo) {
+                            const tremolo = audioContext.createOscillator();
+                            const tremoloGain = audioContext.createGain();
+                            tremolo.frequency.value = settings.tremolo;
+                            tremoloGain.gain.value = settings.gain / 2;
+                            tremolo.connect(tremoloGain);
+                            tremoloGain.connect(gainNode.gain);
+                            tremolo.start(startTime);
+                            tremolo.stop(startTime + duration);
+                        }
+
+
                         oscillator.connect(gainNode);
                         gainNode.connect(audioContext.destination);
-
                         oscillator.start(startTime);
                         oscillator.stop(startTime + duration);
+
+
                         startTime += duration;
                     });
-                } else { // notesプロパティがなければ従来通り
+                } else {
                     const oscillator = audioContext.createOscillator();
                     const gainNode = audioContext.createGain();
 
                     oscillator.type = settings.type;
                     oscillator.frequency.value = settings.frequency;
 
-                    gainNode.gain.setValueAtTime(settings.gain || 0.2, audioContext.currentTime); // gainが設定されていればそれを使う
-                    gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + settings.duration);
 
-                    oscillator.connect(gainNode);
+                    gainNode.gain.setValueAtTime(settings.gain || 0.2, audioContext.currentTime);
+
+
+                    if (settings.decay) {
+                        gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + settings.decay);
+                    }
+
+                    // トレモロ効果
+                    if (settings.tremolo) {
+                        const tremolo = audioContext.createOscillator();
+                        const tremoloGain = audioContext.createGain();
+                        tremolo.frequency.value = settings.tremolo;
+                        tremoloGain.gain.value = settings.gain / 2;
+                        tremolo.connect(tremoloGain);
+                        tremoloGain.connect(gainNode.gain);
+                        tremolo.start();
+                        tremolo.stop(audioContext.currentTime + settings.duration);
+                    }
+
+
+                    // 歪み効果
+                    if (settings.distortion) {
+                        const distortion = audioContext.createWaveShaper();
+                        distortion.curve = makeDistortionCurve(settings.distortion * 400);
+                        oscillator.connect(distortion);
+                        distortion.connect(gainNode);
+                    } else {
+                        oscillator.connect(gainNode);
+                    }
+
                     gainNode.connect(audioContext.destination);
 
                     oscillator.start();
-                    setTimeout(() => oscillator.stop(), settings.duration * 1000);
+                    oscillator.stop(audioContext.currentTime + settings.duration);
                 }
             }
-          
 
-            
+
 
             function initGame() {
                 playerX = (gameArea.offsetWidth - player.offsetWidth) / 2;
+                player.style.bottom = "10px";
                 score = 0;
                 wave = 1;
                 blockSpeed = 5;
                 gameOver = false;
                 isEventActive = false;
                 hasBarrier = false;
+                isBonusEventActive = false;
                 scoreElement.textContent = score;
                 waveElement.textContent = wave;
                 player.style.transform = `translateX(${playerX}px)`;
@@ -378,15 +518,19 @@
                 }
 
                 startTime = Date.now();
-
-                
+                ammo = 100;
+                ammoElement.textContent = ammo;
             }
 
             function createBlock() {
                 const block = document.createElement('div');
                 block.classList.add('block');
 
-                if (isEventActive) {
+                if (isBonusEventActive) {
+                    if (Math.random() < 0.5) {
+                        block.classList.add('bonus-block');
+                    }
+                } else if (isEventActive) {
                     const eventTypes = ['fast', 'slow'];
                     const eventType = eventTypes[Math.floor(Math.random() * eventTypes.length)];
                     block.classList.add(`${eventType}-block`);
@@ -407,7 +551,7 @@
                         updateScore(score + 1);
                     }
 
-                    if (checkCollision(block)) {
+                    if (checkPlayerCollision(block)) {
                         gameOver = true;
                         playSound('gameOver');
                         showResult();
@@ -417,7 +561,9 @@
             }
 
             function resetBlockPosition(block) {
-                block.style.left = Math.floor(Math.random() * (gameArea.clientWidth - block.offsetWidth)) + 'px';
+                const maxX = gameArea.offsetWidth - block.offsetWidth; // ブロックが配置可能な最大X座標
+                const x = Math.floor(Math.random() * maxX); // 0 から maxX までのランダムな値
+                block.style.left = x + 'px';
                 block.style.top = -block.offsetHeight + 'px';
 
                 if (!isEventActive) {
@@ -429,23 +575,46 @@
                 wave++;
                 waveElement.textContent = wave;
                 blockSpeed *= 1.1;
-                playSound('waveUp');
                 maxBlocks = Math.min(wave, 5);
 
-                if (Math.random() < 0.8) {
+                let eventProbability = baseEventProbability + (wave - 1) * eventProbabilityIncreaseFactor;
+                let barrierProbability = baseBarrierProbability + (wave - 1) * barrierProbabilityIncreaseFactor;
+                let bonusEventProbability = baseBonusEventProbability + (wave - 1) * bonusEventProbabilityIncreaseFactor;
+
+                if (pastScores.length === maxPastScores) {
+                    const latestScore = pastScores[pastScores.length - 1];
+                    const averageScore = pastScores.reduce((sum, score) => sum + score, 0) / pastScores.length;
+
+                    if (latestScore < averageScore * 0.8) { // スコアが平均の80%未満の場合
+                        eventProbability += eventProbabilityIncreaseFactor * 2; // イベント確率を増加
+                        barrierProbability += barrierProbabilityIncreaseFactor * 2;
+                        bonusEventProbability += bonusEventProbabilityIncreaseFactor * 2;
+                    }
+                }
+
+                eventProbability = Math.min(0.8, eventProbability); // 上限を設定
+                barrierProbability = Math.min(0.3, barrierProbability);
+                bonusEventProbability = Math.min(0.05, bonusEventProbability);
+
+                if (devlog) {
+                    console.log(`Wave ${wave}: Event Probability = ${eventProbability.toFixed(2)}, Barrier Probability = ${barrierProbability.toFixed(2)}, Bonus Probability = ${bonusEventProbability.toFixed(2)}`);
+                }
+
+                if (Math.random() < eventProbability) {
                     startEvent();
                 }
 
-                if (Math.random() < 0.2 && !hasBarrier) {
+                if (Math.random() < barrierProbability && !hasBarrier) {
                     grantBarrier();
                 }
 
                 while (blocks.length < maxBlocks) {
                     createBlock();
                 }
+                playSound('waveUp');
             }
 
-            function checkCollision(block) {
+            function checkPlayerCollision(block) {
                 const playerRect = player.getBoundingClientRect();
                 const blockRect = block.getBoundingClientRect();
 
@@ -455,7 +624,15 @@
                     playerRect.left < blockRect.right &&
                     playerRect.top < blockRect.bottom
                 ) {
-                    if (hasBarrier) {
+                    if (block.classList.contains('bonus-block')) {
+                        playSound('bonusGet');
+                        grantBarrier();
+
+                        block.remove();
+                        blocks = blocks.filter(b => b !== block);
+
+                        return false;
+                    } else if (hasBarrier) {
                         hasBarrier = false;
                         player.classList.remove('barrier');
                         playSound('barrierBreak');
@@ -472,6 +649,7 @@
                 }
             }
 
+
             function movePlayer(event) {
                 if (event.key === 'a' && playerX > 0) {
                     playerX -= 20;
@@ -482,18 +660,25 @@
             }
 
             function handleTouchStart(event) {
-                const touchX = event.touches[0].clientX;
-                const gameAreaRect = gameArea.getBoundingClientRect();
+                const touchY = event.touches[0].clientY;
 
-                playerX = touchX - gameAreaRect.left - player.offsetLeft;
+                if (touchY < gameArea.clientHeight / 2) { // 画面上部半分をタップした場合
+                    shoot(event);
+                    event.preventDefault(); // 画面スクロールを防ぐ
+                } else {
+                    const touchX = event.touches[0].clientX;
+                    const gameAreaRect = gameArea.getBoundingClientRect();
 
-                if (playerX < 0) {
-                    playerX = 0;
-                } else if (playerX > gameArea.clientWidth - player.offsetWidth) {
-                    playerX = gameArea.clientWidth - player.offsetWidth;
+                    playerX = touchX - gameAreaRect.left - player.offsetWidth / 2; // プレイヤーの中心をタッチ位置に合わせる
+
+                    if (playerX < 0) {
+                        playerX = 0;
+                    } else if (playerX > gameArea.clientWidth - player.offsetWidth) {
+                        playerX = gameArea.clientWidth - player.offsetWidth;
+                    }
+
+                    player.style.transform = `translateX(${playerX}px)`;
                 }
-
-                player.style.transform = `translateX(${playerX}px)`;
             }
 
             function handleTouchMove(event) {
@@ -515,8 +700,18 @@
                 score = newScore;
                 scoreElement.textContent = score;
 
-                if (score % 10 === 0 && score > 0) { // スコアが10の倍数かつ0より大きい場合
+                if (score % 10 === 0 && score > 0) {
                     playSound('scoreUp10');
+                }
+
+                if (Math.random() < bonusEventProbability && !isBonusEventActive && !isEventActive) {
+                    startBonusEvent();
+                }
+
+                // スコアを保存
+                pastScores.push(newScore);
+                if (pastScores.length > maxPastScores) {
+                    pastScores.shift(); // 古いスコアを削除
                 }
             }
 
@@ -527,7 +722,7 @@
                 }
                 finalScoreElement.textContent = score;
                 highScoreElement.textContent = highScore;
-                // リザルト画面を表示
+
                 resultScreen.classList.add('show');
             }
 
@@ -537,47 +732,24 @@
                 highScoreElement.textContent = highScore;
             }
 
-           function startGame() {
-                startScreen.classList.remove('show'); // showクラスを削除して非表示に
-                playSound('start'); 
-                initGame();
-                gameLoop();
-            }
-
-           function restartGame() {
-                resultScreen.classList.remove('show'); // showクラスを削除して非表示に
+            function startGame() {
+                startScreen.classList.remove('show');
                 playSound('start');
                 initGame();
                 gameLoop();
             }
 
-
-            startGameButton.addEventListener('click', startGame);
-            startGameButton.addEventListener('touchstart', startGame);
-
-            restartGameButton.addEventListener('click', restartGame);
-            restartGameButton.addEventListener('touchstart', restartGame);
-
-            resetHighScoreButton.addEventListener('click', resetHighScore);
-            resetHighScoreButton.addEventListener('touchstart', resetHighScore);
-
-            function gameLoop() {
-                if (!gameOver) {
-                    moveBlocks();
-
-                    const elapsedTime = Date.now() - startTime;
-                    if (elapsedTime >= waveDuration) {
-                        nextWave();
-                        startTime = Date.now();
-                    }
-
-                    setTimeout(gameLoop, 30);
-                }
+            function restartGame() {
+                resultScreen.classList.remove('show');
+                playSound('start');
+                initGame();
+                gameLoop();
             }
 
             function startEvent() {
                 isEventActive = true;
                 gameArea.classList.add('event-background');
+                playSound('eventStart');
 
                 setTimeout(() => {
                     isEventActive = false;
@@ -591,7 +763,130 @@
                 playSound('barrierGrant');
             }
 
-            // イベントリスナーの登録
+            function gameLoop() {
+                if (!gameOver) {
+                    moveBlocks();
+
+                    const elapsedTime = Date.now() - startTime;
+                    if (elapsedTime >= waveDuration) {
+                        nextWave();
+                        startTime = Date.now();
+                    }
+
+                    if (Math.random() < bonusEventProbability && !isBonusEventActive && !isEventActive) {
+                        startBonusEvent();
+                    }
+
+                    setTimeout(gameLoop, 30);
+                }
+            }
+
+            function shoot(event) {
+                if (ammo > 0) {
+                    const bullet = document.createElement('div');
+                    bullet.classList.add('bullet');
+
+                    // プレイヤーの左端、上端、幅、高さを取得
+                    const playerLeft = playerX; // playerX を使用
+                    const playerTop = gameArea.clientHeight - player.offsetHeight - parseFloat(player.style.bottom);
+                    const playerWidth = player.offsetWidth;
+                    const playerHeight = player.offsetHeight;
+
+
+                    // 弾の初期位置をプレイヤーの上部中央に設定
+                    bullet.style.left = playerLeft + playerWidth / 2 - bullet.offsetWidth / 2 + 'px';
+                    bullet.style.top = playerTop - bullet.offsetHeight + 'px';
+
+                    gameArea.appendChild(bullet);
+
+                    // マウスカーソルまたはタッチ位置を取得
+                    let targetX, targetY;
+                    if (event.type === 'keydown') { // PCの場合
+                        targetX = playerLeft + playerWidth / 2;
+                        targetY = 0; // 真上に発射
+                    } else { // スマホの場合
+                        targetX = event.touches[0].clientX;
+                        targetY = event.touches[0].clientY;
+                    }
+
+                    // 弾の移動方向を計算
+                    const angle = Math.atan2(targetY - (playerTop + playerHeight / 2), targetX - (playerLeft + playerWidth / 2));
+                    const bulletSpeed = 10; // 弾の速度
+
+                    // 弾の移動アニメーションの開始位置をプレイヤーの上部中央に設定
+                    let bulletX = playerLeft + playerWidth / 2 - bullet.offsetWidth / 2;
+                    let bulletY = playerTop - bullet.offsetHeight;
+
+                    //console.log("弾丸発射！ 初期位置: x=", bulletX, "y=", bulletY); // 弾丸発射時のログ
+
+                    // 弾の移動アニメーション
+                    const bulletInterval = setInterval(() => {
+                        bulletX += Math.cos(angle) * bulletSpeed;
+                        bulletY += Math.sin(angle) * bulletSpeed;
+                        bullet.style.left = bulletX + 'px';
+                        bullet.style.top = bulletY + 'px';
+
+                        //console.log("弾丸移動中: x=", bulletX, "y=", bulletY); // 弾丸移動中のログ
+
+                        // ブロックとの衝突判定
+                        for (let i = 0; i < blocks.length; i++) {
+                            if (checkBulletCollision(bullet, blocks[i])) {
+                                blocks[i].remove();
+                                blocks.splice(i, 1);
+                                clearInterval(bulletInterval);
+                                bullet.remove();
+                                playSound('barrierBreak');
+
+                                console.log("弾丸がブロックにヒット！ ブロック削除"); // 弾丸がブロックにヒットした時のログ
+
+                                // 新しいブロックを作成
+                                createBlock();
+                                updateScore(score + 1);
+
+                                break;
+                            }
+                        }
+
+                        // 画面外に出たら弾を削除
+                        if (bulletY < 0 || bulletY > gameArea.clientHeight || bulletX < 0 || bulletX > gameArea.clientWidth) {
+                            clearInterval(bulletInterval);
+                            bullet.remove();
+
+                            console.log("弾丸が画面外に出たため削除"); // 弾丸が画面外に出た時のログ
+                        }
+                    }, 30);
+
+                    ammo--;
+                    ammoElement.textContent = ammo;
+                }
+            }
+
+            // 弾とブロックの衝突判定 (topとbottomを修正)
+            function checkBulletCollision(bullet, block) {
+                const bulletRect = bullet.getBoundingClientRect();
+                const blockRect = block.getBoundingClientRect();
+
+                return (
+                    bulletRect.top < blockRect.bottom && // 修正: top < bottom
+                    bulletRect.bottom > blockRect.top &&   // 修正: bottom > top
+                    bulletRect.right > blockRect.left &&
+                    bulletRect.left < blockRect.right
+                );
+            }
+
+            function startBonusEvent() {
+                isBonusEventActive = true;
+                bonusEventStartTime = Date.now();
+                playSound('bonusEventStart');
+
+                gameArea.classList.add('event-background');
+
+                setTimeout(() => {
+                    isBonusEventActive = false;
+                    gameArea.classList.remove('event-background');
+                }, bonusEventDuration);
+            }
+
             startGameButton.addEventListener('click', startGame);
             startGameButton.addEventListener('touchstart', startGame);
 
@@ -605,11 +900,16 @@
             gameArea.addEventListener('touchmove', handleTouchMove);
 
             document.addEventListener('keydown', movePlayer);
+            document.addEventListener('keydown', (event) => {
+                if (event.code === 'KeyR') {
+                    shoot(event); //eventを追加
+                }
+            });
 
             return {
                 init: function () {
                     highScoreElement.textContent = highScore;
-                    startScreen.classList.add('show'); // 初期状態で表示
+                    startScreen.classList.add('show');
                 }
             };
         })();

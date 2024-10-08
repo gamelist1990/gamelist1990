@@ -286,6 +286,49 @@
         let gameOver = false; // gameOverフラグを追加
         let isEventActive = false; // イベント発生中フラグ
         let hasBarrier = false; // バリア所持フラグ
+        let audioContext; // AudioContextをグローバル変数として宣言
+
+
+
+
+
+
+
+
+
+
+
+
+
+        function playStartSound() {
+                if (!audioContext) {
+                    audioContext = new AudioContext();
+                } else if (audioContext.state === 'suspended') {
+                    audioContext.resume();
+                }
+
+                // オシレーターノードを作成
+                const oscillator = audioContext.createOscillator();
+                oscillator.type = 'triangle'; // 音色をtriangleに設定
+
+                // 周波数を時間とともに変化させる (ピッチを上げる効果)
+                oscillator.frequency.setValueAtTime(200, audioContext.currentTime); // 開始周波数
+                oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.5); // 0.5秒かけて400Hzまで上げる
+
+                // ゲインノードを作成
+                const gainNode = audioContext.createGain();
+                gainNode.gain.setValueAtTime(0.2, audioContext.currentTime); // 音量を0.2に設定
+                gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.5); // 0.5秒かけて音量を0に下げる
+
+                // 接続
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+
+                // 再生
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.5);
+            }
+
 
 
         function initGame() {
@@ -470,11 +513,12 @@
             gameLoop();
         });
 
-        document.getElementById('restartGame').addEventListener('click', () => {
-            resultScreen.classList.remove('show');
-            initGame();
-            gameLoop();
-        });
+        document.getElementById('startGame').addEventListener('click', () => {
+                startScreen.classList.remove('show');
+                playStartSound(); // ゲーム開始時に音を再生
+                initGame();
+                gameLoop();
+            });
 
         document.getElementById('resetHighScore').addEventListener('click', resetHighScore);
 

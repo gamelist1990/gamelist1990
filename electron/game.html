@@ -5,6 +5,10 @@
     <title>避け避けゲーム</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="避け避けゲーム！！">
+    <meta name="apple-touch-fullscreen" content="yes">
     <style>
         /* 共通スタイル */
         * {
@@ -659,33 +663,27 @@
                 player.style.transform = `translateX(${playerX}px)`;
             }
 
+
+
             function handleTouchStart(event) {
-                const touchY = event.touches[0].clientY;
+                for (let i = 0; i < event.changedTouches.length; i++) {
+                    const touch = event.changedTouches[i];
+                    const touchY = touch.clientY;
 
-                if (touchY < gameArea.clientHeight / 2) { // 画面上部半分をタップした場合
-                    shoot(event);
-                    event.preventDefault(); // 画面スクロールを防ぐ
-                } else {
-                    const touchX = event.touches[0].clientX;
-                    const gameAreaRect = gameArea.getBoundingClientRect();
-
-                    playerX = touchX - gameAreaRect.left - player.offsetWidth / 2; // プレイヤーの中心をタッチ位置に合わせる
-
-                    if (playerX < 0) {
-                        playerX = 0;
-                    } else if (playerX > gameArea.clientWidth - player.offsetWidth) {
-                        playerX = gameArea.clientWidth - player.offsetWidth;
+                    if (touchY < gameArea.clientHeight * 0.6) {
+                        // shoot関数にeventオブジェクトとtouchオブジェクトを渡す
+                        shoot(event, touch);
+                        event.preventDefault();
                     }
-
-                    player.style.transform = `translateX(${playerX}px)`;
                 }
             }
 
             function handleTouchMove(event) {
+                // 最初のタッチポイントのみでプレイヤーを移動させる
                 const touchX = event.touches[0].clientX;
                 const gameAreaRect = gameArea.getBoundingClientRect();
 
-                playerX = touchX - gameAreaRect.left - player.offsetLeft;
+                playerX = touchX - gameAreaRect.left - player.offsetWidth / 2;
 
                 if (playerX < 0) {
                     playerX = 0;
@@ -781,7 +779,7 @@
                 }
             }
 
-            function shoot(event) {
+            function shoot(event, touch) {
                 if (ammo > 0) {
                     const bullet = document.createElement('div');
                     bullet.classList.add('bullet');
@@ -805,8 +803,8 @@
                         targetX = playerLeft + playerWidth / 2;
                         targetY = 0; // 真上に発射
                     } else { // スマホの場合
-                        targetX = event.touches[0].clientX;
-                        targetY = event.touches[0].clientY;
+                        targetX = touch.clientX;
+                        targetY = touch.clientY;
                     }
 
                     // 弾の移動方向を計算

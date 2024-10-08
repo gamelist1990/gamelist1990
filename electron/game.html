@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>避け避けゲーム</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* 共通スタイル */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow: hidden;
+            font-family: 'Press Start 2P', cursive;
+            background-color: #222;
+            background-image:
+                url('https://flowerillust.com/img/flower/flower-back1262.jpg');
+            background-repeat: repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            /* 画面全体を覆う */
+        }
+
+        #gameArea {
+            position: relative;
+            background-color: #eee;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .block {
+            background-color: #e74c3c;
+            position: absolute;
+            border-radius: 3px;
+            animation: blockFall 1s linear infinite;
+        }
+
+        @keyframes blockFall {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0);
+            }
+
+            50% {
+                transform: translateY(-5px) rotate(5deg);
+            }
+        }
+
+        #player {
+            background-color: #3498db;
+            position: absolute;
+            bottom: 10px;
+            border-radius: 5px;
+            transition: transform 0.1s ease;
+            /* transformプロパティのアニメーション */
+        }
+
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+            transition: opacity 0.5s ease;
+            opacity: 0;
+            z-index: 10;
+        }
+
+        .screen.show {
+            opacity: 1;
+        }
+
+        #startScreen button,
+        #resultScreen button {
+            padding: 15px 30px;
+            margin-top: 30px;
+            background-color: #2ecc71;
+            border: none;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+
+        #startScreen button:hover,
+        #resultScreen button:hover {
+            background-color: #27ae60;
+            transform: translateY(-2px);
+        }
+
+        #scoreContainer {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: white;
+        }
+
+        #waveContainer {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: white;
+        }
+
+        /* スマホ用スタイル (画面幅が768px以下の場合) */
+        @media (max-width: 768px) {
+            #gameArea {
+                width: 95vw;
+                height: 60vh;
+            }
+
+            .block {
+                width: 30px;
+                height: 30px;
+            }
+
+            #player {
+                width: 60px;
+                height: 10px;
+            }
+
+            #startScreen button,
+            #resultScreen button {
+                font-size: 0.8em;
+            }
+
+            #scoreContainer,
+            #waveContainer {
+                font-size: 1em;
+            }
+        }
+
+        /* PC用スタイル (画面幅が768pxより大きい場合) */
+        @media (min-width: 768px) {
+            #gameArea {
+                width: 800px;
+                /* 幅を大きく */
+                height: 600px;
+                /* 高さを大きく */
+            }
+
+            .block {
+                width: 50px;
+                /* ブロックの幅を大きく */
+                height: 50px;
+                /* ブロックの高さを大きく */
+            }
+
+            #player {
+                width: 100px;
+                /* プレイヤーの幅を大きく */
+                height: 15px;
+                /* プレイヤーの高さを少し大きく */
+            }
+
+            #startScreen button,
+            #resultScreen button {
+                font-size: 1.2em;
+                /* ボタンのフォントサイズを大きく */
+            }
+
+            #scoreContainer,
+            #waveContainer {
+                font-size: 1.5em;
+                /* スコアとウェーブのフォントサイズを大きく */
+            }
+        }
+
+        /* イベント発生時の背景色 */
+        .event-background {
+            animation: eventBackground 1s linear infinite;
+        }
+
+        @keyframes eventBackground {
+            0% {
+                background-color: #eee;
+            }
+
+            50% {
+                background-color: #f0f0f0;
+            }
+
+            100% {
+                background-color: #eee;
+            }
+        }
+
+        /* 高速ブロック */
+        .fast-block {
+            background-color: #9b59b6;
+            animation: fastBlockFall 0.5s linear infinite;
+        }
+
+        @keyframes fastBlockFall {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0);
+            }
+
+            50% {
+                transform: translateY(-10px) rotate(10deg);
+            }
+        }
+
+        /* 低速ブロック */
+        .slow-block {
+            background-color: #2980b9;
+            animation: slowBlockFall 2s linear infinite;
+        }
+
+        @keyframes slowBlockFall {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0);
+            }
+
+            50% {
+                transform: translateY(-2px) rotate(2deg);
+            }
+        }
+
+        /* バリア */
+        .barrier {
+            box-shadow: 0 0 10px 5px #ffff00;
+            /* バリアの見た目を設定 (例: 黄色い光) */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="gameArea">
+        <div id="scoreContainer" style="color:black">スコア: <span id="score">0</span></div>
+        <div id="waveContainer" style="color:black">Wave: <span id="wave">1</span></div>
+        <div id="player"></div>
+        <div id="startScreen" class="screen show">
+            <h1>避け避けゲームv1</h1>
+            <button id="startGame">ゲームスタート</button>
+        </div>
+        <div id="resultScreen" class="screen">
+            <h2>ゲームオーバー！</h2>
+            <p>スコア: <span id="finalScore"></span></p>
+            <p>ハイスコア: <span id="highScore"></span></p>
+            <button id="restartGame">再挑戦</button>
+            <button id="resetHighScore">ハイスコアをリセット</button>
+        </div>
+    </div>
+
+    <script>
+        const gameArea = document.getElementById('gameArea');
+        const player = document.getElementById('player');
+        const startScreen = document.getElementById('startScreen');
+        const resultScreen = document.getElementById('resultScreen');
+        const finalScoreElement = document.getElementById('finalScore');
+        const highScoreElement = document.getElementById('highScore');
+        const scoreElement = document.getElementById('score');
+        const waveElement = document.getElementById('wave');
+        let playerX;
+        let score = 0;
+        let wave = 1;
+        let highScore = localStorage.getItem('highScore') || 0;
+        let blockSpeed = 5;
+        let blocks = [];
+        let maxBlocks = 1;
+        let startTime;
+        let waveDuration = 10000;
+        let gameOver = false; // gameOverフラグを追加
+        let isEventActive = false; // イベント発生中フラグ
+        let hasBarrier = false; // バリア所持フラグ
+
+
+        function initGame() {
+            playerX = (gameArea.offsetWidth - player.offsetWidth) / 2;
+            score = 0;
+            wave = 1;
+            blockSpeed = 5;
+            gameOver = false; // ゲーム開始時にフラグをfalseに設定
+            isEventActive = false; // イベント発生中フラグをfalseに設定
+            hasBarrier = false; // ゲーム開始時にバリア所持フラグをfalseに設定
+            scoreElement.textContent = score;
+            waveElement.textContent = wave;
+            player.style.transform = `translateX(${playerX}px)`;
+            gameArea.classList.remove('event-background'); // イベント発生時の背景色をリセット
+            player.classList.remove('barrier'); // バリアのクラスを削除
+
+            startScreen.style.display = 'none';
+
+            blocks.forEach(block => block.remove());
+            blocks = [];
+
+            maxBlocks = 1;
+            for (let i = 0; i < maxBlocks; i++) {
+                createBlock();
+            }
+
+            startTime = Date.now();
+        }
+
+        function createBlock() {
+            const block = document.createElement('div');
+            block.classList.add('block');
+
+            // イベント発生中なら特別なブロックを生成
+            if (isEventActive) {
+                const eventTypes = ['fast', 'slow'];
+                const eventType = eventTypes[Math.floor(Math.random() * eventTypes.length)];
+                block.classList.add(`${eventType}-block`);
+            }
+
+            resetBlockPosition(block);
+            gameArea.appendChild(block);
+            blocks.push(block);
+        }
+
+        function moveBlocks() {
+            blocks.forEach((block) => {
+                let blockY = block.offsetTop + (block.classList.contains('fast-block') ? blockSpeed * 2 : (block.classList.contains('slow-block') ? blockSpeed * 0.5 : blockSpeed));
+                block.style.top = blockY + 'px';
+
+                if (blockY > gameArea.clientHeight - block.offsetHeight) {
+                    resetBlockPosition(block);
+                    updateScore(score + 1);
+                }
+
+                if (checkCollision(block)) {
+                    gameOver = true;
+                    showResult();
+                    return;
+                }
+            });
+        }
+
+        function resetBlockPosition(block) {
+            block.style.left = Math.floor(Math.random() * (gameArea.clientWidth - block.offsetWidth)) + 'px';
+            block.style.top = -block.offsetHeight + 'px';
+
+            // イベント発生中でなければ特別なブロックのクラスを削除
+            if (!isEventActive) {
+                block.classList.remove('fast-block', 'slow-block');
+            }
+        }
+
+        function nextWave() {
+            wave++;
+            waveElement.textContent = wave;
+            blockSpeed *= 1.1;
+            maxBlocks = Math.min(wave, 5);
+
+            // ランダムにイベント発生
+            if (Math.random() < 0.5) { 
+                startEvent();
+            }
+
+            // ランダムにバリア付与
+            if (Math.random() < 0.3 && !hasBarrier) { 
+                grantBarrier();
+            }
+
+            while (blocks.length < maxBlocks) {
+                createBlock();
+            }
+        }
+
+        function checkCollision(block) {
+            const playerRect = player.getBoundingClientRect();
+            const blockRect = block.getBoundingClientRect();
+
+            if (
+                playerRect.bottom > blockRect.top &&
+                playerRect.right > blockRect.left &&
+                playerRect.left < blockRect.right &&
+                playerRect.top < blockRect.bottom
+            ) {
+                if (hasBarrier) {
+                    // バリアがある場合はバリアを消費して衝突を無効化
+                    hasBarrier = false;
+                    player.classList.remove('barrier'); // バリアのクラスを削除
+
+                    // バリア破壊の効果音などを再生 (必要であれば)
+                    block.remove();
+                    blocks = blocks.filter(b => b !== block); // blocks配列からも削除
+
+                    return false; // 衝突なしとして処理
+                } else {
+                    return true; // バリアがない場合は衝突ありとして処理
+                }
+            } else {
+                return false; // 衝突なしとして処理
+            }
+        }
+
+        function movePlayer(event) {
+            if (event.key === 'a' && playerX > 0) {
+                playerX -= 20;
+            } else if (event.key === 'd' && playerX < gameArea.clientWidth - player.offsetWidth) {
+                playerX += 20;
+            }
+            player.style.transform = `translateX(${playerX}px)`; // transformプロパティを更新
+        }
+
+        let touchStartX = 0;
+        gameArea.addEventListener('touchstart', (event) => {
+            const touchX = event.touches[0].clientX;
+            const gameAreaRect = gameArea.getBoundingClientRect(); // ゲームエリアの位置情報を取得
+
+            // ゲームエリアの左端の座標を考慮して touchStartX を計算
+            touchStartX = touchX - gameAreaRect.left - player.offsetLeft;
+        });
+
+        gameArea.addEventListener('touchmove', (event) => {
+            const touchX = event.touches[0].clientX;
+            const gameAreaRect = gameArea.getBoundingClientRect();
+
+            // ゲームエリアの左端の座標を考慮して playerX を計算
+            playerX = touchX - gameAreaRect.left - player.offsetLeft;
+
+            // プレイヤーの移動範囲を制限
+            if (playerX < 0) {
+                playerX = 0;
+            } else if (playerX > gameArea.clientWidth - player.offsetWidth) {
+                playerX = gameArea.clientWidth - player.offsetWidth;
+            }
+
+            player.style.transform = `translateX(${playerX}px)`; // transformプロパティを更新
+        });
+
+        function updateScore(newScore) {
+            score = newScore;
+            scoreElement.textContent = score;
+        }
+
+        function showResult() {
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem('highScore', highScore);
+            }
+            finalScoreElement.textContent = score;
+            highScoreElement.textContent = highScore;
+            resultScreen.classList.add('show');
+        }
+
+        function resetHighScore() {
+            localStorage.removeItem('highScore');
+            highScore = 0;
+            highScoreElement.textContent = highScore;
+        }
+
+        document.getElementById('startGame').addEventListener('click', () => {
+            startScreen.classList.remove('show');
+            initGame();
+            gameLoop();
+        });
+
+        document.getElementById('restartGame').addEventListener('click', () => {
+            resultScreen.classList.remove('show');
+            initGame();
+            gameLoop();
+        });
+
+        document.getElementById('resetHighScore').addEventListener('click', resetHighScore);
+
+        document.addEventListener('keydown', movePlayer);
+        highScoreElement.textContent = highScore;
+
+
+        function startEvent() {
+            isEventActive = true;
+            gameArea.classList.add('event-background'); // 背景色を変更
+
+            // イベント終了タイマーを設定
+            setTimeout(() => {
+                isEventActive = false;
+                gameArea.classList.remove('event-background'); // 背景色を元に戻す
+            }, 5000); // 5秒後にイベント終了
+        }
+
+        function grantBarrier() {
+            hasBarrier = true;
+            player.classList.add('barrier'); // プレイヤーにバリアのクラスを追加 (見た目でバリアがわかるように)
+
+            // バリアの効果音などを再生 (必要であれば)
+        }
+
+        function gameLoop() {
+            if (!gameOver) {
+                moveBlocks();
+
+                const elapsedTime = Date.now() - startTime;
+                if (elapsedTime >= waveDuration) {
+                    nextWave();
+                    startTime = Date.now();
+                }
+
+                setTimeout(gameLoop, 30);
+            }
+        }
+    </script>
+</body>
+
+</html>

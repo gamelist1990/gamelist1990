@@ -265,7 +265,10 @@
         </div>
     </div>
 
-    <script>
+    <!-- jsfxrとHowler.jsを読み込む -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+
+    <script type="module" src="https://cdn.jsdelivr.net/gh/KilledByAPixel/ZzFX/ZzFX.min.js">
         const gameArea = document.getElementById('gameArea');
         const player = document.getElementById('player');
         const startScreen = document.getElementById('startScreen');
@@ -287,6 +290,32 @@
         let isEventActive = false; // イベント発生中フラグ
         let hasBarrier = false; // バリア所持フラグ
 
+        // jsfxrで効果音を生成
+        const barrierSoundData = zzfx(...[1, 0, 262, 0.03, 0.3, 0.48, 1, 1.73, -0.81, 0.18, 0.02, 0, 0, 0, 0, 0.06, 0.24]); // バリア付与音
+        const barrierBreakSoundData = zzfx(...[2, 0, 196, 0.02, 0.28, 0.43, 1, 0.99, 0, -0.59, 0.15, 0, 0, 0, 0, 0.07, 0.13]); // バリア破壊音
+        const gameOverSoundData = zzfx(...[2, 0, 80, 0.03, 0.2, 0.3, 1, 0.73, 0, 0.34, 0.17, 0, 0, 0, 0, 0.14, 0.07]); // ゲームオーバー音
+        const eventStartSoundData = zzfx(...[1, 0, 400, 0.02, 0.1, 0.4, 1, 1.94, 0.23, -0.63, 0.11, 0, 0, 0, 0, 0.09, 0.24]); // イベント開始音
+
+        // Howler.jsで効果音を再生
+        const barrierSound = new Howl({
+            src: [barrierSoundData],
+            format: 'wav'
+        });
+
+        const barrierBreakSound = new Howl({
+            src: [barrierBreakSoundData],
+            format: 'wav'
+        });
+
+        const gameOverSound = new Howl({
+            src: [gameOverSoundData],
+            format: 'wav'
+        });
+
+        const eventStartSound = new Howl({
+            src: [eventStartSoundData],
+            format: 'wav'
+        });
 
         function initGame() {
             playerX = (gameArea.offsetWidth - player.offsetWidth) / 2;
@@ -366,12 +395,12 @@
             maxBlocks = Math.min(wave, 5);
 
             // ランダムにイベント発生
-            if (Math.random() < 0.5) { 
+            if (Math.random() < 0.5) {
                 startEvent();
             }
 
             // ランダムにバリア付与
-            if (Math.random() < 0.3 && !hasBarrier) { 
+            if (Math.random() < 0.3 && !hasBarrier) {
                 grantBarrier();
             }
 
@@ -395,7 +424,10 @@
                     hasBarrier = false;
                     player.classList.remove('barrier'); // バリアのクラスを削除
 
-                    // バリア破壊の効果音などを再生 (必要であれば)
+                    // バリア破壊の効果音を再生
+                    barrierBreakSound.play();
+
+                    // 衝突したブロックを削除
                     block.remove();
                     blocks = blocks.filter(b => b !== block); // blocks配列からも削除
 
@@ -449,6 +481,8 @@
         }
 
         function showResult() {
+            gameOverSound.play(); // ゲームオーバー音を再生
+
             if (score > highScore) {
                 highScore = score;
                 localStorage.setItem('highScore', highScore);
@@ -486,6 +520,9 @@
             isEventActive = true;
             gameArea.classList.add('event-background'); // 背景色を変更
 
+            // イベント開始音を再生
+            eventStartSound.play();
+
             // イベント終了タイマーを設定
             setTimeout(() => {
                 isEventActive = false;
@@ -497,7 +534,8 @@
             hasBarrier = true;
             player.classList.add('barrier'); // プレイヤーにバリアのクラスを追加 (見た目でバリアがわかるように)
 
-            // バリアの効果音などを再生 (必要であれば)
+            // バリアの効果音を再生
+            barrierSound.play();
         }
 
         function gameLoop() {

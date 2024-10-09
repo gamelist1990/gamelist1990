@@ -141,7 +141,7 @@ body {
 @media (max-width: 768px) {
    #gameArea {
     width: 98vw; /* 95vw から 98vw に変更 */
-    height: 70vh; /* 60vh から 70vh に変更 */
+    height: 85vh; /* 60vh から 70vh に変更 */
   }
 
   .block {
@@ -792,7 +792,7 @@ body {
                     const touch = event.changedTouches[i];
                     const touchY = touch.clientY;
 
-                    if (touchY < gameArea.clientHeight * 0.6) {
+                    if (touchY < gameArea.clientHeight * 0.4) {
                         // shoot関数にeventオブジェクトとtouchオブジェクトを渡す
                         shoot(event, touch);
                         event.preventDefault();
@@ -1085,6 +1085,9 @@ body {
                 );
             }
 
+
+
+
             function startBonusEvent() {
                 isBonusEventActive = true;
                 bonusEventStartTime = Date.now();
@@ -1096,6 +1099,19 @@ body {
                     isBonusEventActive = false;
                     gameArea.classList.remove("event-background");
                 }, bonusEventDuration);
+            }
+
+
+
+            function rankingchange() {
+
+                if (rankingSidebar.style.display === "none") {
+                    rankingSidebar.style.display = "block";
+                    toggleRankingButton.textContent = "ランキングを非表示";
+                } else {
+                    rankingSidebar.style.display = "none";
+                    toggleRankingButton.textContent = "ランキングを表示";
+                }
             }
 
             startGameButton.addEventListener("click", startGame);
@@ -1165,15 +1181,9 @@ body {
             });
 
 
-            toggleRankingButton.addEventListener("click", () => {
-                if (rankingSidebar.style.display === "none") {
-                    rankingSidebar.style.display = "block";
-                    toggleRankingButton.textContent = "ランキングを非表示";
-                } else {
-                    rankingSidebar.style.display = "none";
-                    toggleRankingButton.textContent = "ランキングを表示";
-                }
-            });
+            toggleRankingButton.addEventListener("touchstart",rankingchange);
+            //toggleRankingButton.addEventListener("click", rankingchange);
+
 
 
             return {

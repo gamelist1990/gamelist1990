@@ -268,16 +268,6 @@
             padding: 5px 10px;
             border-radius: 5px;
         }
-
-        #rankingList {
-            list-style-type: none;
-            padding: 0;
-            margin-top: 20px;
-        }
-
-        #rankingList li {
-            margin-bottom: 10px;
-        }
     </style>
 </head>
 
@@ -308,11 +298,8 @@
             <h2>ゲームオーバー！</h2>
             <p>スコア: <span id="finalScore"></span></p>
             <p>ハイスコア: <span id="highScore"></span></p>
-            <button id="registerHighScore">ハイスコアをランキングに登録</button>
             <button id="restartGame">再挑戦</button>
             <button id="resetHighScore">ハイスコアをリセット</button>
-            <br>
-            <ul id="rankingList"></ul>
         </div>
     </div>
 
@@ -330,9 +317,6 @@
             const restartGameButton = document.getElementById("restartGame");
             const resetHighScoreButton = document.getElementById("resetHighScore");
             const ammoElement = document.getElementById("ammo");
-            const rankingList = document.getElementById("rankingList");
-            const registerHighScoreButton = document.getElementById("registerHighScore");
-
 
             let playerX;
             let score = 0;
@@ -780,66 +764,17 @@
                 }
             }
 
-
-            const scoreboardId = "rytnt3jl"; // ここにあなたのスコアボードIDを記入してください
-            const apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmVhdG9ySWQiOiI2NzA1ZTM1YWRmNGJhYWM2OWE2MzQ3YzQiLCJzY29yZWJvYXJkSWQiOiJyeXRudDNqbCIsImlhdCI6MTcyODQzOTE3MX0.hjXj4pCYyE5sz3TPMDMs51JojVqW0rDoytZmrKFJ034"; // ここにあなたのAPIキーを記入してください
-
             function showResult() {
                 if (score > highScore) {
                     highScore = score;
                     localStorage.setItem("highScore", highScore);
-
-                    // ハイスコア更新時にランキング登録ボタンを表示
-                    registerHighScoreButton.style.display = "block";
-                } else {
-                    // ハイスコア更新時以外はランキング登録ボタンを非表示
-                    registerHighScoreButton.style.display = "none";
                 }
-
                 finalScoreElement.textContent = score;
                 highScoreElement.textContent = highScore;
-
-                // ランキングの表示はshowRanking()に移動
-                showRanking();
-
 
                 resultScreen.classList.add("show");
             }
 
-
-            function showRanking() {
-                const url = `https://bq-server.onrender.com/api/results/${scoreboardId}`;
-
-                fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'apikey': apiKey
-                    }
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`Network response was not ok (status: ${response.status})`);
-                        }
-                        return response.json();
-                    })
-                    .then(rankingData => {
-                        // ランキングを表示する処理
-                        rankingList.innerHTML = ''; //ランキングをクリア
-
-                        // APIから取得したデータを表示 (最大5件まで)
-                        rankingData.results.slice(0, 3).forEach((entry, index) => { // rankingData.results を使用
-                            const listItem = document.createElement("li");
-                            listItem.textContent = `${index + 1}位: ${entry.displayTitle} - ${entry.points}`;
-                            rankingList.appendChild(listItem);
-                        });
-                    })
-                    .catch(error => {
-                        console.error('Error getting ranking:', error);
-                        // エラー発生時の処理 (例: エラーメッセージを表示)
-                        alert("ランキングを取得できませんでした。");
-                    });
-            }
             function resetHighScore() {
                 localStorage.removeItem("highScore");
                 highScore = 0;
@@ -1037,51 +972,6 @@
                 }
             });
 
-           registerHighScoreButton.addEventListener("click", () => {
-                const playerName = prompt("ランキングに登録する名前を入力してください:", "プレイヤー");
-                if (playerName) {
-                    const url = `https://bq-server.onrender.com/api/result/${scoreboardId}`;
-                    const data = {
-                        displayTitle: playerName,
-                        points: highScore
-                    };
-
-                    // 登録ボタンを無効化
-                    registerHighScoreButton.disabled = true;
-
-                    fetch(url, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'apikey': apiKey
-                        },
-                        body: JSON.stringify(data)
-                    })
-                        .then(response => {
-                            if (!response.ok) {
-                                // エラーが発生した場合の処理
-                                console.error('Error registering high score:', response.status, response.statusText);
-                                alert("ハイスコアの登録に失敗しました。");
-                                return Promise.reject(new Error(`HTTP error! status: ${response.status}`));
-                            }
-                            return response.json();
-                        })
-                        .then(() => {
-                            // 登録成功時の処理
-                            alert("ハイスコアを登録しました！");
-                            showRanking();
-                            registerHighScoreButton.style.display = "none";
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            alert("エラーが発生しました。");
-                        })
-                        .finally(() => {
-                            // 登録ボタンを有効化
-                            registerHighScoreButton.disabled = false;
-                        });
-                }
-            }); 
             return {
                 init: function () {
                     highScoreElement.textContent = highScore;
@@ -1092,3 +982,6 @@
 
         gameModule.init();
     </script>
+</body>
+
+</html>

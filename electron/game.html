@@ -137,25 +137,48 @@ body {
 }
 
 /* レスポンシブデザイン */
+/* スマホ表示用スタイル */
 @media (max-width: 768px) {
+   #gameArea {
+    width: 98vw; /* 95vw から 98vw に変更 */
+    height: 70vh; /* 60vh から 70vh に変更 */
+  }
 
-    /* スマホ */
-    #gameArea {
-        width: 95vw;
-        height: 60vh;
-    }
+  .block {
+    width: 30px;
+    height: 30px;
+  }
 
-    .block {
-        width: 30px;
-        height: 30px;
-    }
+  #player {
+    width: 60px;
+    height: 10px;
+  }
 
-    #player {
-        width: 60px;
-        height: 10px;
-    }
+  #rankingSidebar {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: auto;
+    margin-left: -50px; 
+    border-radius: 0;
+    transform: scale(1);
+  }
 
-    /* ... その他のスマホ用スタイル */
+  .ranking-sidebar {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  #resultScreen .result-content {
+    margin-bottom: 20px;
+  }
+
+  #toggleRanking {
+    margin-bottom: 20px;
+  }
 }
 
 @media (min-width: 768px) {
@@ -337,9 +360,10 @@ body {
                 <h2>ゲームオーバー！</h2>
                 <p>スコア: <span id="finalScore"></span></p>
                 <p>ハイスコア: <span id="highScore"></span></p>
-                <button id="registerHighScore">ハイスコアをランキングに登録</button>
                 <button id="restartGame">再挑戦</button>
+                <button id="toggleRanking">ランキングを表示/非表示</button>
                 <button id="resetHighScore">ハイスコアをリセット</button>
+                <button id="registerHighScore">ハイスコアをランキングに登録</button>
             </div>
             <div id="rankingSidebar" class="ranking-sidebar">
                 <h3>ランキング</h3>
@@ -365,6 +389,8 @@ body {
             const ammoElement = document.getElementById("ammo");
             const rankingList = document.getElementById("rankingList");
             const registerHighScoreButton = document.getElementById("registerHighScore");
+            const toggleRankingButton = document.getElementById("toggleRanking");
+            const rankingSidebar = document.getElementById("rankingSidebar");
 
 
             let playerX;
@@ -829,11 +855,18 @@ body {
                     registerHighScoreButton.style.display = "none";
                 }
 
+
+
+
                 finalScoreElement.textContent = score;
                 highScoreElement.textContent = highScore;
 
                 // ランキングの表示はshowRanking()に移動
                 showRanking();
+
+
+                rankingSidebar.style.display = "none";
+                toggleRankingButton.textContent = "ランキングを表示";
 
 
                 resultScreen.classList.add("show");
@@ -1130,6 +1163,19 @@ body {
                         });
                 }
             });
+
+
+            toggleRankingButton.addEventListener("click", () => {
+                if (rankingSidebar.style.display === "none") {
+                    rankingSidebar.style.display = "block";
+                    toggleRankingButton.textContent = "ランキングを非表示";
+                } else {
+                    rankingSidebar.style.display = "none";
+                    toggleRankingButton.textContent = "ランキングを表示";
+                }
+            });
+
+
             return {
                 init: function () {
                     highScoreElement.textContent = highScore;

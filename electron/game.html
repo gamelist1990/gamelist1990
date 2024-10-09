@@ -1102,9 +1102,7 @@ body {
             }
 
 
-
             function rankingchange() {
-
                 if (rankingSidebar.style.display === "none") {
                     rankingSidebar.style.display = "block";
                     toggleRankingButton.textContent = "ランキングを非表示";
@@ -1181,8 +1179,13 @@ body {
             });
 
 
-            toggleRankingButton.addEventListener("touchstart",rankingchange);
-            //toggleRankingButton.addEventListener("click", rankingchange);
+      if ('ontouchstart' in window) {
+                // タッチイベントに対応している = モバイルと判定
+                toggleRankingButton.addEventListener('touchstart', rankingchange);
+            } else {
+                // タッチイベントに対応していない = PCと判定
+                toggleRankingButton.addEventListener('click', rankingchange);
+            }
 
 
 

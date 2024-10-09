@@ -859,10 +859,13 @@ body {
                     .then(rankingData => {
                         rankingList.innerHTML = '';
 
+                        // スコアの高い順にソート
+                        rankingData.results.sort((a, b) => b.points - a.points);
+
                         rankingData.results.slice(0, 3).forEach((entry, index) => {
                             const listItem = document.createElement("li");
-                            const displayTitle = escapeHtml(String(entry.displayTitle)); // 文字列に変換
-                            const points = escapeHtml(String(entry.points)); // 文字列に変換
+                            const displayTitle = escapeHtml(String(entry.displayTitle));
+                            const points = escapeHtml(String(entry.points));
                             listItem.textContent = `${index + 1}位: ${displayTitle} - [${points}]`;
                             rankingList.appendChild(listItem);
                         });
@@ -1106,7 +1109,7 @@ body {
                             if (!response.ok) {
                                 // エラーが発生した場合の処理
                                 console.error('Error registering high score:', response.status, response.statusText);
-                                alert("ハイスコアの登録に失敗しました。(10/09)時点でStatus500を返すというバグが起きています\n(ランキングの運営にどうにかしてもらうか．．．)");
+                                alert("ハイスコアの登録に失敗しました。(10/09)時点でStatus500を返すというバグが起きています\n(ランキングの運営にどうにかしてもらうしか．．．)");
                                 return Promise.reject(new Error(`HTTP error! status: ${response.status}`));
                             }
                             return response.json();

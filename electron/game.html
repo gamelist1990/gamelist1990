@@ -51,11 +51,39 @@
             overflow: hidden;
         }
 
+        /* ブロックの共通クラス */
         .block {
-            background-color: #e74c3c;
             position: absolute;
             border-radius: 3px;
             animation: blockFall 1s linear infinite;
+            width: 50px;
+            /* 幅を追加 */
+            height: 50px;
+            /* 高さを追加 */
+        }
+
+        /* 通常のブロック */
+        .normal-block {
+            background-color: #e74c3c;
+            /* 赤色 */
+        }
+
+        /* 高速ブロック */
+        .fast-block {
+            background-color: #9b59b6;
+            animation: blockFall 0.5s linear infinite;
+        }
+
+        /* 低速ブロック */
+        .slow-block {
+            background-color: #2980b9;
+            animation: blockFall 2s linear infinite;
+        }
+
+        /* バリア付与ブロック */
+        .bonus-block {
+            background-color: #ff9f43;
+            animation: blockFall 0.5s linear infinite;
         }
 
         @keyframes blockFall {
@@ -67,6 +95,44 @@
 
             50% {
                 transform: translateY(-5px) rotate(5deg);
+            }
+        }
+
+        @keyframes fastBlockFall {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0);
+            }
+
+            50% {
+                transform: translateY(-10px) rotate(10deg);
+            }
+        }
+
+        @keyframes slowBlockFall {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0);
+            }
+
+            50% {
+                transform: translateY(-2px) rotate(2deg);
+            }
+        }
+
+        @keyframes bonusBlockPulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
             }
         }
 
@@ -147,9 +213,14 @@
                 /* 60vh から 70vh に変更 */
             }
 
-            .block {
+            .normal-block,
+            .fast-block,
+            .slow-block,
+            .bonus-block {
                 width: 30px;
+                /* スマホ用の幅 */
                 height: 30px;
+                /* スマホ用の高さ */
             }
 
             #player {
@@ -192,9 +263,14 @@
                 height: 600px;
             }
 
-            .block {
+            .normal-block,
+            .fast-block,
+            .slow-block,
+            .bonus-block {
                 width: 50px;
+                /* スマホ用の幅 */
                 height: 50px;
+                /* スマホ用の高さ */
             }
 
             #player {
@@ -223,62 +299,8 @@
             }
         }
 
-        .fast-block {
-            background-color: #9b59b6;
-            animation: fastBlockFall 0.5s linear infinite;
-        }
-
-        @keyframes fastBlockFall {
-
-            0%,
-            100% {
-                transform: translateY(0) rotate(0);
-            }
-
-            50% {
-                transform: translateY(-10px) rotate(10deg);
-            }
-        }
-
-        .slow-block {
-            background-color: #2980b9;
-            animation: slowBlockFall 2s linear infinite;
-        }
-
-        @keyframes slowBlockFall {
-
-            0%,
-            100% {
-                transform: translateY(0) rotate(0);
-            }
-
-            50% {
-                transform: translateY(-2px) rotate(2deg);
-            }
-        }
-
         .barrier {
             box-shadow: 0 0 10px 5px #ffff00;
-        }
-
-        .bonus-block {
-            /* オレンジ色のバリア付与ブロック */
-            background-color: #ff9f43;
-            animation: bonusBlockPulse 1s linear infinite;
-        }
-
-        @keyframes bonusBlockPulse {
-            0% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.1);
-            }
-
-            100% {
-                transform: scale(1);
-            }
         }
 
         #ammoContainer {
@@ -293,6 +315,15 @@
             background-color: rgba(128, 128, 128, 0.5);
             padding: 5px 10px;
             border-radius: 5px;
+        }
+        #eventStatusContainer {
+            position: absolute;
+            background-color: rgba(128, 128, 128, 0.5);
+            top: 40px; 
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 14px; 
         }
 
         #rankingList {
@@ -348,18 +379,21 @@
             Wave: <span id="wave">1</span>
         </div>
         <div id="player"></div>
-        <div id="ammoContainer">弾数: <span id="ammo">100</span></div>
+        <div id="ammoContainer">弾数: <span id="ammo">500</span></div>
+        <div id="eventStatusContainer">イベント：</div>
         <div id="startScreen" class="screen show">
             <h1>避け避けゲームv1</h1>
             <p><b>遊び方:</b></p>
             <ul>
                 <li>PC: AキーとDキーで左右に移動</li>
                 <li>スマホ: 画面左右をタッチして移動</li>
-                <li>PC: Rキー、スマホ: 画面上部タップで弾丸発射！</li>
+                <li>PC: Rキーで弾丸発射！</li>
+                <li>スマホ: 画面上部タップで弾丸発射！</li>
                 <li>ブロックに当たるとゲームオーバー！</li>
                 <li>バリア獲得でブロック1つを無効化！</li>
                 <li>弾丸はブロックに当たると消滅</li>
             </ul>
+            <p>10/11時点で大幅なアップデートを行いました<br>(イベントを新規で二種類追加計4種類,ランキング実装,弾薬:500)</p>
             <button id="startGame">ゲームスタート</button>
         </div>
         <div id="resultScreen" class="screen">
@@ -379,9 +413,8 @@
         </div>
 
     </div>
-
     <script>
-        const gameModule = (function () {
+    const gameModule = (function () {
             const gameArea = document.getElementById("gameArea");
             const player = document.getElementById("player");
             const startScreen = document.getElementById("startScreen");
@@ -394,12 +427,12 @@
             const restartGameButton = document.getElementById("restartGame");
             const resetHighScoreButton = document.getElementById("resetHighScore");
             const ammoElement = document.getElementById("ammo");
+            const eventStatusContainer = document.getElementById("eventStatusContainer");
             const rankingList = document.getElementById("rankingList");
             const registerHighScoreButton = document.getElementById("registerHighScore");
             const toggleRankingButton = document.getElementById("toggleRanking");
             const rankingSidebar = document.getElementById("rankingSidebar");
             const url = "https://script.google.com/macros/s/AKfycbzGk2qcBPqFsFa_7dKdPeRGtGnTMCXQpL0n9vl8aDUhYbNfzNqk8hNpLWY_vHfLYjidqQ/exec";
-
 
             let playerX;
             let score = 0;
@@ -419,7 +452,7 @@
             let bonusEventDuration = 5000;
             let pastScores = [];
             const maxPastScores = 5;
-            let ammo = 100;
+            let ammo = 500;
             let baseEventProbability = 0.2;
             let baseBarrierProbability = 0.05;
             let baseBonusEventProbability = 0.005;
@@ -428,6 +461,11 @@
             let eventProbabilityIncreaseFactor = 0.1;
             let barrierProbabilityIncreaseFactor = 0.05;
             let bonusEventProbabilityIncreaseFactor = 0.0025;
+            let currentEvent; // 現在発生中のイベントの種類を格納
+            let playerOriginalSpeed = 20; // プレイヤーの元の移動速度
+            let isSpeedUpActive = false;
+            let isDiffusionShotActive = false;
+
 
             const soundSettings = {
                 start: {
@@ -498,6 +536,26 @@
                     ],
                     gain: 0.5,
                 },
+                diffusionShot: {
+                    notes: [
+                        [1760, 0.05], // 高音の短い音
+                        [880, 0.05],  // 低音の短い音
+                    ],
+                    gain: 0.3,
+                },
+                speedUpStart: {
+                    frequency: 880,
+                    duration: 0.5,
+                    type: "square", // キリッとした音
+                    gain: 0.4,
+                },
+                speedUpEnd: {
+                    frequency: 440,
+                    duration: 0.2,
+                    type: "square",
+                    gain: 0.2,
+                },
+
             };
 
             function makeDistortionCurve(amount) {
@@ -623,11 +681,12 @@
                 player.classList.remove("barrier");
 
                 blocks.forEach((block) => block.remove());
+                eventStatusContainer.textContent = "";
                 blocks = [];
 
-                maxBlocks = 1;
+                maxBlocks = 3;
                 for (let i = 0; i < maxBlocks; i++) {
-                    createBlock();
+                    createBlock("normal"); // 通常ブロックを作成
                 }
 
                 startTime = Date.now();
@@ -635,19 +694,25 @@
                 ammoElement.textContent = ammo;
             }
 
-            function createBlock() {
+            // ブロックを作成する関数 (通常のブロックとイベントブロックを統合)
+            function createBlock(blockType) {
                 const block = document.createElement("div");
                 block.classList.add("block");
 
-                if (isBonusEventActive) {
-                    if (Math.random() < 0.5) {
+                switch (blockType) {
+                    case "normal":
+                        block.classList.add("normal-block");
+                        break;
+                    case "fast":
+                        block.classList.add("fast-block");
+                        break;
+                    case "slow":
+                        block.classList.add("slow-block");
+                        break;
+                    case "bonus":
                         block.classList.add("bonus-block");
-                    }
-                } else if (isEventActive) {
-                    const eventTypes = ["fast", "slow"];
-                    const eventType =
-                        eventTypes[Math.floor(Math.random() * eventTypes.length)];
-                    block.classList.add(`${eventType}-block`);
+                        break;
+                    // 他のイベントブロックの種類を追加
                 }
 
                 resetBlockPosition(block);
@@ -655,15 +720,23 @@
                 blocks.push(block);
             }
 
+
             function moveBlocks() {
                 blocks.forEach((block) => {
-                    let blockY =
-                        block.offsetTop +
-                        (block.classList.contains("fast-block")
-                            ? blockSpeed * 2
-                            : block.classList.contains("slow-block")
-                                ? blockSpeed * 0.5
-                                : blockSpeed);
+                    let blockY = block.offsetTop; // 初期値を設定
+
+                    // ブロックの種類によって速度を変更
+                    if (block.classList.contains("fast-block")) {
+                        blockY += blockSpeed * 2;
+                    } else if (block.classList.contains("slow-block")) {
+                        blockY += blockSpeed * 0.5;
+                    } else if (block.classList.contains("event-block") || block.classList.contains("bonus-block")) {
+                        // event-block と bonus-block にも速度を適用
+                        blockY += blockSpeed;
+                    } else {
+                        blockY += blockSpeed;
+                    }
+
                     block.style.top = blockY + "px";
 
                     if (blockY > gameArea.clientHeight - block.offsetHeight) {
@@ -681,21 +754,23 @@
             }
 
             function resetBlockPosition(block) {
-                const maxX = gameArea.offsetWidth - block.offsetWidth; // ブロックが配置可能な最大X座標
-                const x = Math.floor(Math.random() * maxX); // 0 から maxX までのランダムな値
+                const maxX = gameArea.offsetWidth - block.offsetWidth;
+                const x = Math.floor(Math.random() * maxX);
+                const maxY = block.offsetHeight * 5;
+                const top = -Math.floor(Math.random() * maxY);
                 block.style.left = x + "px";
-                block.style.top = -block.offsetHeight + "px";
-
-                if (!isEventActive) {
-                    block.classList.remove("fast-block", "slow-block");
-                }
+                block.style.top = top + "px";
             }
 
             function nextWave() {
                 wave++;
                 waveElement.textContent = wave;
-                blockSpeed *= 1.1;
-                maxBlocks = Math.min(wave, 5);
+
+                // ブロック落下速度の上限を設定
+                blockSpeed = Math.min(blockSpeed * 1.1, 10);
+
+                // 1waveあたりのブロック数を増やす
+                maxBlocks = Math.min(maxBlocks + wave, 10);
 
                 let eventProbability =
                     baseEventProbability + (wave - 1) * eventProbabilityIncreaseFactor;
@@ -714,13 +789,13 @@
 
                     if (latestScore < averageScore * 0.8) {
                         // スコアが平均の80%未満の場合
-                        eventProbability += eventProbabilityIncreaseFactor * 2; // イベント確率を増加
+                        eventProbability += eventProbabilityIncreaseFactor * 2;
                         barrierProbability += barrierProbabilityIncreaseFactor * 2;
                         bonusEventProbability += bonusEventProbabilityIncreaseFactor * 2;
                     }
                 }
 
-                eventProbability = Math.min(0.8, eventProbability); // 上限を設定
+                eventProbability = Math.min(0.8, eventProbability);
                 barrierProbability = Math.min(0.3, barrierProbability);
                 bonusEventProbability = Math.min(0.05, bonusEventProbability);
 
@@ -734,19 +809,57 @@
                     );
                 }
 
+
+                const eventTypes = ["speed", "diffusion", "fastBlock", "slowBlock", "bonusBlock"];
+
                 if (Math.random() < eventProbability) {
+                    currentEvent = eventTypes[Math.floor(Math.random() * eventTypes.length)];
                     startEvent();
+
+                    // イベント発生時に追加するブロックの数
+                    const additionalBlocks = Math.floor(Math.random() * 3) + 1; // 1〜3個
+
+                    // イベントの種類に応じてブロックを追加
+
+                    console.log("Event:"+ currentEvent)
+                    switch (currentEvent) {
+                        case "speed":
+                        case "diffusion":
+                            // speedとdiffusionイベント時は通常のブロックを追加
+                            for (let i = 0; i < additionalBlocks; i++) {
+                                createBlock("normal");
+                            }
+                            break;
+                        case "fastBlock":
+                            for (let i = 0; i < additionalBlocks; i++) {
+                                createBlock("fast");
+                            }
+                            break;
+                        case "slowBlock":
+                            for (let i = 0; i < additionalBlocks; i++) {
+                                createBlock("slow");
+                            }
+                            break;
+                        case "bonusBlock":
+                            for (let i = 0; i < additionalBlocks; i++) {
+                                createBlock("bonus");
+                            }
+                            break;
+                    }
                 }
+
 
                 if (Math.random() < barrierProbability && !hasBarrier) {
                     grantBarrier();
                 }
 
+                // 通常ブロックを追加してmaxBlocksに達するまで補充
                 while (blocks.length < maxBlocks) {
-                    createBlock();
+                    createBlock("normal");
                 }
                 playSound("waveUp");
             }
+
 
             function checkPlayerCollision(block) {
                 const playerRect = player.getBoundingClientRect();
@@ -784,13 +897,19 @@
             }
 
             function movePlayer(event) {
+                let moveSpeed = playerOriginalSpeed;
+                if (isSpeedUpActive) {
+                    moveSpeed *= 2; // 高速移動中は速度を2倍にする
+                }
+
+
                 if (event.key === "a" && playerX > 0) {
-                    playerX -= 20;
+                    playerX -= moveSpeed;
                 } else if (
                     event.key === "d" &&
                     playerX < gameArea.clientWidth - player.offsetWidth
                 ) {
-                    playerX += 20;
+                    playerX += moveSpeed;
                 }
                 player.style.transform = `translateX(${playerX}px)`;
             }
@@ -847,7 +966,6 @@
                 }
             }
 
-
             function showResult() {
                 if (score > highScore) {
                     highScore = score;
@@ -860,23 +978,17 @@
                     registerHighScoreButton.style.display = "none";
                 }
 
-
-
-
                 finalScoreElement.textContent = score;
                 highScoreElement.textContent = highScore;
 
                 // ランキングの表示はshowRanking()に移動
                 showRanking();
 
-
                 rankingSidebar.style.display = "none";
                 toggleRankingButton.textContent = "ランキングを表示";
 
-
                 resultScreen.classList.add("show");
             }
-
 
             function showRanking() {
                 $.ajax({
@@ -905,16 +1017,14 @@
                 });
             }
 
-
-            function escapeHtml(unsafe) {
-                return unsafe
-                    .replace(/&/g, "&amp;")
-                    .replace(/</g, "&lt;")
-                    .replace(/>/g, "&gt;")
-                    .replace(/"/g, "&quot;")
-                    .replace(/'/g, "&#039;");
-            }
-
+           function escapeHtml(unsafe) {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
 
             function resetHighScore() {
                 localStorage.removeItem("highScore");
@@ -926,6 +1036,7 @@
                 startScreen.classList.remove("show");
                 playSound("start");
                 initGame();
+                playerOriginalSpeed = 20;
                 gameLoop();
             }
 
@@ -933,19 +1044,58 @@
                 resultScreen.classList.remove("show");
                 playSound("start");
                 initGame();
+                playerOriginalSpeed = 20;
                 gameLoop();
             }
 
+            // イベント開始処理
             function startEvent() {
                 isEventActive = true;
                 gameArea.classList.add("event-background");
                 playSound("eventStart");
 
+                switch (currentEvent) {
+                    case "speed":
+                        startSpeedUpEvent();
+                        eventStatusContainer.textContent = "イベント発生中！移動速度アップ！";
+                        break;
+                    case "diffusion":
+                        startDiffusionShotEvent();
+                        eventStatusContainer.textContent = "イベント発生中！拡散ショット！";
+                        break;
+                }
+            }
+
+            function startSpeedUpEvent() {
+                isSpeedUpActive = true;
+                playSound("speedUpStart");
+
                 setTimeout(() => {
-                    isEventActive = false;
+                    isSpeedUpActive = false;
+                    eventStatusContainer.textContent = "";
+                    playSound("speedUpEnd");
+                    isEventActive = false; // イベント終了
                     gameArea.classList.remove("event-background");
                 }, 5000);
             }
+
+
+            function startDiffusionShotEvent() {
+            isDiffusionShotActive = true;
+
+            // 10秒後に拡散ショットを無効化
+            setTimeout(() => {
+                isDiffusionShotActive = false;
+                eventStatusContainer.textContent = "";
+                isEventActive = false; // イベント終了
+                playSound("speedUpEnd");
+                gameArea.classList.remove("event-background");
+            }, 5000); // 5秒
+        }
+
+
+
+
 
             function grantBarrier() {
                 hasBarrier = true;
@@ -964,7 +1114,7 @@
                     }
 
                     //場外移動を防止
-                    const boundaryMargin = 15; // 壁からの猶予距離 (px)
+                    const boundaryMargin = 17; // 壁からの猶予距離 (px)
 
                     if (playerX < -boundaryMargin) {
                         playerX = (gameArea.offsetWidth - player.offsetWidth) / 2;
@@ -1042,16 +1192,20 @@
                         // ブロックとの衝突判定
                         for (let i = 0; i < blocks.length; i++) {
                             if (checkBulletCollision(bullet, blocks[i])) {
-                                blocks[i].remove();
-                                blocks.splice(i, 1);
+                                if (isDiffusionShotActive) {
+                                    diffusionShot(bullet, blocks[i]);
+                                }  else {
+                                    blocks[i].remove();
+                                    blocks.splice(i, 1);
+                                    playSound("barrierBreak");
+
+                                    console.log("弾丸がブロックにヒット！ ブロック削除"); // 弾丸がブロックにヒットした時のログ
+
+                                    // 新しいブロックを作成
+                                    createBlock("normal"); // 通常ブロックを作成
+                                }
                                 clearInterval(bulletInterval);
                                 bullet.remove();
-                                playSound("barrierBreak");
-
-                                console.log("弾丸がブロックにヒット！ ブロック削除"); // 弾丸がブロックにヒットした時のログ
-
-                                // 新しいブロックを作成
-                                createBlock();
                                 updateScore(score + 1);
 
                                 break;
@@ -1092,6 +1246,77 @@
 
 
 
+            function diffusionShot(bullet, block) {
+                playSound("diffusionShot");
+
+                if (block === undefined) {
+                    console.warn("diffusionShot: block is undefined!");
+                    return; // blockがundefinedなら関数を終了
+                }
+
+
+                const numBullets = 50; // 拡散弾の数
+                const bulletSpeed = 9; // 拡散弾の速度
+                const angleOffset = Math.PI / 4; // 拡散角度のオフセット (45度)
+
+                for (let i = 0; i < numBullets; i++) {
+                    const diffusionBullet = document.createElement("div");
+                    diffusionBullet.classList.add("bullet");
+
+                    // 拡散弾の初期位置を衝突したブロックの中心に設定
+                    const blockX = parseFloat(block.style.left);
+                    const blockY = parseFloat(block.style.top);
+                    const blockWidth = block.offsetWidth;
+                    const blockHeight = block.offsetHeight;
+                    diffusionBullet.style.left = blockX + blockWidth / 2 - diffusionBullet.offsetWidth / 2 + "px";
+                    diffusionBullet.style.top = blockY + blockHeight / 2 - diffusionBullet.offsetHeight / 2 + "px";
+
+                    gameArea.appendChild(diffusionBullet);
+
+                    // 拡散弾の移動方向を計算
+                    const angle = (Math.PI * 2 / numBullets) * i - angleOffset;
+
+                    // 拡散弾の移動アニメーション
+                    const diffusionBulletInterval = setInterval(() => {
+                        const currentX = parseFloat(diffusionBullet.style.left);
+                        const currentY = parseFloat(diffusionBullet.style.top);
+                        diffusionBullet.style.left = currentX + Math.cos(angle) * bulletSpeed + "px";
+                        diffusionBullet.style.top = currentY + Math.sin(angle) * bulletSpeed + "px";
+
+                        // ブロックとの衝突判定 (拡散弾もブロックを破壊できるようにする)
+                        for (let j = 0; j < blocks.length; j++) {
+                            if (checkBulletCollision(diffusionBullet, blocks[j])) {
+                                blocks[j].remove();
+                                blocks.splice(j, 1);
+                                clearInterval(diffusionBulletInterval);
+                                diffusionBullet.remove();
+
+                                // 新しいブロックを作成
+                                createBlock("normal"); // 通常ブロックを作成
+
+                                updateScore(score + 1);
+                                break;
+                            }
+                        }
+
+                        // 画面外に出たら弾を削除
+                        if (
+                            currentY < 0 ||
+                            currentY > gameArea.clientHeight ||
+                            currentX < 0 ||
+                            currentX > gameArea.clientWidth
+                        ) {
+                            clearInterval(diffusionBulletInterval);
+                            diffusionBullet.remove();
+                        }
+                    }, 30);
+
+                }
+                block.remove();
+                blocks = blocks.filter(b => b !== block);
+            }
+
+
 
             function startBonusEvent() {
                 isBonusEventActive = true;
@@ -1100,9 +1325,21 @@
 
                 gameArea.classList.add("event-background");
 
+                // ボーナスイベント中にボーナスブロックを1つずつ作成
+                let bonusBlocksCreated = 0;
+                const bonusBlockInterval = setInterval(() => {
+                    if (bonusBlocksCreated < 5 && isBonusEventActive) {
+                        createBlock("bonus");
+                        bonusBlocksCreated++;
+                    } else {
+                        clearInterval(bonusBlockInterval);
+                    }
+                }, 500); // 0.5秒ごとにブロックを作成
+
                 setTimeout(() => {
                     isBonusEventActive = false;
                     gameArea.classList.remove("event-background");
+                    clearInterval(bonusBlockInterval); // イベント終了時にインターバルをクリア
                 }, bonusEventDuration);
             }
 
@@ -1175,24 +1412,25 @@
                 }
             });
 
-
-            if ('ontouchstart' in window) {
-                // タッチイベントに対応している = モバイルと判定
-                toggleRankingButton.addEventListener('touchstart', rankingchange);
-            } else {
-                // タッチイベントに対応していない = PCと判定
-                toggleRankingButton.addEventListener('click', rankingchange);
-            }
-
+        if ('ontouchstart' in window) {
+            // タッチイベントに対応している = モバイルと判定
+            toggleRankingButton.addEventListener('touchstart', rankingchange);
+        } else {
+            // タッチイベントに対応していない = PCと判定
+            toggleRankingButton.addEventListener('click', rankingchange);
+        }
 
 
-            return {
-                init: function () {
-                    highScoreElement.textContent = highScore;
-                    startScreen.classList.add("show");
-                },
-            };
-        })();
 
-        gameModule.init();
-    </script>
+        return {
+            init: function () {
+                highScoreElement.textContent = highScore;
+                startScreen.classList.add("show");
+            },
+        };
+    })();
+
+    gameModule.init();
+</script>
+</body>
+</html>

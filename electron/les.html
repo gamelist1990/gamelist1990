@@ -12,6 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
         /* 共通スタイル */
         * {
@@ -92,7 +93,7 @@
             text-align: center;
             transition: opacity 0.5s ease;
             opacity: 0;
-            z-index: 10;
+            z-index: 11;
         }
 
         .screen.show {
@@ -137,12 +138,13 @@
         }
 
         /* レスポンシブデザイン */
+        /* スマホ表示用スタイル */
         @media (max-width: 768px) {
-
-            /* スマホ */
             #gameArea {
-                width: 95vw;
-                height: 60vh;
+                width: 98vw;
+                /* 95vw から 98vw に変更 */
+                height: 85vh;
+                /* 60vh から 70vh に変更 */
             }
 
             .block {
@@ -155,7 +157,31 @@
                 height: 10px;
             }
 
-            /* ... その他のスマホ用スタイル */
+            #rankingSidebar {
+                position: fixed;
+                top: auto;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                width: 100%;
+                height: auto;
+                margin-left: -50px;
+                border-radius: 0;
+                transform: scale(1);
+            }
+
+            .ranking-sidebar {
+                width: 100%;
+                margin-left: 0;
+            }
+
+            #resultScreen .result-content {
+                margin-bottom: 20px;
+            }
+
+            #toggleRanking {
+                margin-bottom: 20px;
+            }
         }
 
         @media (min-width: 768px) {
@@ -268,6 +294,48 @@
             padding: 5px 10px;
             border-radius: 5px;
         }
+
+        #rankingList {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        #rankingList li {
+            margin-bottom: 10px;
+
+        }
+
+        /* ランキングサイドバーのスタイル */
+        #rankingSidebar {
+            position: absolute;
+            /* 絶対配置 */
+            top: 10px;
+            right: 10px;
+            width: 280px;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 5px;
+            z-index: 10;
+            transform: scale(0.7);
+        }
+
+        .ranking-sidebar {
+            width: 280px;
+            /* サイドバーの幅 */
+            background-color: rgba(0, 0, 0, 0.8);
+            /* サイドバーの背景色 */
+            padding: 20px;
+            border-radius: 5px;
+            margin-left: 20px;
+            /* 左側のコンテンツとの間隔 */
+            z-index: 10;
+        }
+
+        .ranking-sidebar h3 {
+            color: white;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 
@@ -295,12 +363,21 @@
             <button id="startGame">ゲームスタート</button>
         </div>
         <div id="resultScreen" class="screen">
-            <h2>ゲームオーバー！</h2>
-            <p>スコア: <span id="finalScore"></span></p>
-            <p>ハイスコア: <span id="highScore"></span></p>
-            <button id="restartGame">再挑戦</button>
-            <button id="resetHighScore">ハイスコアをリセット</button>
+            <div class="result-content">
+                <h2>ゲームオーバー！</h2>
+                <p>スコア: <span id="finalScore"></span></p>
+                <p>ハイスコア: <span id="highScore"></span></p>
+                <button id="restartGame">再挑戦</button>
+                <button id="toggleRanking">ランキングを表示/非表示</button>
+                <button id="resetHighScore">ハイスコアをリセット</button>
+                <button id="registerHighScore">ハイスコアをランキングに登録</button>
+            </div>
+            <div id="rankingSidebar" class="ranking-sidebar">
+                <h3>ランキング</h3>
+                <ul id="rankingList"></ul>
+            </div>
         </div>
+
     </div>
 
     <script>
@@ -317,6 +394,12 @@
             const restartGameButton = document.getElementById("restartGame");
             const resetHighScoreButton = document.getElementById("resetHighScore");
             const ammoElement = document.getElementById("ammo");
+            const rankingList = document.getElementById("rankingList");
+            const registerHighScoreButton = document.getElementById("registerHighScore");
+            const toggleRankingButton = document.getElementById("toggleRanking");
+            const rankingSidebar = document.getElementById("rankingSidebar");
+            const url = "https://script.google.com/macros/s/AKfycbzGk2qcBPqFsFa_7dKdPeRGtGnTMCXQpL0n9vl8aDUhYbNfzNqk8hNpLWY_vHfLYjidqQ/exec";
+
 
             let playerX;
             let score = 0;
@@ -717,7 +800,7 @@
                     const touch = event.changedTouches[i];
                     const touchY = touch.clientY;
 
-                    if (touchY < gameArea.clientHeight * 0.6) {
+                    if (touchY < gameArea.clientHeight * 0.4) {
                         // shoot関数にeventオブジェクトとtouchオブジェクトを渡す
                         shoot(event, touch);
                         event.preventDefault();
@@ -764,16 +847,74 @@
                 }
             }
 
+
             function showResult() {
                 if (score > highScore) {
                     highScore = score;
                     localStorage.setItem("highScore", highScore);
+
+                    // ハイスコア更新時にランキング登録ボタンを表示
+                    registerHighScoreButton.style.display = "block";
+                } else {
+                    // ハイスコア更新時以外はランキング登録ボタンを非表示
+                    registerHighScoreButton.style.display = "none";
                 }
+
+
+
+
                 finalScoreElement.textContent = score;
                 highScoreElement.textContent = highScore;
 
+                // ランキングの表示はshowRanking()に移動
+                showRanking();
+
+
+                rankingSidebar.style.display = "none";
+                toggleRankingButton.textContent = "ランキングを表示";
+
+
                 resultScreen.classList.add("show");
             }
+
+
+            function showRanking() {
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (rankingData) {
+                        rankingList.innerHTML = '';
+
+                        // スコアの高い順にソート (スコアは配列の2番目の要素)
+                        rankingData.results.sort((a, b) => b[1] - a[1]);
+
+                        rankingData.results.slice(0, 3).forEach((entry, index) => {
+                            const listItem = document.createElement("li");
+                            // 配列から名前とスコアを取得 (名前は1番目、スコアは2番目の要素)
+                            const displayTitle = escapeHtml(String(entry[0]));
+                            const points = escapeHtml(String(entry[1]));
+                            listItem.textContent = `${index + 1}位: ${displayTitle} - [${points}]`;
+                            rankingList.appendChild(listItem);
+                        });
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error('Error getting ranking:', errorThrown);
+                        alert("ランキングを取得できませんでした。");
+                    }
+                });
+            }
+
+
+            function escapeHtml(unsafe) {
+                return unsafe
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+            }
+
 
             function resetHighScore() {
                 localStorage.removeItem("highScore");
@@ -821,6 +962,16 @@
                         nextWave();
                         startTime = Date.now();
                     }
+
+                    //場外移動を防止
+                    const boundaryMargin = 15; // 壁からの猶予距離 (px)
+
+                    if (playerX < -boundaryMargin) {
+                        playerX = (gameArea.offsetWidth - player.offsetWidth) / 2;
+                    } else if (playerX > gameArea.clientWidth - player.offsetWidth + boundaryMargin) {
+                        playerX = (gameArea.offsetWidth - player.offsetWidth) / 2;
+                    }
+                    player.style.transform = `translateX(${playerX}px)`;
 
                     if (
                         Math.random() < bonusEventProbability &&
@@ -877,7 +1028,6 @@
                     // 弾の移動アニメーションの開始位置をプレイヤーの上部中央に設定
                     let bulletX = playerLeft + playerWidth / 2 - bullet.offsetWidth / 2;
                     let bulletY = playerTop - bullet.offsetHeight;
-
                     //console.log("弾丸発射！ 初期位置: x=", bulletX, "y=", bulletY); // 弾丸発射時のログ
 
                     // 弾の移動アニメーション
@@ -940,6 +1090,9 @@
                 );
             }
 
+
+
+
             function startBonusEvent() {
                 isBonusEventActive = true;
                 bonusEventStartTime = Date.now();
@@ -951,6 +1104,17 @@
                     isBonusEventActive = false;
                     gameArea.classList.remove("event-background");
                 }, bonusEventDuration);
+            }
+
+
+            function rankingchange() {
+                if (rankingSidebar.style.display === "none") {
+                    rankingSidebar.style.display = "block";
+                    toggleRankingButton.textContent = "ランキングを非表示";
+                } else {
+                    rankingSidebar.style.display = "none";
+                    toggleRankingButton.textContent = "ランキングを表示";
+                }
             }
 
             startGameButton.addEventListener("click", startGame);
@@ -972,6 +1136,56 @@
                 }
             });
 
+            registerHighScoreButton.addEventListener("click", () => {
+                const playerName = prompt("ランキングに登録する名前を入力してください:", "Player");
+                if (playerName) {
+                    const data = {
+                        displayTitle: playerName,
+                        points: highScore,
+                    };
+
+                    // 登録ボタンを無効化
+                    registerHighScoreButton.disabled = true;
+
+                    // jQuery.ajax を使用して POST リクエストを送信
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        data: data, // JSON.stringify() は不要
+                        success: function (data) {
+                            // 登録成功時の処理
+                            if (data.result === "yes") {
+                                alert(data.message); // GASから返されたメッセージを表示
+                                showRanking();
+                                registerHighScoreButton.style.display = "none";
+                            } else {
+                                alert(data.error); // エラーメッセージを表示
+                            }
+                        },
+                        error: function (error) {
+                            // エラーが発生した場合の処理
+                            console.error('Error registering high score:', error);
+                            alert("ハイスコアの登録に失敗しました。");
+                        },
+                        complete: function () {
+                            // 登録ボタンを有効化
+                            registerHighScoreButton.disabled = false;
+                        }
+                    });
+                }
+            });
+
+
+            if ('ontouchstart' in window) {
+                // タッチイベントに対応している = モバイルと判定
+                toggleRankingButton.addEventListener('touchstart', rankingchange);
+            } else {
+                // タッチイベントに対応していない = PCと判定
+                toggleRankingButton.addEventListener('click', rankingchange);
+            }
+
+
+
             return {
                 init: function () {
                     highScoreElement.textContent = highScore;
@@ -982,6 +1196,3 @@
 
         gameModule.init();
     </script>
-</body>
-
-</html>

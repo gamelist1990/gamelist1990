@@ -12,323 +12,330 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
         /* 共通スタイル */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-.bullet {
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    background-color: #2ecc71;
-    /* 弾の色 (例: 緑) */
-    border-radius: 50%;
-    /* 円形にする */
-}
+        .bullet {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #2ecc71;
+            /* 弾の色 (例: 緑) */
+            border-radius: 50%;
+            /* 円形にする */
+        }
 
-body {
-    overflow: hidden;
-    font-family: "Press Start 2P", monospace;
-    background-color: #222;
-    background-image: url("https://flowerillust.com/img/flower/flower-back1262.jpg");
-    background-repeat: repeat;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    /* 画面全体を覆う */
-}
+        body {
+            overflow: hidden;
+            font-family: "Press Start 2P", monospace;
+            background-color: #222;
+            background-image: url("https://flowerillust.com/img/flower/flower-back1262.jpg");
+            background-repeat: repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            /* 画面全体を覆う */
+        }
 
-#gameArea {
-    position: relative;
-    background-color: #eee;
-    border-radius: 5px;
-    overflow: hidden;
-}
+        #gameArea {
+            position: relative;
+            background-color: #eee;
+            border-radius: 5px;
+            overflow: hidden;
+        }
 
-.block {
-    background-color: #e74c3c;
-    position: absolute;
-    border-radius: 3px;
-    animation: blockFall 1s linear infinite;
-}
+        .block {
+            background-color: #e74c3c;
+            position: absolute;
+            border-radius: 3px;
+            animation: blockFall 1s linear infinite;
+        }
 
-@keyframes blockFall {
+        @keyframes blockFall {
 
-    0%,
-    100% {
-        transform: translateY(0) rotate(0);
-    }
+            0%,
+            100% {
+                transform: translateY(0) rotate(0);
+            }
 
-    50% {
-        transform: translateY(-5px) rotate(5deg);
-    }
-}
+            50% {
+                transform: translateY(-5px) rotate(5deg);
+            }
+        }
 
-#player {
-    background-color: #3498db;
-    position: absolute;
-    bottom: 10px;
-    border-radius: 5px;
-    transition: transform 0.1s ease;
-}
+        #player {
+            background-color: #3498db;
+            position: absolute;
+            bottom: 10px;
+            border-radius: 5px;
+            transition: transform 0.1s ease;
+        }
 
-.screen {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    color: white;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    text-align: center;
-    transition: opacity 0.5s ease;
-    opacity: 0;
-    z-index: 11;
-}
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+            transition: opacity 0.5s ease;
+            opacity: 0;
+            z-index: 11;
+        }
 
-.screen.show {
-    opacity: 1;
-    display: flex;
-}
+        .screen.show {
+            opacity: 1;
+            display: flex;
+        }
 
-#startScreen button,
-#resultScreen button {
-    padding: 15px 30px;
-    margin-top: 30px;
-    background-color: #2ecc71;
-    border: none;
-    color: white;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    cursor: pointer;
-    border-radius: 5px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s ease, transform 0.1s ease;
-}
+        #startScreen button,
+        #resultScreen button {
+            padding: 15px 30px;
+            margin-top: 30px;
+            background-color: #2ecc71;
+            border: none;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
 
-#startScreen button:hover,
-#resultScreen button:hover {
-    background-color: #27ae60;
-    transform: translateY(-2px);
-}
+        #startScreen button:hover,
+        #resultScreen button:hover {
+            background-color: #27ae60;
+            transform: translateY(-2px);
+        }
 
-#scoreContainer {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    color: white;
-}
+        #scoreContainer {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: white;
+        }
 
-#waveContainer {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    color: white;
-}
+        #waveContainer {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: white;
+        }
 
-/* レスポンシブデザイン */
-/* スマホ表示用スタイル */
-@media (max-width: 768px) {
-   #gameArea {
-    width: 98vw; /* 95vw から 98vw に変更 */
-    height: 85vh; /* 60vh から 70vh に変更 */
-  }
+        /* レスポンシブデザイン */
+        /* スマホ表示用スタイル */
+        @media (max-width: 768px) {
+            #gameArea {
+                width: 98vw;
+                /* 95vw から 98vw に変更 */
+                height: 85vh;
+                /* 60vh から 70vh に変更 */
+            }
 
-  .block {
-    width: 30px;
-    height: 30px;
-  }
+            .block {
+                width: 30px;
+                height: 30px;
+            }
 
-  #player {
-    width: 60px;
-    height: 10px;
-  }
+            #player {
+                width: 60px;
+                height: 10px;
+            }
 
-  #rankingSidebar {
-    position: fixed;
-    top: auto;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    height: auto;
-    margin-left: -50px; 
-    border-radius: 0;
-    transform: scale(1);
-  }
+            #rankingSidebar {
+                position: fixed;
+                top: auto;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                width: 100%;
+                height: auto;
+                margin-left: -50px;
+                border-radius: 0;
+                transform: scale(1);
+            }
 
-  .ranking-sidebar {
-    width: 100%;
-    margin-left: 0;
-  }
+            .ranking-sidebar {
+                width: 100%;
+                margin-left: 0;
+            }
 
-  #resultScreen .result-content {
-    margin-bottom: 20px;
-  }
+            #resultScreen .result-content {
+                margin-bottom: 20px;
+            }
 
-  #toggleRanking {
-    margin-bottom: 20px;
-  }
-}
+            #toggleRanking {
+                margin-bottom: 20px;
+            }
+        }
 
-@media (min-width: 768px) {
+        @media (min-width: 768px) {
 
-    /* PC */
-    #gameArea {
-        width: 800px;
-        height: 600px;
-    }
+            /* PC */
+            #gameArea {
+                width: 800px;
+                height: 600px;
+            }
 
-    .block {
-        width: 50px;
-        height: 50px;
-    }
+            .block {
+                width: 50px;
+                height: 50px;
+            }
 
-    #player {
-        width: 100px;
-        height: 15px;
-    }
+            #player {
+                width: 100px;
+                height: 15px;
+            }
 
-    /* ... その他のPC用スタイル */
-}
+            /* ... その他のPC用スタイル */
+        }
 
-.event-background {
-    animation: eventBackground 1s linear infinite;
-}
+        .event-background {
+            animation: eventBackground 1s linear infinite;
+        }
 
-@keyframes eventBackground {
-    0% {
-        background-color: #eee;
-    }
+        @keyframes eventBackground {
+            0% {
+                background-color: #eee;
+            }
 
-    50% {
-        background-color: #f0f0f0;
-    }
+            50% {
+                background-color: #f0f0f0;
+            }
 
-    100% {
-        background-color: #eee;
-    }
-}
+            100% {
+                background-color: #eee;
+            }
+        }
 
-.fast-block {
-    background-color: #9b59b6;
-    animation: fastBlockFall 0.5s linear infinite;
-}
+        .fast-block {
+            background-color: #9b59b6;
+            animation: fastBlockFall 0.5s linear infinite;
+        }
 
-@keyframes fastBlockFall {
+        @keyframes fastBlockFall {
 
-    0%,
-    100% {
-        transform: translateY(0) rotate(0);
-    }
+            0%,
+            100% {
+                transform: translateY(0) rotate(0);
+            }
 
-    50% {
-        transform: translateY(-10px) rotate(10deg);
-    }
-}
+            50% {
+                transform: translateY(-10px) rotate(10deg);
+            }
+        }
 
-.slow-block {
-    background-color: #2980b9;
-    animation: slowBlockFall 2s linear infinite;
-}
+        .slow-block {
+            background-color: #2980b9;
+            animation: slowBlockFall 2s linear infinite;
+        }
 
-@keyframes slowBlockFall {
+        @keyframes slowBlockFall {
 
-    0%,
-    100% {
-        transform: translateY(0) rotate(0);
-    }
+            0%,
+            100% {
+                transform: translateY(0) rotate(0);
+            }
 
-    50% {
-        transform: translateY(-2px) rotate(2deg);
-    }
-}
+            50% {
+                transform: translateY(-2px) rotate(2deg);
+            }
+        }
 
-.barrier {
-    box-shadow: 0 0 10px 5px #ffff00;
-}
+        .barrier {
+            box-shadow: 0 0 10px 5px #ffff00;
+        }
 
-.bonus-block {
-    /* オレンジ色のバリア付与ブロック */
-    background-color: #ff9f43;
-    animation: bonusBlockPulse 1s linear infinite;
-}
+        .bonus-block {
+            /* オレンジ色のバリア付与ブロック */
+            background-color: #ff9f43;
+            animation: bonusBlockPulse 1s linear infinite;
+        }
 
-@keyframes bonusBlockPulse {
-    0% {
-        transform: scale(1);
-    }
+        @keyframes bonusBlockPulse {
+            0% {
+                transform: scale(1);
+            }
 
-    50% {
-        transform: scale(1.1);
-    }
+            50% {
+                transform: scale(1.1);
+            }
 
-    100% {
-        transform: scale(1);
-    }
-}
+            100% {
+                transform: scale(1);
+            }
+        }
 
-#ammoContainer {
-    position: absolute;
-    top: 10px;
-    /* 上端から 10px の位置に配置 */
-    left: 50%;
-    transform: translateX(-50%);
-    /* 水平方向に中央寄せ */
-    color: white;
-    font-size: 16px;
-    background-color: rgba(128, 128, 128, 0.5);
-    padding: 5px 10px;
-    border-radius: 5px;
-}
+        #ammoContainer {
+            position: absolute;
+            top: 10px;
+            /* 上端から 10px の位置に配置 */
+            left: 50%;
+            transform: translateX(-50%);
+            /* 水平方向に中央寄せ */
+            color: white;
+            font-size: 16px;
+            background-color: rgba(128, 128, 128, 0.5);
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
 
-#rankingList {
-    list-style-type: none;
-    padding: 0;
-    margin-top: 20px;
-}
+        #rankingList {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+        }
 
-#rankingList li {
-    margin-bottom: 10px;
-    
-}
+        #rankingList li {
+            margin-bottom: 10px;
 
-/* ランキングサイドバーのスタイル */
-#rankingSidebar {
-    position: absolute; /* 絶対配置 */
-    top: 10px;
-    right: 10px;
-    width: 280px;
-    background-color: rgba(0, 0, 0, 0.8);
-    padding: 20px;
-    border-radius: 5px;
-    z-index: 10; 
-    transform: scale(0.7);
-}
+        }
 
-.ranking-sidebar {
-    width: 280px; /* サイドバーの幅 */
-    background-color: rgba(0, 0, 0, 0.8); /* サイドバーの背景色 */
-    padding: 20px;
-    border-radius: 5px;
-    margin-left: 20px; /* 左側のコンテンツとの間隔 */
-    z-index: 10; 
-}
+        /* ランキングサイドバーのスタイル */
+        #rankingSidebar {
+            position: absolute;
+            /* 絶対配置 */
+            top: 10px;
+            right: 10px;
+            width: 280px;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 5px;
+            z-index: 10;
+            transform: scale(0.7);
+        }
 
-.ranking-sidebar h3 {
-    color: white;
-    margin-bottom: 10px;
-}
+        .ranking-sidebar {
+            width: 280px;
+            /* サイドバーの幅 */
+            background-color: rgba(0, 0, 0, 0.8);
+            /* サイドバーの背景色 */
+            padding: 20px;
+            border-radius: 5px;
+            margin-left: 20px;
+            /* 左側のコンテンツとの間隔 */
+            z-index: 10;
+        }
+
+        .ranking-sidebar h3 {
+            color: white;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 
@@ -370,7 +377,7 @@ body {
                 <ul id="rankingList"></ul>
             </div>
         </div>
-        
+
     </div>
 
     <script>
@@ -391,6 +398,7 @@ body {
             const registerHighScoreButton = document.getElementById("registerHighScore");
             const toggleRankingButton = document.getElementById("toggleRanking");
             const rankingSidebar = document.getElementById("rankingSidebar");
+            const url = "https://script.google.com/macros/s/AKfycbzGk2qcBPqFsFa_7dKdPeRGtGnTMCXQpL0n9vl8aDUhYbNfzNqk8hNpLWY_vHfLYjidqQ/exec";
 
 
             let playerX;
@@ -840,9 +848,6 @@ body {
             }
 
 
-            const scoreboardId = "rytnt3jl";
-            const apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmVhdG9ySWQiOiI2NzA1ZTM1YWRmNGJhYWM2OWE2MzQ3YzQiLCJzY29yZWJvYXJkSWQiOiJyeXRudDNqbCIsImlhdCI6MTcyODQzOTE3MX0.hjXj4pCYyE5sz3TPMDMs51JojVqW0rDoytZmrKFJ034"; 
-
             function showResult() {
                 if (score > highScore) {
                     highScore = score;
@@ -874,39 +879,30 @@ body {
 
 
             function showRanking() {
-                const url = `https://bq-server.onrender.com/api/results/${scoreboardId}`;
-
-                fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'apikey': apiKey
-                    }
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`Network response was not ok (status: ${response.status})`);
-                        }
-                        return response.json();
-                    })
-                    .then(rankingData => {
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (rankingData) {
                         rankingList.innerHTML = '';
 
-                        // スコアの高い順にソート
-                        rankingData.results.sort((a, b) => b.points - a.points);
+                        // スコアの高い順にソート (スコアは配列の2番目の要素)
+                        rankingData.results.sort((a, b) => b[1] - a[1]);
 
                         rankingData.results.slice(0, 3).forEach((entry, index) => {
                             const listItem = document.createElement("li");
-                            const displayTitle = escapeHtml(String(entry.displayTitle));
-                            const points = escapeHtml(String(entry.points));
+                            // 配列から名前とスコアを取得 (名前は1番目、スコアは2番目の要素)
+                            const displayTitle = escapeHtml(String(entry[0]));
+                            const points = escapeHtml(String(entry[1]));
                             listItem.textContent = `${index + 1}位: ${displayTitle} - [${points}]`;
                             rankingList.appendChild(listItem);
                         });
-                    })
-                    .catch(error => {
-                        console.error('Error getting ranking:', error);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error('Error getting ranking:', errorThrown);
                         alert("ランキングを取得できませんでした。");
-                    });
+                    }
+                });
             }
 
 
@@ -967,6 +963,16 @@ body {
                         startTime = Date.now();
                     }
 
+                    //場外移動を防止
+                    const boundaryMargin = 15; // 壁からの猶予距離 (px)
+
+                    if (playerX < -boundaryMargin) {
+                        playerX = (gameArea.offsetWidth - player.offsetWidth) / 2;
+                    } else if (playerX > gameArea.clientWidth - player.offsetWidth + boundaryMargin) {
+                        playerX = (gameArea.offsetWidth - player.offsetWidth) / 2;
+                    }
+                    player.style.transform = `translateX(${playerX}px)`;
+
                     if (
                         Math.random() < bonusEventProbability &&
                         !isBonusEventActive &&
@@ -1022,7 +1028,6 @@ body {
                     // 弾の移動アニメーションの開始位置をプレイヤーの上部中央に設定
                     let bulletX = playerLeft + playerWidth / 2 - bullet.offsetWidth / 2;
                     let bulletY = playerTop - bullet.offsetHeight;
-
                     //console.log("弾丸発射！ 初期位置: x=", bulletX, "y=", bulletY); // 弾丸発射時のログ
 
                     // 弾の移動アニメーション
@@ -1134,9 +1139,7 @@ body {
             registerHighScoreButton.addEventListener("click", () => {
                 const playerName = prompt("ランキングに登録する名前を入力してください:", "Player");
                 if (playerName) {
-                    const url = `https://bq-server.onrender.com/api/result/${scoreboardId}`;
                     const data = {
-                        additionalInfo: "",
                         displayTitle: playerName,
                         points: highScore,
                     };
@@ -1144,42 +1147,37 @@ body {
                     // 登録ボタンを無効化
                     registerHighScoreButton.disabled = true;
 
-                    fetch(url, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'apikey': apiKey
-                        },
-                        body: JSON.stringify(data)
-                    })
-                        .then(response => {
-                            if (!response.ok) {
-                                // エラーが発生した場合の処理
-                                console.error('Error registering high score:', response.status, response.statusText);
-                                alert("ハイスコアの登録に失敗しました。(10/09)時点でStatus500を返すというバグが起きています\n(ランキングの運営にどうにかしてもらうしか．．．)");
-                                return Promise.reject(new Error(`HTTP error! status: ${response.status}`));
-                            }
-                            return response.json();
-                        })
-                        .then(() => {
+                    // jQuery.ajax を使用して POST リクエストを送信
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        data: data, // JSON.stringify() は不要
+                        success: function (data) {
                             // 登録成功時の処理
-                            alert("ハイスコアを登録しました！");
-                            showRanking();
-                            registerHighScoreButton.style.display = "none";
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            alert("エラーが発生しました。");
-                        })
-                        .finally(() => {
+                            const result = JSON.parse(data); // レスポンスをJSONとしてパース
+                            if (result.result === "yes") {
+                                alert(result.message); // GASから返されたメッセージを表示
+                                showRanking();
+                                registerHighScoreButton.style.display = "none";
+                            } else {
+                                alert(result.error); // エラーメッセージを表示
+                            }
+                        },
+                        error: function (error) {
+                            // エラーが発生した場合の処理
+                            console.error('Error registering high score:', error);
+                            alert("ハイスコアの登録に失敗しました。");
+                        },
+                        complete: function () {
                             // 登録ボタンを有効化
                             registerHighScoreButton.disabled = false;
-                        });
+                        }
+                    });
                 }
             });
 
 
-      if ('ontouchstart' in window) {
+            if ('ontouchstart' in window) {
                 // タッチイベントに対応している = モバイルと判定
                 toggleRankingButton.addEventListener('touchstart', rankingchange);
             } else {

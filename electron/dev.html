@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <base target="_top">
+    <title>GAS デバッグ (API)</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <h1>POST リクエスト</h1>
+    <form id="postForm">
+        <label for="name">名前:</label>
+        <input type="text" id="name" name="name"><br><br>
+        <label for="score">スコア:</label>
+        <input type="number" id="score" name="score"><br><br>
+        <button type="submit">送信</button>
+    </form>
+
+    <h1>GET リクエスト</h1>
+    <button id="getButton">取得</button>
+
+    <div id="result"></div>
+
+    <script>
+        const postForm = $('#postForm');
+        const getButton = $('#getButton');
+        const resultDiv = $('#result');
+        const apiUrl ='https://script.google.com/macros/s/AKfycbzGk2qcBPqFsFa_7dKdPeRGtGnTMCXQpL0n9vl8aDUhYbNfzNqk8hNpLWY_vHfLYjidqQ/exec';
+
+        postForm.on('submit', (event) => {
+            event.preventDefault();
+            const name = $('#name').val();
+            const score = $('#score').val();
+
+            $.ajax({
+                url: apiUrl,
+                type: 'POST',
+                data: {
+                    displayTitle: name,
+                    points: score
+                },
+                success: function (data) {
+                    displayResult(data);
+                },
+                error: function (error) {
+                    displayResult({
+                        error: error.message
+                    });
+                }
+            });
+        });
+
+        getButton.on('click', () => {
+            $.ajax({
+                url: apiUrl,
+                type: 'GET',
+                success: function (data) {
+                    displayResult(data);
+                },
+                error: function (error) {
+                    displayResult({
+                        error: error.message
+                    });
+                }
+            });
+        });
+
+        function displayResult(result) {
+            resultDiv.html(JSON.stringify(result));
+        }
+    </script>
+</body>
+
+</html>

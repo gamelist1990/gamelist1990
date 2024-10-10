@@ -1,0 +1,13 @@
+{
+
+    "posts": [
+        {
+            "id": 1,
+            "displayTitle": "BETATest",
+            "points": 1
+        }
+    ],
+    "profile": {
+        "name": "typicode"
+    }
+}

@@ -1154,13 +1154,12 @@
                         data: data, // JSON.stringify() は不要
                         success: function (data) {
                             // 登録成功時の処理
-                            const result = JSON.parse(data); // レスポンスをJSONとしてパース
-                            if (result.result === "yes") {
-                                alert(result.message); // GASから返されたメッセージを表示
+                            if (data.result === "yes") {
+                                alert(data.message); // GASから返されたメッセージを表示
                                 showRanking();
                                 registerHighScoreButton.style.display = "none";
                             } else {
-                                alert(result.error); // エラーメッセージを表示
+                                alert(data.error); // エラーメッセージを表示
                             }
                         },
                         error: function (error) {

@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>音げー</title>
+    <style>
+        body {
+            background-color: #222;
+            font-family: sans-serif;
+            overflow: hidden;
+            margin: 0;
+        }
+
+        #container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .screen {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .screen h1 {
+            color: #f0f0f0;
+            font-size: 5vw;
+            margin-bottom: 3vh;
+            text-shadow: 0.2vw 0.2vw 0.4vw black;
+        }
+
+        .screen button {
+            background-color: #FFA500;
+            color: #222;
+            padding: 1.5vh 3vw;
+            font-size: 2vw;
+            border: none;
+            border-radius: 0.5vw;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 1vh 0;
+        }
+
+        .screen button:hover {
+            background-color: #FF8C00;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #game-area {
+            width: 40vw;
+            height: 80vh;
+            display: flex;
+            align-items: flex-end;
+            position: relative;
+            background-color: #333;
+            border-radius: 1vw;
+            overflow: hidden;
+        }
+
+        #lane-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .lane {
+            width: 45%;
+            height: 100%;
+            background-color: #444;
+            border: 2px solid #555;
+            border-radius: 5px;
+            position: relative;
+        }
+
+        #key-indicators {
+            display: flex;
+            justify-content: space-around;
+            width: 30vw;
+            margin-bottom: 5vh;
+        }
+
+        .key-indicator {
+            width: 8vw;
+            height: 8vw;
+            border-radius: 50%;
+            background-color: rgba(255, 165, 0, 0.5);
+            color: #222;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3vw;
+            transition: transform 0.1s;
+        }
+
+        .key-indicator.red {
+            background-color: rgba(255, 0, 0, 0.5);
+        }
+
+        .key-indicator.blue {
+            background-color: rgba(0, 0, 255, 0.5);
+        }
+
+        .key-indicator:active {
+            transform: scale(0.9);
+        }
+
+        .judgement-line {
+            width: 90%;
+            height: 2px;
+            background-color: #FFA500;
+            position: absolute;
+            bottom: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .note {
+            width: 20%;
+            height: 10%;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 10px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            animation: moveNote 3s linear forwards;
+        }
+
+        @keyframes moveNote {
+            0% {
+                top: -5%;
+            }
+
+            100% {
+                top: 100%;
+            }
+        }
+
+        .note.red {
+            background-color: #ff0000;
+            background-image: linear-gradient(to bottom, #ff0000, #ff6347);
+        }
+
+        .note.blue {
+            background-color: #0000ff;
+            background-image: linear-gradient(to bottom, #0000ff, #6495ed);
+        }
+
+        .judgement {
+            position: absolute;
+            top: 70%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 4vw;
+            color: white;
+            text-shadow: 0.2vw 0.2vw 0.4vw black;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-family: 'Arial Black', sans-serif;
+        }
+
+        .judgement.show {
+            opacity: 1;
+        }
+
+        #score-display {
+            position: absolute;
+            top: 5%;
+            left: 5%;
+            font-size: 3vw;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <div id="start-screen" class="screen">
+            <h1>音げー</h1>
+            <button id="start-button">スタート</button>
+        </div>
+
+        <div id="mode-select-screen" class="screen hidden">
+            <h1>モード選択</h1>
+            <button id="mode1-button">Mode1 (TEST)</button>
+            <button id="mp3-game-button">MP3 Game</button>
+            <button id="back-to-start-button">戻る</button>
+        </div>
+
+        <div id="music-upload-screen" class="screen hidden">
+            <h1>MP3ファイルを選択</h1>
+            <input type="file" id="musicUpload" accept=".mp3">
+            <button id="ready-button">準備OK</button>
+            <button id="back-to-mode-select-button">戻る</button>
+        </div>
+
+        <div id="game-screen" class="screen hidden">
+            <div id="game-area">
+                <div id="lane-container">
+                    <div class="lane" data-key="f"></div>
+                    <div class="lane" data-key="j"></div>
+                </div>
+                <div class="judgement-line"></div>
+                <div id="score-display">スコア: 0</div>
+                <div id="judgement" class="judgement"></div>
+            </div>
+            <div id="key-indicators">
+                <div class="key-indicator red" data-key="f">F</div>
+                <div class="key-indicator blue" data-key="j">J</div>
+            </div>
+        </div>
+
+        <div id="result-screen" class="screen hidden">
+            <h1>リザルト</h1>
+            <p id="score">スコア: </p>
+            <button id="back-to-mode-select-button2">モード選択に戻る</button>
+        </div>
+    </div>
+
+    <script>
+        const startScreen = document.getElementById("start-screen");
+        const modeSelectScreen = document.getElementById("mode-select-screen");
+        const musicUploadScreen = document.getElementById("music-upload-screen");
+        const gameScreen = document.getElementById("game-screen");
+        const resultScreen = document.getElementById("result-screen");
+        const scoreElement = document.getElementById("score");
+        const scoreDisplay = document.getElementById("score-display");
+        const judgementElement = document.getElementById("judgement");
+        const lanes = document.querySelectorAll(".lane");
+        const gameArea = document.getElementById("game-area");
+        const musicUpload = document.getElementById('musicUpload');
+
+        const keyMapping = {
+            'f': 0,
+            'j': 1
+        };
+
+        const SoundData = {
+            hit: {
+                frequency: [440, 880],
+                duration: 0.1,
+                type: 'sine'
+            },
+            miss: {
+                frequency: [220],
+                duration: 0.2,
+                type: 'square'
+            }
+        };
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    let source;
+    let analyser;
+    let beatTimes = [];
+    let bpm = getBPMFromCookie() || 120;
+    let songDuration = 0;  // 曲の長さを格納
+    let beatThreshold = 100; // ビート検知の閾値（調整可能）
+
+
+    let score = 0;
+    let combo = 0;
+    let fullCombo = true;
+    let notes = [];
+    let startTime;
+    let lastBeatIndex = 0;
+    let lastBeatTime = 0; // 最後にビートが検出された時間
+
+        document.getElementById("start-button").addEventListener("click", () => {
+            startScreen.classList.add("hidden");
+            modeSelectScreen.classList.remove("hidden");
+        });
+
+        document.getElementById("mode1-button").addEventListener("click", () => {
+            modeSelectScreen.classList.add("hidden");
+            gameScreen.classList.remove("hidden");
+            startGame("mode1");
+        });
+
+        document.getElementById("mp3-game-button").addEventListener("click", () => {
+            modeSelectScreen.classList.add("hidden");
+            musicUploadScreen.classList.remove("hidden");
+        });
+
+        document.getElementById("back-to-start-button").addEventListener("click", () => {
+            modeSelectScreen.classList.add("hidden");
+            startScreen.classList.remove("hidden");
+        });
+
+        document.getElementById("ready-button").addEventListener("click", () => {
+            musicUploadScreen.classList.add("hidden");
+            gameScreen.classList.remove("hidden");
+            handleMusicUpload();
+        });
+
+        document.getElementById("back-to-mode-select-button").addEventListener("click", () => {
+            musicUploadScreen.classList.add("hidden");
+            modeSelectScreen.classList.remove("hidden");
+        });
+
+        document.getElementById("back-to-mode-select-button2").addEventListener("click", () => {
+            resultScreen.classList.add("hidden");
+            modeSelectScreen.classList.remove("hidden");
+            if (source && source.playbackState === source.PLAYING_STATE) {
+                source.stop();
+            }
+        });
+
+
+        function startGame(mode) {
+            score = 0;
+            combo = 0;
+            fullCombo = true;
+            notes = [];
+            startTime = audioCtx.currentTime;
+            lastBeatIndex = 0;
+
+            if (mode === "mode1") {
+                startMode1();
+            } else if (mode === "mp3Game") {
+                startMp3Game();
+            }
+        }
+
+
+        function startMode1() {
+            const gameDuration = 10;
+
+            function generateNote() {
+                const laneIndex = Math.floor(Math.random() * lanes.length);
+                const lane = lanes[laneIndex];
+                const noteType = laneIndex === 0 ? "red" : "blue";
+                const key = lane.dataset.key;
+
+                const note = document.createElement("div");
+                note.classList.add("note");
+                note.classList.add(noteType);
+                lane.appendChild(note);
+
+                const noteStartTime = audioCtx.currentTime - startTime;
+                const noteEndTime = noteStartTime + 3;
+
+                notes.push({
+                    note,
+                    lane: laneIndex,
+                    startTime: noteStartTime,
+                    endTime: noteEndTime,
+                    key: key
+                });
+            }
+
+
+            let noteGenerationInterval = setInterval(generateNote, 1000);
+            requestAnimationFrame(gameLoop);
+
+
+        }
+
+        function startMp3Game() {
+            musicUpload.addEventListener('change', handleMusicUpload);
+        }
+
+        function handleMusicUpload() {
+            const file = musicUpload.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                audioCtx.decodeAudioData(e.target.result, function (buffer) {
+                    const audioData = buffer.getChannelData(0);
+                    const sampleRate = audioCtx.sampleRate;
+
+                    // 波形データからビートを検出
+                    detectBeats(audioData, sampleRate).then((detectedBeats) => {
+                        beatTimes = detectedBeats;
+                        bpm = calculateBPM(detectedBeats); // BPMを計算
+
+                        if (source) {
+                            source.stop();
+                        }
+
+                        source = audioCtx.createBufferSource();
+                        source.buffer = buffer;
+
+                        analyser = audioCtx.createAnalyser();
+                        analyser.fftSize = 2048;
+                        source.connect(analyser);
+                        analyser.connect(audioCtx.destination);
+
+                        source.onended = () => {
+                            gameScreen.classList.add("hidden");
+                            resultScreen.classList.remove("hidden");
+                            scoreElement.textContent = `スコア: ${score} コンボ: ${combo} ${fullCombo ? 'フルコンボ!' : ''}`;
+                        };
+
+                        // 音楽再生開始前にstartTimeを設定
+                        startTime = audioCtx.currentTime + 0.1; // 0.1秒の遅延を追加
+                        lastBeatIndex = 0;
+                        source.start(startTime);
+                        gameLoop();
+                    });
+                });
+            }
+            reader.readAsArrayBuffer(file);
+        }
+
+        // 高性能化されたビート検出関数
+        async function detectBeats(audioData, sampleRate) {
+            // オンセット検出アルゴリズム
+            const onsets = [];
+            const energyHistory = [];
+            const energyThreshold = 5; // エネルギー閾値 (調整可能)
+            const minOnsetDistance = sampleRate * 0.1; // 最小オンセット間隔 (調整可能)
+
+            // 各サンプルのエネルギーを計算
+            for (let i = 0; i < audioData.length; i++) {
+                const energy = audioData[i] * audioData[i]; // サンプル値の二乗
+                energyHistory.push(energy);
+            }
+
+            // 移動平均を使用してエネルギーの変化を平滑化
+            const windowSize = 512; // 平滑化ウィンドウサイズ (調整可能)
+            for (let i = windowSize; i < energyHistory.length; i++) {
+                let sum = 0;
+                for (let j = 0; j < windowSize; j++) {
+                    sum += energyHistory[i - j];
+                }
+                const averageEnergy = sum / windowSize;
+
+                // 平均エネルギーの変化が閾値を超えたらオンセットとして検出
+                if (
+                    energyHistory[i] > averageEnergy * energyThreshold &&
+                    (onsets.length === 0 || i - onsets[onsets.length - 1] > minOnsetDistance)
+                ) {
+                    onsets.push(i / sampleRate);
+                }
+            }
+
+            return onsets;
+        }
+
+        // BPM計算関数
+        function calculateBPM(beats) {
+            const intervals = [];
+            for (let i = 1; i < beats.length; i++) {
+                intervals.push(beats[i] - beats[i - 1]);
+            }
+            const averageInterval = intervals.reduce((sum, interval) => sum + interval, 0) / intervals.length;
+            return 60 / averageInterval;
+        }
+
+        function generateNote(beatIndex) {
+            if (beatIndex < lastBeatIndex) return;
+
+            const laneIndex = beatIndex % 2 === 0 ? 1 : 0;
+            const lane = lanes[laneIndex];
+            const noteType = laneIndex === 0 ? "red" : "blue";
+            const key = lane.dataset.key;
+
+            const note = document.createElement("div");
+            note.classList.add("note");
+            note.classList.add(noteType);
+
+            // BPM に基づいてノートのスピードを調整
+            const noteSpeed = bpm / 60 * gameArea.clientHeight;
+            note.style.animationDuration = `${gameArea.clientHeight / noteSpeed}s`;
+
+            // アニメーションの設定を追加
+            note.style.animationName = "moveNote";
+            note.style.animationTimingFunction = "linear";
+            note.style.animationFillMode = "forwards";
+
+            lane.appendChild(note);
+
+
+
+
+            const noteStartTime = beatTimes[beatIndex];
+            const noteEndTime = noteStartTime + 3;
+
+            notes.push({
+                note,
+                lane: laneIndex,
+                startTime: noteStartTime,
+                endTime: noteEndTime,
+                key: key
+            });
+
+            lastBeatIndex = beatIndex;
+
+            //console.log("ノート生成:", note, "startTime:", noteStartTime, "endTime:", noteEndTime);
+        }
+
+
+        function gameLoop() {
+            const currentTime = audioCtx.currentTime;
+
+
+
+            notes.forEach((n, index) => {
+                const noteRect = n.note.getBoundingClientRect();
+                const noteCenterY = noteRect.top + noteRect.height / 2;
+                const judgementLineRect = document.querySelector('.judgement-line').getBoundingClientRect();
+                const judgementLineY = judgementLineRect.top;
+                const judgementRange = noteRect.height / 2;
+                const elapsedTime = currentTime - startTime - n.startTime;
+                const noteSpeed = gameArea.clientHeight / (n.endTime - n.startTime); // ノートの速度を計算
+                const top = Math.max(-5, (elapsedTime * noteSpeed) - 5); // 上端を超えないように調整
+                n.note.style.top = top + "%";
+
+                console.log("elapsedTime:", elapsedTime, "noteSpeed:", noteSpeed, "top:", top);
+
+
+                if (
+                    noteCenterY >= judgementLineY - judgementRange &&
+                    noteCenterY <= judgementLineY + judgementRange
+                ) {
+                    if (currentTime > n.endTime) {
+                        n.note.remove();
+                        notes.splice(index, 1);
+                        combo = 0;
+                        fullCombo = false;
+                        score = Math.max(0, score - 5);
+                        showJudgement("Miss");
+                        createSound(SoundData.miss);
+                    }
+                } else if (currentTime > n.endTime) {
+                    n.note.remove();
+                    notes.splice(index, 1);
+                }
+            });
+
+
+            const nextBeatIndex = beatTimes.findIndex(time => time > audioCtx.currentTime);
+            if (nextBeatIndex >= 0) {
+                generateNote(nextBeatIndex);
+            }
+
+            scoreDisplay.textContent = "スコア: " + score;
+            requestAnimationFrame(gameLoop);
+        }
+
+        document.addEventListener("keydown", (event) => {
+            if (gameScreen.classList.contains("hidden")) return;
+
+            const key = event.key.toLowerCase();
+
+            if (key in keyMapping) {
+                const laneIndex = keyMapping[key];
+                const keyIndicator = document.querySelector(`.key-indicator[data-key="${key}"]`);
+                keyIndicator.style.backgroundColor = "rgba(255, 165, 0, 0.7)";
+
+                const hitNotes = notes.filter(n => {
+                    const hitTime = audioCtx.currentTime;
+                    const noteRect = n.note.getBoundingClientRect();
+                    const noteCenterY = noteRect.top + noteRect.height / 2;
+                    const judgementLineRect = document.querySelector('.judgement-line').getBoundingClientRect();
+                    const judgementLineY = judgementLineRect.top;
+                    const judgementRange = noteRect.height / 2;
+
+                    return (
+                        n.key === key &&
+                        noteCenterY >= judgementLineY - judgementRange &&
+                        noteCenterY <= judgementLineY + judgementRange &&
+                        hitTime >= n.startTime &&
+                        hitTime <= n.endTime
+                    );
+                });
+
+                if (hitNotes.length > 0) {
+                    hitNotes.forEach(n => {
+                        n.note.remove();
+                        notes = notes.filter(n2 => n2 !== n);
+                        combo++;
+                        score += 10 * combo;
+                        showJudgement("Perfect");
+                        createSound(SoundData.hit);
+                    });
+                } else {
+                    combo = 0;
+                    fullCombo = false;
+                    score = Math.max(0, score - 5);
+                    showJudgement("Miss");
+                    createSound(SoundData.miss);
+                }
+
+                setTimeout(() => {
+                    keyIndicator.style.backgroundColor = key === 'f' ? "rgba(255, 0, 0, 0.5)" : "rgba(0, 0, 255, 0.5)";
+                }, 100);
+            }
+        });
+
+
+        function showJudgement(text) {
+            judgementElement.textContent = text;
+            judgementElement.classList.add("show");
+            setTimeout(() => {
+                judgementElement.classList.remove("show");
+            }, 300);
+        }
+
+        function createSound(soundData) {
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+
+            oscillator.type = soundData.type;
+            oscillator.frequency.value = soundData.frequency[0];
+
+            if (soundData.frequency.length > 1) {
+                for (let i = 1; i < soundData.frequency.length; i++) {
+                    const additionalOscillator = audioCtx.createOscillator();
+                    additionalOscillator.type = soundData.type;
+                    additionalOscillator.frequency.value = soundData.frequency[i];
+                    additionalOscillator.connect(gainNode);
+                    additionalOscillator.start();
+                    setTimeout(() => additionalOscillator.stop(), soundData.duration * 1000);
+                }
+            }
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            oscillator.start();
+            setTimeout(() => {
+                oscillator.stop();
+                gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+            }, soundData.duration * 1000);
+        }
+    </script>
+</body>
+
+</html>

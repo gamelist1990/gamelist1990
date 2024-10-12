@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>音げー</title>
+    <style>
+        body {
+            background-color: #222;
+            font-family: 'Press Start 2P', cursive;
+            overflow: hidden;
+            margin: 0;
+            color: #f0f0f0;
+            text-shadow: 0.1vw 0.1vw 0.2vw black;
+        }
+
+        #container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .screen {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .screen h1 {
+            font-size: 5vw;
+            margin-bottom: 3vh;
+            text-align: center;
+            animation: glow 1s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 1vw #FFA500;
+            }
+
+            to {
+                text-shadow: 0 0 2vw #FFA500;
+            }
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .screen button {
+            background-color: transparent;
+            border: 2px solid #FFA500;
+            color: #f0f0f0;
+            padding: 1.5vh 3vw;
+            font-size: 2vw;
+            border-radius: 1vw;
+            cursor: pointer;
+            transition: border-color 0.3s, transform 0.2s;
+            margin: 1vh 0;
+        }
+
+        .screen button:hover {
+            border-color: #FF8C00;
+            transform: scale(1.05);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #game-area {
+            width: 40vw;
+            height: 80vh;
+            display: flex;
+            align-items: flex-end;
+            position: relative;
+            background-color: #333;
+            border-radius: 1vw;
+            overflow: hidden;
+        }
+
+        #lane-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .lane {
+            width: 45%;
+            height: 100%;
+            background-color: #444;
+            border: 2px solid #555;
+            border-radius: 5px;
+            position: relative;
+        }
+
+        #key-indicators {
+            display: flex;
+            justify-content: space-around;
+            width: 30vw;
+            margin-bottom: 5vh;
+        }
+
+        .key-indicator {
+            width: 8vw;
+            height: 8vw;
+            border-radius: 50%;
+            background-color: rgba(255, 165, 0, 0.5);
+            color: #222;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3vw;
+            transition: transform 0.1s;
+        }
+
+        .key-indicator.red {
+            background-color: rgba(255, 0, 0, 0.5);
+        }
+
+        .key-indicator.blue {
+            background-color: rgba(0, 0, 255, 0.5);
+        }
+
+        .key-indicator:active {
+            transform: scale(0.9);
+        }
+
+        .judgement-line {
+            width: 90%;
+            height: 2px;
+            background-color: #FFA500;
+            position: absolute;
+            bottom: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: bottom 0.1s;
+            /* 判定ライン移動時のアニメーション */
+        }
+
+        .note {
+            width: 20%;
+            height: 10%;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 10px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            animation: moveNote 1s linear forwards;
+            /* noteDuration に合わせて変更 */
+        }
+
+        @keyframes moveNote {
+            0% {
+                top: -5%;
+            }
+
+            100% {
+                top: 100%;
+            }
+        }
+
+        .note.red {
+            background-color: #ff0000;
+            background-image: linear-gradient(to bottom, #ff0000, #ff6347);
+        }
+
+        .note.blue {
+            background-color: #0000ff;
+            background-image: linear-gradient(to bottom, #0000ff, #6495ed);
+        }
+
+        .judgement {
+            position: absolute;
+            top: 70%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 4vw;
+            color: white;
+            text-shadow: 0.2vw 0.2vw 0.4vw black;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-family: 'Arial Black', sans-serif;
+        }
+
+        .judgement.show {
+            opacity: 1;
+        }
+
+        #score-display {
+            position: absolute;
+            top: 5%;
+            left: 5%;
+            font-size: 3vw;
+            color: white;
+        }
+
+
+
+        #settings-screen input[type="number"] {
+            width: 8vw;
+            padding: 1vh;
+            font-size: 2vw;
+        }
+
+        /* 既存のCSSに追加 */
+        #bpmInput,
+        #timingAdjustInput,
+        #noteDurationInput {
+            width: 100px;
+            /* 必要に応じて調整 */
+            padding: 5px;
+            /* 必要に応じて調整 */
+            font-size: 16px;
+            /* 必要に応じて調整 */
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="container">
+        <div id="start-screen" class="screen">
+            <h1>音げー</h1>
+            <button id="start-button">スタート</button>
+        </div>
+
+        <div id="menu-screen" class="screen hidden">
+            <h1>メインメニュー</h1>
+            <div class="button-container">
+                <button id="mode-select-button">モード選択</button>
+                <button id="settings-button">設定</button>
+                <button id="back-to-start-button4">ゲーム終了</button>
+            </div>
+        </div>
+
+        <div id="settings-screen" class="screen hidden">
+            <h1>設定</h1>
+            <div class="input-group">
+                <label for="bpmInput">BPM:</label>
+                <input type="number" id="bpmInput" min="60" max="240" value="120">
+            </div>
+            <div class="input-group">
+                <label for="timingAdjustInput">判定タイミング:</label>
+                <input type="number" id="timingAdjustInput" min="-10" max="10" value="0">
+            </div>
+            <div class="input-group">
+                <label for="noteDurationInput">ノート落下時間 (秒):</label>
+                <input type="number" id="noteDurationInput" min="0.5" max="5" step="0.1" value="1">
+            </div>
+            <div class="button-container">
+                <button id="save-settings-button">設定を保存</button>
+                <button id="back-to-menu-button">戻る</button>
+            </div>
+        </div>
+
+        <div id="mode-select-screen" class="screen hidden">
+            <h1>モード選択</h1>
+            <div class="button-container">
+                <button id="mode1-button">Mode1 (TEST)</button>
+                <button id="mp3-game-button">MP3 Game</button>
+                <button id="back-to-menu-button2">戻る</button>
+            </div>
+        </div>
+
+        <div id="music-upload-screen" class="screen hidden">
+            <h1>MP3ファイルを選択</h1>
+            <input type="file" id="musicUpload" accept=".mp3">
+            <div class="button-container">
+                <button id="ready-button">準備OK</button>
+                <button id="back-to-mode-select-button">戻る</button>
+            </div>
+        </div>
+
+        <div id="game-screen" class="screen hidden">
+            <div id="game-area">
+                <div id="lane-container">
+                    <div class="lane" data-key="f"></div>
+                    <div class="lane" data-key="j"></div>
+                </div>
+                <div class="judgement-line"></div>
+                <div id="score-display">スコア: 0</div>
+                <div id="judgement" class="judgement"></div>
+            </div>
+            <div id="key-indicators">
+                <div class="key-indicator red" data-key="f">F</div>
+                <div class="key-indicator blue" data-key="j">J</div>
+            </div>
+        </div>
+
+        <div id="result-screen" class="screen hidden">
+            <h1>リザルト</h1>
+            <p id="score">スコア: </p>
+            <button id="back-to-mode-select-button2">モード選択に戻る</button>
+        </div>
+    </div>
+
+    <script>
+        // --- 要素の取得  ---------------------------
+        const startScreen = document.getElementById("start-screen");
+        const menuScreen = document.getElementById("menu-screen");
+        const settingsScreen = document.getElementById("settings-screen");
+        const modeSelectScreen = document.getElementById("mode-select-screen");
+        const musicUploadScreen = document.getElementById("music-upload-screen");
+        const gameScreen = document.getElementById("game-screen");
+        const resultScreen = document.getElementById("result-screen");
+        const scoreElement = document.getElementById("score");
+        const scoreDisplay = document.getElementById("score-display");
+        const judgementElement = document.getElementById("judgement");
+        const lanes = document.querySelectorAll(".lane");
+        const gameArea = document.getElementById("game-area");
+        const musicUpload = document.getElementById('musicUpload');
+        const bpmInput = document.getElementById('bpmInput');
+        const timingAdjustInput = document.getElementById('timingAdjustInput');
+        const noteDurationInput = document.getElementById('noteDurationInput');
+
+        // ---  キー設定、サウンドデータ ---------------------------
+        const keyMapping = {
+            'f': 0,
+            'j': 1
+        };
+
+        const SoundData = {
+            hit: {
+                frequency: [440, 880],
+                duration: 0.1,
+                type: 'sine'
+            },
+            miss: {
+                frequency: [110], // miss音は低い音程に
+                duration: 0.2,
+                type: 'square'
+            }
+        };
+
+        // ---  AudioContext、ゲーム変数  ---------------------------
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let source;
+        let analyser;
+        let beatTimes = [];
+        let bpm = getBPMFromCookie() || 120;
+        let songDuration = 0; // 曲の長さを格納
+        let beatThreshold = 80; // ビート検知の閾値（調整可能）
+        let beatSensitivity = 0.25; // ビート感度（調整可能）
+
+
+        let score = 0;
+        let combo = 0;
+        let fullCombo = true;
+        let notes = [];
+        let startTime;
+        let lastBeatIndex = 0;
+        let lastBeatTime = 0; // 最後にビートが検出された時間
+        let prevEnergy = 0;
+        let timingAdjust = getTimingAdjustFromCookie() || 0; // 判定タイミング調整変数 (-10 ~ 10)
+        let noteDuration = getNoteDurationFromCookie() || 1; // ノート落下時間 (秒)
+
+        // --- イベントリスナー  ---------------------------
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+
+
+            document.getElementById("start-button").addEventListener("click", () => {
+                startScreen.classList.add("hidden");
+                menuScreen.classList.remove("hidden");
+            });
+
+            // --- メニュー画面イベントリスナー  ---------------------------
+
+            document.getElementById("mode-select-button").addEventListener("click", () => {
+                menuScreen.classList.add("hidden");
+                modeSelectScreen.classList.remove("hidden");
+            });
+
+            document.getElementById("settings-button").addEventListener("click", () => {
+                menuScreen.classList.add("hidden");
+                settingsScreen.classList.remove("hidden");
+                bpmInput.value = getBPMFromCookie() || 120;
+                timingAdjustInput.value = getTimingAdjustFromCookie() || 0;
+                noteDurationInput.value = getNoteDurationFromCookie() || 1;
+            });
+
+            document.getElementById("back-to-start-button4").addEventListener("click", () => {
+                // 終了処理などを追加
+                window.close();
+            });
+
+            // --- 設定画面イベントリスナー ---------------------------
+
+            document.getElementById("save-settings-button").addEventListener("click", () => {
+                bpm = parseInt(bpmInput.value, 10); // BPM入力欄の値を取得
+                timingAdjust = parseInt(timingAdjustInput.value, 10); // 判定タイミング調整値を取得
+                noteDuration = parseFloat(noteDurationInput.value); // ノート落下時間 (秒) を取得
+                setBPMToCookie(bpm); // CookieにBPMを保存
+                setTimingAdjustToCookie(timingAdjust); // 判定タイミング調整値をCookieに保存
+                setNoteDurationToCookie(noteDuration); // ノート落下時間 (秒) をCookieに保存
+                settingsScreen.classList.add("hidden");
+                menuScreen.classList.remove("hidden");
+            });
+
+            document.getElementById("back-to-menu-button").addEventListener("click", () => {
+                settingsScreen.classList.add("hidden");
+                menuScreen.classList.remove("hidden");
+            });
+
+            // --- モード選択画面イベントリスナー ---
+
+            document.getElementById("mode1-button").addEventListener("click", () => {
+                modeSelectScreen.classList.add("hidden");
+                gameScreen.classList.remove("hidden");
+                startGame("mode1");
+            });
+
+            document.getElementById("mp3-game-button").addEventListener("click", () => {
+                modeSelectScreen.classList.add("hidden");
+                musicUploadScreen.classList.remove("hidden");
+            });
+
+            document.getElementById("back-to-menu-button2").addEventListener("click", () => {
+                modeSelectScreen.classList.add("hidden");
+                menuScreen.classList.remove("hidden");
+            });
+
+            // --- ファイル選択画面イベントリスナー ---
+            document.getElementById("ready-button").addEventListener("click", () => {
+                musicUploadScreen.classList.add("hidden");
+                gameScreen.classList.remove("hidden");
+                handleMusicUpload();
+            });
+
+            document.getElementById("back-to-mode-select-button").addEventListener("click", () => {
+                musicUploadScreen.classList.add("hidden");
+                modeSelectScreen.classList.remove("hidden");
+            });
+
+            // --- 結果画面イベントリスナー ---
+
+            document.getElementById("back-to-mode-select-button2").addEventListener("click", () => {
+                resultScreen.classList.add("hidden");
+                modeSelectScreen.classList.remove("hidden");
+
+                // MP3 データのリセット処理
+                resetMp3Data();
+
+                if (source && source.playbackState === source.PLAYING_STATE) {
+                    source.stop();
+                }
+            });
+        });
+
+
+
+        //-- Key Event
+
+        document.addEventListener("keydown", (event) => {
+            if (gameScreen.classList.contains("hidden")) return;
+
+            const key = event.key.toLowerCase();
+
+            if (key in keyMapping) {
+                const laneIndex = keyMapping[key];
+                const keyIndicator = document.querySelector(`.key-indicator[data-key="${key}"]`);
+                keyIndicator.style.backgroundColor = "rgba(255, 165, 0, 0.7)";
+
+                // 判定ラインに重なっているノーツを取得
+                const hitNotes = notes.filter(n => {
+                    const noteRect = n.note.getBoundingClientRect();
+                    const noteCenterY = noteRect.top + noteRect.height / 2;
+                    const judgementLineRect = document.querySelector('.judgement-line').getBoundingClientRect();
+                    const judgementLineY = judgementLineRect.top;
+                    const judgementRange = noteRect.height * beatSensitivity; //判定範囲調整
+
+                    return (
+                        n.key === key &&
+                        noteCenterY >= judgementLineY - judgementRange &&
+                        noteCenterY <= judgementLineY + judgementRange
+                    );
+                });
+
+                if (hitNotes.length > 0) {
+                    hitNotes.forEach(n => {
+                        n.note.remove();
+                        notes = notes.filter(n2 => n2 !== n);
+                        combo++;
+                        score += 10 * combo;
+                        showJudgement("Perfect");
+                        createSound(SoundData.hit);
+                    });
+                } else {
+                    // miss判定
+                    combo = 0;
+                    score = Math.max(0, score - 5); // スコアがマイナスにならないように
+                    showJudgement("Miss");
+                }
+
+                setTimeout(() => {
+                    keyIndicator.style.backgroundColor = key === 'f' ? "rgba(255, 0, 0, 0.5)" : "rgba(0, 0, 255, 0.5)";
+                }, 100);
+            }
+        });
+
+
+
+
+        // ---  ゲーム開始  ---------------------------
+
+        function startGame(mode) {
+            score = 0;
+            combo = 0;
+            fullCombo = true;
+            notes = [];
+            startTime = audioCtx.currentTime;
+            lastBeatIndex = 0;
+            prevEnergy = 0; // 各ゲーム開始時に初期化
+
+            if (mode === "mode1") {
+                startMode1();
+            } else if (mode === "mp3Game") {
+                startMp3Game();
+            }
+        }
+
+        // --- 各モード ---------------------------
+
+        function startMode1() {
+            const gameDuration = 10; // ゲーム時間（秒）
+            let endTime = Date.now() + gameDuration * 1000; // 終了時間
+
+            function generateNote() {
+                if (Date.now() > endTime) {
+                    clearInterval(noteGenerationInterval); // ノート生成を停止
+                    return;
+                }
+
+                const laneIndex = Math.floor(Math.random() * lanes.length);
+                const lane = lanes[laneIndex];
+                const noteType = laneIndex === 0 ? "red" : "blue";
+                const key = lane.dataset.key;
+
+                const note = document.createElement("div");
+                note.classList.add("note");
+                note.classList.add(noteType);
+
+                // ノートのアニメーション時間 (3秒で落下)
+                note.style.animationDuration = `${noteDuration * 1000}ms`; // noteDuration に合わせて変更
+
+                // アニメーションの設定
+                note.style.animationName = "moveNote";
+                note.style.animationTimingFunction = "linear";
+                note.style.animationFillMode = "forwards";
+
+                // 判定タイミング調整値に基づいて落下開始時間を調整
+                const timingOffset = (timingAdjust / 10) * noteDuration;
+                note.style.animationDelay = `-${(audioDelay + timingOffset) * 1000}ms`;
+
+
+                lane.appendChild(note);
+                note.offsetHeight; // 強制的に再描画を促す
+
+                // ノートの終了時間
+                const noteEndTime = Date.now() + (noteDuration * 1000); // noteDuration に合わせて変更
+
+                notes.push({
+                    note,
+                    lane: laneIndex,
+                    startTime: Date.now(), // 生成時間
+                    endTime: noteEndTime,
+                    key: key
+                });
+            }
+
+            let noteGenerationInterval = setInterval(generateNote, 1000); // 1秒ごとにノート生成
+            requestAnimationFrame(gameLoop);
+        }
+
+        function startMp3Game() {
+            musicUpload.addEventListener('change', handleMusicUpload);
+        }
+
+
+        // --- 音声ファイルアップロード ---------------------------
+
+        function handleMusicUpload() {
+            const file = musicUpload.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                audioCtx.decodeAudioData(e.target.result, async function (buffer) {
+                    // --- CookieからBPMを取得（なければデフォルトの120） ---
+                    bpm = getBPMFromCookie() || 120;
+
+                    songDuration = buffer.duration; // 曲の長さを取得
+
+                    if (source) {
+                        source.stop();
+                    }
+
+                    source = audioCtx.createBufferSource();
+                    source.buffer = buffer;
+
+                    analyser = audioCtx.createAnalyser();
+                    analyser.fftSize = 2048;
+
+                    // --- 音楽の再生速度を変更 ---
+                    const originalBPM = 120; // 音楽ファイルの元々のBPM（仮定）
+                    const playbackRate = bpm / originalBPM;
+                    source.playbackRate.value = playbackRate;
+
+                    // --- BPMと再生速度に基づいてビート情報を生成 ---
+                    // beatTimes = generateBeatTimes(bpm, buffer.duration / playbackRate); // BPMベースのビート情報は使用しない
+
+                    source.connect(analyser);
+                    analyser.connect(audioCtx.destination);
+
+
+                    source.onended = () => {
+                        gameScreen.classList.add("hidden");
+                        resultScreen.classList.remove("hidden");
+                        scoreElement.textContent = `スコア: ${score} コンボ: ${combo} ${fullCombo ? 'フルコンボ!' : ''}`;
+                    };
+
+
+                    // --- 音楽再生開始 ---
+                    startTime = audioCtx.currentTime; // AudioContextのcurrentTimeを使用
+                    source.start(0);
+                    requestAnimationFrame(gameLoop); // 再生開始後にgameLoopを呼び出す
+                });
+            }
+            reader.readAsArrayBuffer(file);
+        }
+
+        // --- ビート情報生成 (BPMベース) ---------------------------
+        // (現在は使用していない)
+
+        function generateBeatTimes(bpm, duration) {
+            const beatInterval = 60 / bpm; // ビート間隔(秒)
+            const beats = [];
+            for (let i = 0; i * beatInterval < duration; i++) {
+                beats.push(i * beatInterval); // ビートの時間を秒単位で追加
+            }
+            return beats;
+        }
+
+
+
+        // ---  ノート生成  -------------------------
+
+        const audioDelay = audioCtx.baseLatency;
+        const judgementLine = document.querySelector('.judgement-line');
+
+        function generateNote() {
+            const currentTime = audioCtx.currentTime - startTime;
+
+            const laneIndex = Math.floor(Math.random() * lanes.length); // ランダムなレーンに生成
+            const lane = lanes[laneIndex];
+            const noteType = laneIndex === 0 ? "red" : "blue";
+            const key = lane.dataset.key;
+
+            const note = document.createElement("div");
+            note.classList.add("note");
+            note.classList.add(noteType);
+
+            // ノートのアニメーション時間を計算 (秒単位)
+            note.style.animationDuration = `${noteDuration * 1000}ms`;
+
+            // 判定タイミング調整値に基づいて落下開始時間を調整
+            const timingOffset = (timingAdjust / 10) * noteDuration;
+            note.style.animationDelay = `-${(audioDelay + timingOffset) * 1000}ms`;
+
+            lane.appendChild(note);
+
+            notes.push({
+                note,
+                lane: laneIndex,
+                startTime: currentTime, // 秒単位
+                endTime: currentTime + noteDuration, // 秒単位
+                key: key
+            });
+        }
+
+
+        function detectBeat() {
+            const dataArray = new Uint8Array(analyser.frequencyBinCount);
+            analyser.getByteFrequencyData(dataArray);
+
+            let energy = 0;
+            for (let i = 0; i < dataArray.length / 8; i++) { // 低周波数帯域のみを対象とする
+                energy += dataArray[i];
+            }
+
+            const currentTime = audioCtx.currentTime - startTime;
+
+            // エネルギーの変化量が閾値を超えた場合にビートと判定
+            if (energy - prevEnergy > beatThreshold && currentTime - lastBeatTime > 0.2) {
+                generateNote(); // ノート生成
+                lastBeatTime = currentTime;
+            }
+            prevEnergy = energy; // 現在のエネルギーを前回のエネルギーとして保存
+        }
+
+
+
+        // --- ゲームループ --------------------------- 
+
+        function gameLoop() {
+            const currentTime = audioCtx.currentTime; // AudioContextのcurrentTimeを使用
+            const elapsedTime = currentTime - startTime;
+
+            notes.forEach((n, index) => {
+                const noteRect = n.note.getBoundingClientRect();
+                const noteCenterY = noteRect.top + noteRect.height / 2;
+                const judgementLineRect = document.querySelector('.judgement-line').getBoundingClientRect();
+                const judgementLineY = judgementLineRect.top;
+                const judgementRange = noteRect.height * beatSensitivity; // 判定範囲
+
+                // ビジュアル判定のみ (判定ラインを通過したかの判定)
+                if (noteCenterY > judgementLineY + judgementRange) {
+                    // Miss処理 (判定ラインを通過して、キー入力がないままの場合)
+                    n.note.remove();
+                    notes.splice(index, 1);
+                    combo = 0;
+                    fullCombo = false;
+                    score = Math.max(0, score - 5);
+                    showJudgement("Miss");
+                }
+            });
+
+            // 判定ラインの位置を調整
+            const judgementLineBottom = 5 + (timingAdjust / 10) * 80; // 判定ラインのbottomを調整 (80はgame-areaの高さ)
+            judgementLine.style.bottom = `${judgementLineBottom}%`;
+
+
+            detectBeat(); // ビート検知を呼び出す
+
+            scoreDisplay.textContent = "スコア: " + score;
+            requestAnimationFrame(gameLoop);
+        }
+
+
+        // --- 判定、効果音再生 ---------------------------
+
+        function showJudgement(text) {
+            judgementElement.textContent = text;
+            judgementElement.classList.add("show");
+            setTimeout(() => {
+                judgementElement.classList.remove("show");
+            }, 300);
+        }
+
+        function createSound(soundData) {
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+
+            oscillator.type = soundData.type;
+            oscillator.frequency.value = soundData.frequency[0];
+
+            if (soundData.frequency.length > 1) {
+                for (let i = 1; i < soundData.frequency.length; i++) {
+                    const additionalOscillator = audioCtx.createOscillator();
+                    additionalOscillator.type = soundData.type;
+                    additionalOscillator.frequency.value = soundData.frequency[i];
+                    additionalOscillator.connect(gainNode);
+                    additionalOscillator.start();
+                    setTimeout(() => additionalOscillator.stop(), soundData.duration * 1000);
+                }
+            }
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            oscillator.start();
+            setTimeout(() => {
+                oscillator.stop();
+                gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+            }, soundData.duration * 1000);
+        }
+
+
+        // --- Cookie操作 ---------------------------
+        function getBPMFromCookie() {
+            return getCookieValue("gameBPM"); // "gameBPM" を取得
+        }
+
+        function setBPMToCookie(bpm) {
+            setCookie("gameBPM", bpm, 365);
+        }
+
+        function getTimingAdjustFromCookie() {
+            return parseInt(getCookieValue("timingAdjust")); // 整数に変換
+        }
+
+        function setTimingAdjustToCookie(value) {
+            setCookie("timingAdjust", value, 365);
+        }
+
+        function getNoteDurationFromCookie() {
+            return parseFloat(getCookieValue("noteDuration")); // 浮動小数点数に変換
+        }
+
+        function setNoteDurationToCookie(value) {
+            setCookie("noteDuration", value, 365);
+        }
+
+        function getCookieValue(name) {
+            const cookieName = `${name}=`;
+            const decodedCookie = decodeURIComponent(document.cookie);
+            const cookieArray = decodedCookie.split(';');
+            for (let i = 0; i < cookieArray.length; i++) {
+                let cookie = cookieArray[i];
+                while (cookie.charAt(0) === ' ') {
+                    cookie = cookie.substring(1);
+                }
+                if (cookie.indexOf(cookieName) === 0) {
+                    return cookie.substring(cookieName.length, cookie.length);
+                }
+            }
+            return null;
+        }
+
+        function setCookie(name, value, days) {
+            const expiryDate = new Date();
+            expiryDate.setTime(expiryDate.getTime() + (days * 24 * 60 * 60 * 1000));
+            document.cookie = `${name}=${value}; expires=${expiryDate.toUTCString()}; path=/`;
+        }
+
+        // --- MP3 データのリセット ---------------------------
+        function resetMp3Data() {
+            if (source) {
+                source.disconnect(); // 接続を解除
+                source = null;
+            }
+            if (analyser) {
+                analyser.disconnect(); // 接続を解除
+                analyser = null;
+            }
+            musicUpload.value = ''; // ファイル選択をクリア
+            beatTimes = []; // beatTimes を初期化
+            songDuration = 0; // 曲の長さを初期化
+            lastBeatTime = 0; // 最後にビート検出した時間を初期化
+            prevEnergy = 0; // 前回のエネルギー値を初期化
+        }
+    </script>
+</body>
+
+</html>

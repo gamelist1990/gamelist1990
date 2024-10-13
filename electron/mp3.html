@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>MP3テストライブラリ</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        #container {
+            width: 800px;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .section {
+            border: 1px solid #eee;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .section h2 {
+            margin-top: 0;
+        }
+
+        #fileInput {
+            margin-bottom: 10px;
+        }
+
+        #audio {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        #waveform {
+            width: 100%;
+            height: 100px;
+            background-color: #f0f0f0;
+            margin-bottom: 10px;
+        }
+
+        #info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        #key-info,
+        #bpm-info {
+            font-size: 18px;
+        }
+
+        .key-container {
+            display: flex;
+            width: 100%;
+            height: 50px;
+            margin-bottom: 10px;
+        }
+
+        .key-bar {
+            flex-grow: 1;
+            height: 100%;
+            background-color: #ccc;
+            margin-right: 2px;
+            border-radius: 5px;
+            transition: background-color 0.2s ease;
+        }
+
+        .key-bar.active {
+            background-color: #f00;
+        }
+
+        #json-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #json-output {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 10px;
+            resize: vertical;
+        }
+
+        #loading-bar {
+            width: 0%;
+            height: 5px;
+            background-color: #4CAF50;
+            margin-bottom: 10px;
+            transition: width 0.5s ease;
+        }
+
+        #instrument-select {
+            margin-bottom: 10px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/meyda@5.6.3/dist/web/meyda.min.js"></script>
+</head>
+
+<body>
+    <div id="container">
+        <h1>MP3テストライブラリ</h1>
+
+
+        <div class="section">
+            <h2>ファイル選択</h2>
+            <input type="file" id="fileInput" accept="audio/mpeg">
+            <audio id="audio" controls></audio>
+            <div id="loading">読み込み中...</div>
+        </div>
+
+        <div class="section">
+            <h2>波形表示</h2>
+            <canvas id="waveform"></canvas>
+        </div>
+
+        <div class="section">
+            <h2>情報</h2>
+            <div id="info">
+                <div id="key-info">キー: <span id="key-value">検出中...</span></div>
+                <div id="bpm-info">BPM: <span id="bpm-value">自動検出</span></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>キー強度</h2>
+            <div class="key-container" id="waveform-key"></div>
+        </div>
+
+        <div class="section">
+            <h2>楽器選択</h2>
+            <select id="instrument-select">
+                <option value="sine">Sine</option>
+                <option value="square">Square</option>
+                <option value="sawtooth">Sawtooth</option>
+                <option value="triangle">Triangle</option>
+            </select>
+        </div>
+
+        <div class="section">
+            <h2>JSONデータ</h2>
+            <div id="json-container">
+                <textarea id="json-output" readonly></textarea>
+                <button id="copy-json">JSONをコピー</button>
+                <input type="file" id="load-json-file" accept=".json">
+                <div id="loading-bar"></div>
+                <button id="generate-json">JSONを生成</button>
+                <button id="play-json">JSONを再生</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const audio = document.getElementById('audio');
+        const canvas = document.getElementById('waveform');
+        const ctx = canvas.getContext('2d');
+        const keyValue = document.getElementById('key-value');
+        const bpmValue = document.getElementById('bpm-value');
+        const waveformKeyContainer = document.getElementById('waveform-key');
+        const jsonOutput = document.getElementById('json-output');
+        const copyJsonButton = document.getElementById('copy-json');
+        const loadJsonFile = document.getElementById('load-json-file');
+        const generateJsonButton = document.getElementById('generate-json');
+        const playJsonButton = document.getElementById('play-json');
+        const loadingBar = document.getElementById('loading-bar');
+        const instrumentSelect = document.getElementById('instrument-select');
+        const loadingDiv = document.getElementById('loading');
+
+        const numOctaves = 3;
+        const notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+        const keyNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
+            "C2", "C#2", "D2", "D#2", "E2", "F2", "F#2", "G2", "G#2", "A2", "A#2", "B2",
+            "C3", "C#3", "D3", "D#3", "E3", "F3", "F#3", "G3", "G#3", "A3", "A#3", "B3"];
+
+        const keyFrequencies = [];
+        for (let octave = 0; octave < numOctaves; octave++) {
+            notes.forEach((note, index) => {
+                const frequency = 440 * Math.pow(2, (octave * 12 + index - 9) / 12);
+                keyFrequencies.push(frequency);
+            });
+        }
+
+        let audioCtx, source, bufferLength, dataArray;
+        let bpm;
+        let isPlaying = false;
+        let meydaAnalyzer;
+
+        let animationId;
+
+        let onAudioPlay, onAudioPause;
+
+        fileInput.addEventListener('change', async (event) => {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+
+            loadingDiv.style.display = 'block'; // ローディング表示開始
+
+            reader.onload = async (e) => {
+                const arrayBuffer = e.target.result;
+
+                const audioURL = URL.createObjectURL(new Blob([arrayBuffer]));
+                audio.src = audioURL;
+                audio.load();
+
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                await audioCtx.audioWorklet.addModule('https://cdn.jsdelivr.net/npm/meyda@5.6.3/dist/web/meyda-wa.min.js');
+                source = audioCtx.createBufferSource();
+
+                audioCtx.decodeAudioData(arrayBuffer, async (buffer) => {
+                    source.buffer = buffer;
+                    bufferLength = buffer.length;
+                    dataArray = new Float32Array(bufferLength);
+
+                    source.connect(audioCtx.destination);
+
+                    waveformKeyContainer.innerHTML = '';
+                    for (let i = 0; i < keyNames.length; i++) {
+                        const bar = document.createElement('div');
+                        bar.classList.add('key-bar');
+                        bar.style.height = '0px';
+                        waveformKeyContainer.appendChild(bar);
+                    }
+
+                    Meyda.bufferSize = 2048;
+                    Meyda.sampleRate = audioCtx.sampleRate;
+
+                    meydaAnalyzer = Meyda.createMeydaAnalyzer({
+                        "audioContext": audioCtx,
+                        "source": source,
+                        "bufferSize": Meyda.bufferSize,
+                        "featureExtractors": ["chroma", "spectralCentroid", "rms"]
+                    });
+
+                    onAudioPlay = () => {
+                        isPlaying = true;
+                        if (audioCtx.state === 'suspended') {
+                            audioCtx.resume();
+                        }
+                        source.start();
+                    };
+                    onAudioPause = () => {
+                        isPlaying = false;
+                        source.stop();
+                    };
+
+                    audio.addEventListener('play', onAudioPlay);
+                    audio.addEventListener('pause', onAudioPause);
+
+                    analyzeAudio();
+                    drawWaveform();
+
+                    loadingDiv.style.display = 'none'; // ローディング表示終了
+                });
+            };
+
+            reader.onerror = (error) => {
+                console.error("ファイルの読み込み中にエラーが発生しました:", error);
+                loadingDiv.style.display = 'none';
+                alert('ファイルの読み込み中にエラーが発生しました。');
+            };
+
+            reader.readAsArrayBuffer(file);
+        });
+
+        function drawWaveform() {
+            ctx.fillStyle = '#f0f0f0';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = 'black';
+            ctx.beginPath();
+
+            const sliceWidth = canvas.width * 1.0 / bufferLength;
+            let x = 0;
+
+            for (let i = 0; i < bufferLength; i++) {
+                const v = dataArray[i];
+                const y = v * canvas.height / 2 + canvas.height / 2;
+
+                if (i === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+
+                x += sliceWidth;
+            }
+            ctx.stroke();
+        }
+
+        async function analyzeAudio() {
+            for (let i = 0; i < bufferLength; i += Meyda.bufferSize) {
+                const buffer = source.buffer.getChannelData(0).slice(i, i + Meyda.bufferSize);
+
+                const features = await meydaAnalyzer.process(buffer);
+
+                if (features && features.spectralCentroid) {
+                    bpm = features.spectralCentroid;
+                    bpmValue.textContent = bpm.toFixed(2);
+                }
+
+                if (features && features.chroma) {
+                    const keyStrengths = features.chroma;
+                    const strongestKeyIndex = keyStrengths.indexOf(Math.max(...keyStrengths));
+                    const strongestKey = keyNames[strongestKeyIndex];
+
+                    keyValue.textContent = strongestKey;
+
+                    const bars = waveformKeyContainer.querySelectorAll('.key-bar');
+                    bars.forEach((bar, index) => {
+                        const strength = keyStrengths[index];
+                        bar.style.height = strength * 50 + 'px';
+                        bar.classList.toggle('active', index === strongestKeyIndex);
+                    });
+                }
+
+                dataArray.set(buffer, i);
+            }
+
+            generateJsonFromWaveform();
+        }
+
+        function generateJsonFromWaveform() {
+            const notesData = extractNotesFromAudio();
+            const jsonData = JSON.stringify({
+                bpm: bpm,
+                key: keyValue.textContent,
+                notes: notesData
+            }, null, 2);
+            jsonOutput.value = jsonData;
+        }
+
+        function copyJsonToClipboard() {
+            jsonOutput.select();
+            document.execCommand('copy');
+            alert('JSONをクリップボードにコピーしました。');
+        }
+
+        function downloadJsonFile() {
+            const jsonData = jsonOutput.value;
+            const blob = new Blob([jsonData], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'sheet_music.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function loadSheetMusicFromJson(jsonData) {
+            const data = JSON.parse(jsonData);
+            bpm = data.bpm;
+            bpmValue.textContent = bpm;
+
+            jsonOutput.value = jsonData;
+        }
+
+        function playSheetMusicFromJson(jsonData) {
+            const data = JSON.parse(jsonData);
+            bpm = data.bpm;
+            bpmValue.textContent = bpm;
+
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+            data.notes.forEach(noteData => {
+                const oscillator = audioCtx.createOscillator();
+                oscillator.type = instrumentSelect.value;
+                oscillator.frequency.value = getFrequencyFromNote(noteData.note);
+
+                const gainNode = audioCtx.createGain();
+                gainNode.gain.setValueAtTime(0, audioCtx.currentTime + noteData.startTime);
+                gainNode.gain.linearRampToValueAtTime(1, audioCtx.currentTime + noteData.startTime + 0.01);
+                gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + noteData.startTime + noteData.duration);
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+
+                oscillator.start(audioCtx.currentTime + noteData.startTime);
+                oscillator.stop(audioCtx.currentTime + noteData.startTime + noteData.duration);
+            });
+        }
+
+        function getFrequencyFromNote(note) {
+            const noteIndex = notes.indexOf(note.slice(0, -1));
+            const octave = parseInt(note.slice(-1)) - 1;
+            if (noteIndex === -1) {
+                return 440;
+            }
+            return 440 * Math.pow(2, (octave * 12 + noteIndex - 9) / 12);
+        }
+
+        function extractNotesFromAudio() {
+            const notesData = [];
+            let lastNote = null;
+            let startTime = 0;
+            const amplitudeThreshold = 0.1;
+            const minNoteDuration = 0.1;
+
+            for (let i = 0; i < dataArray.length; i += Meyda.bufferSize) {
+                const buffer = source.buffer.getChannelData(0).slice(i, i + Meyda.bufferSize);
+                const features = meydaAnalyzer.get();
+
+                if (features.rms > amplitudeThreshold) {
+                    const strongestPitchIndex = features.chroma.indexOf(Math.max(...features.chroma));
+                    const note = keyNames[strongestPitchIndex];
+
+                    if (note !== lastNote) {
+                        if (lastNote && (i / audioCtx.sampleRate - startTime) >= minNoteDuration) {
+                            notesData.push({
+                                note: lastNote,
+                                startTime: startTime,
+                                duration: i / audioCtx.sampleRate - startTime
+                            });
+                        }
+                        lastNote = note;
+                        startTime = i / audioCtx.sampleRate;
+                    }
+                } else if (lastNote) {
+                    if ((i / audioCtx.sampleRate - startTime) >= minNoteDuration) {
+                        notesData.push({
+                            note: lastNote,
+                            startTime: startTime,
+                            duration: i / audioCtx.sampleRate - startTime
+                        });
+                    }
+                    lastNote = null;
+                }
+            }
+
+            if (lastNote && (dataArray.length / audioCtx.sampleRate - startTime) >= minNoteDuration) {
+                notesData.push({
+                    note: lastNote,
+                    startTime: startTime,
+                    duration: dataArray.length / audioCtx.sampleRate - startTime
+                });
+            }
+
+            return notesData;
+        }
+
+        copyJsonButton.addEventListener('click', copyJsonToClipboard);
+        copyJsonButton.addEventListener('click', downloadJsonFile);
+
+        generateJsonButton.addEventListener('click', generateJsonFromWaveform);
+
+        loadJsonFile.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+
+            loadingBar.style.width = '0%';
+            loadingBar.style.backgroundColor = '#4CAF50';
+
+            reader.onloadstart = () => {
+                loadingBar.style.display = 'block';
+            };
+
+            reader.onprogress = (event) => {
+                if (event.lengthComputable) {
+                    const percentLoaded = Math.round((event.loaded / event.total) * 100);
+                    loadingBar.style.width = percentLoaded + '%';
+                }
+            };
+
+            reader.onload = (e) => {
+                const jsonData = e.target.result;
+                jsonOutput.value = jsonData;
+
+                loadingBar.style.width = '100%';
+                loadingBar.style.backgroundColor = '#008CBA';
+                setTimeout(() => {
+                    loadingBar.style.display = 'none';
+                }, 500);
+            };
+
+            reader.onerror = () => {
+                loadingBar.style.backgroundColor = '#f44336';
+                alert('JSONファイルの読み込みに失敗しました。');
+            };
+
+            reader.readAsText(file);
+        });
+
+        playJsonButton.addEventListener('click', () => {
+            const jsonData = jsonOutput.value;
+            if (jsonData) {
+                playSheetMusicFromJson(jsonData);
+            }
+        });
+    </script>
+</body>
+
+</html>

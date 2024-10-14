@@ -20,8 +20,10 @@
             margin: 0;
             overflow: hidden;
             display: flex;
-            align-items: flex-end;
-            justify-content: center;
+            flex-direction: column;
+            /* 縦方向に要素を配置 */
+            align-items: center;
+            justify-content: flex-end;
             min-height: 100vh;
         }
 
@@ -34,6 +36,8 @@
             max-width: 800px;
             margin-bottom: 20px;
             position: relative;
+            z-index: 1;
+            /* 画像の上に表示 */
         }
 
         .dialogue-box::before,
@@ -124,10 +128,29 @@
         .choice-button:hover {
             background-color: #6b614f;
         }
+
+        .character-image-container {
+            display: flex;
+            justify-content: space-between;
+            width: 80%;
+            max-width: 800px;
+            margin: 50px auto 10px;
+            /* 上下に margin を追加, 上を大きく */
+            position: relative;
+            z-index: 0;
+            /* dialogue-box より下に表示 */
+        }
+
+        .character-image {
+            width: 150px;
+            height: 200px;
+            object-fit: cover;
+        }
     </style>
 </head>
 
 <body>
+    <div class="character-image-container"></div>
     <div class="dialogue-box">
         <div class="character-name"></div>
         <div class="dialogue-text"></div>
@@ -138,149 +161,162 @@
         const characterNameElement = document.querySelector('.character-name');
         const dialogueTextElement = document.querySelector('.dialogue-text');
         const choiceButtonsElement = document.querySelector('.choice-buttons');
+        const characterImageContainer = document.querySelector('.character-image-container');
 
         const storylines = {
-                start: [
-                    { character: "パイモン", text: "ねぇ、旅人！面白いものを見つけたよ！" },
-                    {
-                        choiceTime: true,
-                        options: [
-                            { text: "何を見つけたの？", next: "found1" },
-                            { text: "また宝箱？", next: "found2" },
-                            { text: "お腹減ったんだけど…", next: "hungry" }
-                        ]
-                    }
-                ],
-                found1: [
-                    { character: "パイモン", text: "んー、これは…なんだか不思議な石だね！キラキラ光ってる！" },
-                    { character: "旅人", text: "本当だ…綺麗だけど、見たことないな。調べてみようか。" },
-                    { character: "パイモン", text: "触ってみたら…急に光った！うわっ、なんか声が聞こえる！" },
-                    { character: "謎の声", text: "…選ばれし者よ…汝に試練を与えよう…" },
-                    { character: "旅人", text: "え、誰！？ どこから声が…？" },
-                    { character: "パイモン", text: "わ、なんか怖いよ！逃げよう！" },
-                    {
-                        choiceTime: true,
-                        options: [
-                            { text: "声の主に従う", next: "obey" },
-                            { text: "パイモンと一緒に逃げる", next: "escape" }
-                        ]
-                    }
-                ],
-                found2: [
-                    { character: "パイモン", text: "宝箱じゃないけど、すごいやつかも！" },
-                    { character: "旅人", text: "どれどれ？ もしかして宝の地図の一部とか？" },
-                    { character: "パイモン", text: "んんー…なんか古い巻物みたい。文字がいっぱい書いてある！" },
-                    { character: "旅人", text: "古代文字…かな？ 読めないけど、重要なものかもしれない。" },
-                    { character: "パイモン", text: "街に戻ってリサさんに解読してもらおう！" },
-                    { character: "旅人", text: "そうだな。急いでモンド城に戻ろう！" },
-                    { character: "リサ", text: "あら、旅人さんとパイモンさん。どうしたのかしら？" },
-                    { character: "旅人", text: "リサさん、この巻物を解読してくれませんか？" },
-                    { character: "リサ", text: "ふふっ、面白そうね。ちょっと見せて。" },
-                    { character: "リサ", text: "…なるほど…これは古代の秘宝の在り処を示した地図ね。" },
-                    { character: "パイモン", text: "秘宝！？ どんな秘宝なの？" },
-                    { character: "リサ", text: "それは…伝説の風神の聖遺物よ。" },
-                    { character: "旅人", text: "風神の聖遺物…？" },
-                    { character: "リサ", text: "ええ。風の力を司る強力なアイテムらしいわ。でも、地図を見る限り、入手するのは容易じゃないみたいね。" },
-                    {
-                        choiceTime: true,
-                        options: [
-                            { text: "風神の聖遺物を探しに行く", next: "searchRelic" },
-                            { text: "危険すぎるから諦める", next: "giveUpRelic" }
-                        ]
-                    }
-                ],
-                hungry: [
-                    { character: "パイモン", text: "えー、今？ まぁ、後で美味しいもの食べに行こう！" },
-                    { character: "旅人", text: "そうだな、もう少し我慢するか…" },
-                    { character: "パイモン", text: "そういえば、この近くに美味しそうな匂いがするレストランがあったような…" },
-                    { character: "旅人", text: "本当？ じゃあ、ちょっと寄り道して行ってみよう！" },
-                    { character: "パイモン", text: "やったー！ 美味しいものが食べられるぞー！" },
-                    { character: "旅人", text: "…あれ？ 店の前に人が集まってる…" },
-                    { character: "パイモン", text: "どうしたんだろう？" },
-                    { character: "村人", text: "大変なんだ！ 店主が魔物にさらわれちゃった！" },
-                    { character: "旅人", text: "魔物！？" },
-                    {
-                        choiceTime: true,
-                        options: [
-                            { text: "魔物を倒して店主を助ける", next: "rescueOwner" },
-                            { text: "お腹が空いたから他の店を探す", next: "findOtherRestaurant" }
-                        ]
-                    }
+            images: [
+                { name: "パイモン", url: "https://static.wikia.nocookie.net/gensin-impact/images/5/5f/Icon_Emoji_Paimon%27s_Paintings_01_Paimon_4.png/revision/latest?cb=20240303112442" },
+                { name: "旅人", url: "https://static.wikia.nocookie.net/gensin-impact/images/2/2d/Icon_Emoji_Paimon%27s_Paintings_01_Lumine_2.png/revision/latest?cb=20240303141251" },
+                { name: "リサ", url: "https://static.wikia.nocookie.net/gensin-impact/images/9/9a/Icon_Emoji_Paimon%27s_Paintings_13_Lisa_1.png/revision/latest?cb=20220311051626" },
+                { name: "自慢げパイモン", url: "https://static.wikia.nocookie.net/gensin-impact/images/b/bc/Icon_Emoji_Paimon%27s_Paintings_01_Paimon_3.png/revision/latest?cb=20240303140837" },
+                { name: "びっくりパイモン", url: "https://static.wikia.nocookie.net/gensin-impact/images/2/21/Icon_Emoji_Paimon%27s_Paintings_01_Paimon_5.png/revision/latest?cb=20240303140938" },
+                { name: "謎の紙", url: "https://static.wikia.nocookie.net/gensin-impact/images/3/36/Icon_Emoji_Paimon%27s_Paintings_19_Layla_3.png/revision/latest?cb=20221124043125" },
+                { name: "驚愕パイモン", url: "https://static.wikia.nocookie.net/gensin-impact/images/6/6b/Icon_Emoji_Paimon%27s_Paintings_17_Paimon_3.png/revision/latest?cb=20220921015823" },
+                { name: "びっくり旅人", url: "https://static.wikia.nocookie.net/gensin-impact/images/4/48/Icon_Emoji_Paimon%27s_Paintings_01_Aether_2.png/revision/latest?cb=20240303141212" },
+                { name: "考え込むパイモン", url: "https://upload-os-bbs.hoyolab.com/upload/2022/05/05/5436450020c1e39a6d6626c8c2349dfb_8449394452872526297.gif" },
+                { name: "笑顔の旅人", url: "https://upload-os-bbs.hoyolab.com/upload/2024/02/19/6a1718e4c453a4379c517d47e87b0295_4420627277224840974.png?x-oss-process=image%2Fauto-orient%2C0%2Finterlace%2C1%2Fformat%2Cwebp%2Fquality%2Cq_70" },
+                { name: "真剣な旅人", url: "https://upload-os-bbs.hoyolab.com/upload/2022/09/27/c1229c1c7f2857e2ffb0f7ab66ba01ec_5410248461863540560.png?x-oss-process=image%2Fauto-orient%2C0%2Finterlace%2C1%2Fformat%2Cwebp%2Fquality%2Cq_70" }
+            ],
+            start: [
+                { character: "パイモン", text: "ねぇ、旅人！すっごいもの見つけたんだぞ！", image: ["パイモン-l", "旅人-r"] },
+                {
+                    choiceTime: true,
+                    options: [
+                        { text: "何を見つけたの？", next: "found1" },
+                        { text: "まさか、また宝箱？", next: "found2" },
+                        { text: "パイモン、お腹ペコペコだよ…", next: "hungry" }
+                    ]
+                }
+            ],
+            found1: [
+                { character: "パイモン", text: "んー、これは…なんだか不思議な石だな！キラキラ光ってるぞ！", image: ["自慢げパイモン-l", "旅人-r"] },
+                { character: "旅人", text: "本当だ…綺麗だけど、見たことないわね。ちょっと調べてみようか。", image: ["旅人-l", "考え込むパイモン-r"] },
+                { character: "パイモン", text: "触ってみたら…急に光り出した！うわっ、なんか声が聞こえるぞ！", image: ["びっくりパイモン-l", "旅人-r"] },
+                { character: "謎の声", text: "…選ばれし者よ…汝に試練を与えよう…", image: ["謎の紙-l"] },
+                { character: "旅人", text: "え、誰！？ どこから声が…？", image: ["びっくり旅人-l", "びっくりパイモン-r"] },
+                { character: "パイモン", text: "ひぃぃ！なんか怖いよ！逃げよう！", image: ["驚愕パイモン-l", "びっくり旅人-r"] },
+                {
+                    choiceTime: true,
+                    options: [
+                        { text: "声の主に従う", next: "obey" },
+                        { text: "パイモンと一緒に逃げる", next: "escape" }
+                    ]
+                }
+            ],
+            found2: [
+                { character: "パイモン", text: "宝箱じゃないけど、すごいものかも！", image: ["自慢げパイモン-l", "旅人-r"] },
+                { character: "旅人", text: "どれどれ？ もしかして宝の地図の一部とか？", image: ["笑顔の旅人-l", "パイモン-r"] },
+                { character: "パイモン", text: "んんー…なんか古い巻物みたいだぞ。文字がいっぱい書いてある！", image: ["パイモン-l", "真剣な旅人-r"] },
+                { character: "旅人", text: "古代文字…かしら？ 読めないけど、重要なものかもしれないわね。", image: ["真剣な旅人-l", "パイモン-r"] },
+                { character: "パイモン", text: "街に戻ってリサ姉さんに解読してもらおう！", image: ["パイモン-l", "笑顔の旅人-r"] },
+                { character: "旅人", text: "そうね。急いでモンド城に戻りましょう！", image: ["笑顔の旅人-l", "パイモン-r"] },
+                { character: "リサ", text: "あら、旅人さんとパイモンさん。どうしたのかしら？", image: ["リサ-l", "パイモン-r", "旅人-r"] },
+                { character: "旅人", text: "リサさん、この巻物を解読してくれませんか？", image: ["旅人-l", "リサ-r"] },
+                { character: "リサ", text: "ふふっ、面白そうね。ちょっと見せて。", image: ["リサ-l", "旅人-r"] },
+                { character: "リサ", text: "…なるほど…これは古代の秘宝の在り処を示した地図ね。", image: ["リサ-l", "パイモン-r", "旅人-r"] },
+                { character: "パイモン", text: "秘宝！？ どんな秘宝なんだ？", image: ["パイモン-l", "リサ-r"] },
+                { character: "リサ", text: "それは…伝説の風神の聖遺物よ。", image: ["リサ-l", "パイモン-r", "旅人-r"] },
+                { character: "旅人", text: "風神の聖遺物…？", image: ["旅人-l", "リサ-r"] },
+                { character: "リサ", text: "ええ。風の力を司る強力なアイテムらしいわ。でも、地図を見る限り、入手するのは容易じゃないみたいね。", image: ["リサ-l", "パイモン-r", "旅人-r"] },
+                {
+                    choiceTime: true,
+                    options: [
+                        { text: "風神の聖遺物を探しに行く", next: "searchRelic" },
+                        { text: "危険すぎるから諦める", next: "giveUpRelic" }
+                    ]
+                }
+            ],
+            hungry: [
+                { character: "パイモン", text: "えー、今？ まぁ、後で美味しいもの食べに行こう！", image: ["パイモン-l", "旅人-r"] },
+                { character: "旅人", text: "そうね、もう少し我慢しましょうか…", image: ["旅人-l", "パイモン-r"] },
+                { character: "パイモン", text: "そういえば、この近くに美味しそうな匂いがするレストランがあったような…", image: ["考え込むパイモン-l", "旅人-r"] },
+                { character: "旅人", text: "本当？ じゃあ、ちょっと寄り道して行ってみましょう！", image: ["笑顔の旅人-l", "パイモン-r"] },
+                { character: "パイモン", text: "やったー！ 美味しいものが食べられるぞー！", image: ["自慢げパイモン-l", "笑顔の旅人-r"] },
+                { character: "旅人", text: "…あれ？ 店の前に人が集まってる…", image: ["真剣な旅人-l", "パイモン-r"] },
+                { character: "パイモン", text: "どうしたんだろう？", image: ["パイモン-l", "真剣な旅人-r"] },
+                { character: "村人", text: "大変なんだ！ 店主が魔物にさらわれちゃった！", image: ["村人-l", "パイモン-r", "旅人-r"] }, // 村人画像を追加してください
+                { character: "旅人", text: "魔物！？", image: ["びっくり旅人-l", "パイモン-r"] },
+                {
+                    choiceTime: true,
+                    options: [
+                        { text: "魔物を倒して店主を助ける", next: "rescueOwner" },
+                        { text: "お腹が空いたから他の店を探す", next: "findOtherRestaurant" }
+                    ]
+                }
 
-                ],
-                obey: [
-                    { character: "旅人", text: "声の主よ、私はここにいます。試練とは何ですか？" },
-                    { character: "謎の声", text: "ふむ…勇気ある者よ。汝の力は本物か…試してみよう。" },
-                    { character: "パイモン", text: "ちょ、旅人！ 大丈夫なの？" },
-                    { character: "謎の声", text: "汝の目の前に現れる魔物を倒せ！ それが試練だ！" },
-                    { character: "旅人", text: "魔物…！？" },
-                    { character: "パイモン", text: "うわっ！ 凶暴そうなヒルチャールだ！" },
-                    { character: "旅人", text: "パイモン、行くぞ！" },
-                    { character: "パイモン", text: "了解！" },
-                    // 戦闘シーン (ここではテキストで表現)
-                    { character: "旅人", text: "ふう…なんとか倒したぞ。" },
-                    { character: "謎の声", text: "見事だ…汝は真の勇者である。褒美として、この剣を与えよう。" },
-                    { character: "旅人", text: "これは…！" },
-                    { character: "パイモン", text: "すごい！ すごく強い剣みたい！" },
-                    { character: "謎の声", text: "さらばだ、勇者よ。また会う日まで…" },
-                    { character: "旅人", text: "…声は消えてしまった…" },
-                    { character: "パイモン", text: "なんだか不思議な体験だったね…" },
-                    { character: "旅人", text: "ああ…でも、この剣はきっと役に立つだろう。" },
-                    { text: "エンディング：試練を乗り越えた旅人", next: "end" }
-                ],
-                escape: [
-                    { character: "旅人", text: "パイモン、行こう！" },
-                    { character: "パイモン", text: "うん！ 怖いよー！" },
-                    { character: "旅人", text: "…なんとか逃げ切れたみたいだな。" },
-                    { character: "パイモン", text: "はぁはぁ…怖かった…" },
-                    { character: "旅人", text: "でも、あの声は何だったんだろう…？" },
-                    { character: "パイモン", text: "わからないけど…もうあんな怖い思いはしたくないよ！" },
-                    { character: "旅人", text: "そうだな…気をつけよう。" },
-                    { text: "エンディング：謎の声から逃れた旅人", next: "end" }
-                ],
-                searchRelic: [
-                    { character: "旅人", text: "風神の聖遺物…探してみましょう。" },
-                    { character: "パイモン", text: "でも、どこにあるかわからないよね？" },
-                    { character: "リサ", text: "地図によると…風龍廃墟の奥深くにあるみたいよ。" },
-                    { character: "パイモン", text: "風龍廃墟！？ 危ないところじゃないか！" },
-                    { character: "旅人", text: "でも、風神の聖遺物はきっとテイワットを守るために必要なものだ。行こう、パイモン。" },
-                    { character: "パイモン", text: "わかったよ…旅人のためなら頑張る！" },
-                    // 風龍廃墟での冒険シーン (ここではテキストで表現)
-                    { character: "旅人", text: "…ふう、やっと聖遺物を手に入れたぞ。" },
-                    { character: "パイモン", text: "すごい！ キラキラ光ってる！" },
-                    { character: "旅人", text: "これでテイワットを守ることができるかもしれない。" },
-                    { text: "エンディング：風神の聖遺物を手に入れた旅人", next: "end" }
-                ],
-                giveUpRelic: [
-                    { character: "旅人", text: "リサさん、ありがとうございます。でも、今回は諦めます。" },
-                    { character: "パイモン", text: "そうだね…危険すぎるよ！" },
-                    { character: "リサ", text: "そう…残念だわ。でも、あなたの判断は賢明だと思うわ。" },
-                    { character: "旅人", text: "また別の機会に、テイワットを守る方法を探しましょう。" },
-                    { text: "エンディング：風神の聖遺物を諦めた旅人", next: "end" }
-                ],
-                rescueOwner: [
-                    { character: "旅人", text: "魔物を倒して、店主を助けましょう！" },
-                    { character: "パイモン", text: "うん！ 任せて！" },
-                    // 魔物との戦闘シーン (ここではテキストで表現)
-                    { character: "旅人", text: "やった！ 魔物を倒したぞ！" },
-                    { character: "店主", text: "ありがとうございます！ 助けてくれて！" },
-                    { character: "パイモン", text: "お腹空いたから、ご飯食べよう！" },
-                    { character: "店主", text: "もちろんです！ 感謝の気持ちです、無料で好きなだけ食べてください！" },
-                    { text: "エンディング：美味しいご飯を食べた旅人", next: "end" }
-                ],
-                findOtherRestaurant: [
-                    { character: "旅人", text: "そうだな…他に店を探そう。" },
-                    { character: "パイモン", text: "早く美味しいものが食べたいよ！" },
-                    // 別のレストランを探すシーン (ここではテキストで表現)
-                    { character: "パイモン", text: "あ！ あそこに美味しそうな店がある！" },
-                    { character: "旅人", text: "行ってみよう！" },
-                    { text: "エンディング：別のレストランでご飯を食べた旅人", next: "end" }
-                ],
-                end: [
-                    { text: "ゲームクリア！ お疲れ様でした！" }
-                ]
-                // 他のストーリーラインもここに追加
-            };
+            ],
+            obey: [
+                { character: "旅人", text: "声の主よ、私はここにいます。試練とは何ですか？", image: ["旅人-l", "謎の紙-r"] },
+                { character: "謎の声", text: "ふむ…勇気ある者よ。汝の力は本物か…試してみよう。", image: ["謎の紙-l"] },
+                { character: "パイモン", text: "ちょ、旅人！ 大丈夫なの！？", image: ["驚愕パイモン-l", "旅人-r"] },
+                { character: "謎の声", text: "汝の目の前に現れる魔物を倒せ！ それが試練だ！", image: ["謎の紙-l"] },
+                { character: "旅人", text: "魔物…！？", image: ["びっくり旅人-l", "驚愕パイモン-r"] },
+                { character: "パイモン", text: "うわっ！ 凶暴そうなヒルチャールだ！", image: ["びっくりパイモン-l", "びっくり旅人-r"] },
+                { character: "旅人", text: "パイモン、行くぞ！", image: ["真剣な旅人-l", "びっくりパイモン-r"] },
+                { character: "パイモン", text: "了解！", image: ["パイモン-l", "真剣な旅人-r"] },
+                // 戦闘シーン (ここではテキストで表現)
+                { character: "旅人", text: "ふう…なんとか倒したわ。", image: ["旅人-l", "パイモン-r"] },
+                { character: "謎の声", text: "見事だ…汝は真の勇者である。褒美として、この剣を与えよう。", image: ["謎の紙-l"] },
+                { character: "旅人", text: "これは…！", image: ["びっくり旅人-l", "パイモン-r"] },
+                { character: "パイモン", text: "すごい！ すごく強い剣みたいだぞ！", image: ["自慢げパイモン-l", "びっくり旅人-r"] },
+                { character: "謎の声", text: "さらばだ、勇者よ。また会う日まで…", image: ["謎の紙-l"] },
+                { character: "旅人", text: "…声は消えてしまった…", image: ["真剣な旅人-l", "パイモン-r"] },
+                { character: "パイモン", text: "なんだか不思議な体験だったね…", image: ["パイモン-l", "真剣な旅人-r"] },
+                { character: "旅人", text: "ああ…でも、この剣はきっと役に立つでしょう。", image: ["笑顔の旅人-l", "パイモン-r"] },
+                { text: "エンディング：試練を乗り越えた旅人", next: "end" }
+            ],
+            escape: [
+                { character: "旅人", text: "パイモン、行きましょう！", image: ["真剣な旅人-l", "驚愕パイモン-r"] },
+                { character: "パイモン", text: "うん！ 怖いよー！", image: ["驚愕パイモン-l", "真剣な旅人-r"] },
+                { character: "旅人", text: "…なんとか逃げ切れたみたいね。", image: ["旅人-l", "パイモン-r"] },
+                { character: "パイモン", text: "はぁはぁ…怖かった…", image: ["びっくりパイモン-l", "旅人-r"] },
+                { character: "旅人", text: "でも、あの声は何だったのかしら…？", image: ["真剣な旅人-l", "パイモン-r"] },
+                { character: "パイモン", text: "わからないけど…もうあんな怖い思いはしたくないぞ！", image: ["パイモン-l", "真剣な旅人-r"] },
+                { character: "旅人", text: "そうね…気をつけましょう。", image: ["笑顔の旅人-l", "パイモン-r"] },
+                { text: "エンディング：謎の声から逃れた旅人", next: "end" }
+            ],
+            searchRelic: [
+                { character: "旅人", text: "風神の聖遺物…探してみましょう。", image: ["真剣な旅人-l", "パイモン-r"] },
+                { character: "パイモン", text: "でも、どこにあるかわからないよね？", image: ["パイモン-l", "真剣な旅人-r"] },
+                { character: "リサ", text: "地図によると…風龍廃墟の奥深くにあるみたいよ。", image: ["リサ-l", "パイモン-r", "旅人-r"] },
+                { character: "パイモン", text: "風龍廃墟！？ 危ないところじゃないか！", image: ["驚愕パイモン-l", "真剣な旅人-r"] },
+                { character: "旅人", text: "でも、風神の聖遺物はきっとテイワットを守るために必要なものよ。行きましょう、パイモン。", image: ["真剣な旅人-l", "驚愕パイモン-r"] },
+                { character: "パイモン", text: "わかったよ…旅人のためなら頑張る！", image: ["パイモン-l", "真剣な旅人-r"] },
+                // 風龍廃墟での冒険シーン (ここではテキストで表現)
+                { character: "旅人", text: "…ふう、やっと聖遺物を手に入れたわ。", image: ["旅人-l", "パイモン-r"] },
+                { character: "パイモン", text: "すごい！ キラキラ光ってるぞ！", image: ["自慢げパイモン-l", "旅人-r"] },
+                { character: "旅人", text: "これでテイワットを守ることができるかもしれないわ。", image: ["笑顔の旅人-l", "パイモン-r"] },
+                { text: "エンディング：風神の聖遺物を手に入れた旅人", next: "end" }
+            ],
+            giveUpRelic: [
+                { character: "旅人", text: "リサさん、ありがとうございます。でも、今回は諦めます。", image: ["旅人-l", "リサ-r"] },
+                { character: "パイモン", text: "そうだね…危険すぎるよ！", image: ["パイモン-l", "リサ-r"] },
+                { character: "リサ", text: "そう…残念だわ。でも、あなたの判断は賢明だと思うわ。", image: ["リサ-l", "パイモン-r", "旅人-r"] },
+                { character: "旅人", text: "また別の機会に、テイワットを守る方法を探しましょう。", image: ["笑顔の旅人-l", "リサ-r"] },
+                { text: "エンディング：風神の聖遺物を諦めた旅人", next: "end" }
+            ],
+            rescueOwner: [
+                { character: "旅人", text: "魔物を倒して、店主を助けましょう！", image: ["真剣な旅人-l", "パイモン-r"] },
+                { character: "パイモン", text: "うん！ 任せて！", image: ["パイモン-l", "真剣な旅人-r"] },
+                // 魔物との戦闘シーン (ここではテキストで表現)
+                { character: "旅人", text: "やった！ 魔物を倒したわ！", image: ["旅人-l", "パイモン-r"] },
+                { character: "店主", text: "ありがとうございます！ 助けてくれて！", image: ["店主-l", "パイモン-r", "旅人-r"] }, // 店主画像を追加してください
+                { character: "パイモン", text: "お腹空いたから、ご飯食べよう！", image: ["パイモン-l", "旅人-r"] },
+                { character: "店主", text: "もちろんです！ 感謝の気持ちです、無料で好きなだけ食べてください！", image: ["店主-l", "パイモン-r", "旅人-r"] },
+                { text: "エンディング：美味しいご飯を食べた旅人", next: "end" }
+            ],
+            findOtherRestaurant: [
+                { character: "旅人", text: "そうね…他に店を探しましょう。", image: ["真剣な旅人-l", "パイモン-r"] },
+                { character: "パイモン", text: "早く美味しいものが食べたいよ！", image: ["パイモン-l", "真剣な旅人-r"] },
+                // 別のレストランを探すシーン (ここではテキストで表現)
+                { character: "パイモン", text: "あ！ あそこに美味しそうな店がある！", image: ["自慢げパイモン-l", "真剣な旅人-r"] },
+                { character: "旅人", text: "行ってみましょう！", image: ["笑顔の旅人-l", "パイモン-r"] },
+                { text: "エンディング：別のレストランでご飯を食べた旅人", next: "end" }
+            ],
+            end: [
+                { text: "ゲームクリア！ お疲れ様でした！", image: ["パイモン-l", "旅人-r"] }
+            ]
+        };
 
         let currentStoryline = "start";
         let currentLine = 0;
@@ -293,63 +329,109 @@
         });
 
         function displayLine() {
-                console.log("--------------------");
-                console.log("currentStoryline:", currentStoryline);
-                console.log("currentLine:", currentLine);
+            console.log("--------------------");
+            console.log("currentStoryline:", currentStoryline);
+            console.log("currentLine:", currentLine);
 
-                if (currentLine < storylines[currentStoryline].length) {
-                    const line = storylines[currentStoryline][currentLine];
+            if (currentLine < storylines[currentStoryline].length) {
+                const line = storylines[currentStoryline][currentLine];
 
-                    if (line.choiceTime) {
-                        displayChoices(line.options);
-                    } else {
-                        console.log("Displaying dialogue:");
-                        console.log("Character:", line.character);
-                        console.log("Text:", line.text);
-                        characterNameElement.textContent = line.character;
-                        dialogueTextElement.textContent = line.text;
-                        choiceButtonsElement.innerHTML = '';
-                    }
+                if (line.choiceTime) {
+                    displayChoices(line.options);
+                    // 選択肢を表示するときは画像を非表示にする
+                    displayCharacterImage(null);
                 } else {
+                    console.log("Displaying dialogue:");
+                    console.log("Character:", line.character);
+                    console.log("Text:", line.text);
+                    characterNameElement.textContent = line.character;
+                    dialogueTextElement.textContent = line.text;
+                    choiceButtonsElement.innerHTML = '';
+
+                    displayCharacterImage(line.image); // 画像を表示する関数を呼び出す
                 }
-                console.log("--------------------");
+            } else {
+                // ストーリーラインの最後まで到達した場合の処理
+                console.log("ストーリーライン終了");
+                // 終了時は画像を非表示にする
+                displayCharacterImage(null);
             }
+            console.log("--------------------");
+        }
 
-            function handleNext() {
-                console.log("--------------------");
-                console.log("currentStoryline:", currentStoryline);
-                console.log("currentLine:", currentLine);
+        function handleNext() {
+            console.log("--------------------");
+            console.log("currentStoryline:", currentStoryline);
+            console.log("currentLine:", currentLine);
 
-                currentLine++;
-                console.log("currentLine incremented:", currentLine);
+            currentLine++;
+            console.log("currentLine incremented:", currentLine);
 
-                if (currentLine < storylines[currentStoryline].length) {
-                    displayLine();
-                } else {
-                    // ストーリーラインの最後まで到達した場合の処理
-                    console.log("ストーリーライン終了");
-                }
-                console.log("--------------------");
+            if (currentLine < storylines[currentStoryline].length) {
+                displayLine();
+            } else {
+                // ストーリーラインの最後まで到達した場合の処理
+                console.log("ストーリーライン終了");
             }
+            console.log("--------------------");
+        }
 
-            function displayChoices(options) {
-                console.log("--------------------");
-                console.log("displayChoices called");
-                choiceButtonsElement.innerHTML = '';
+        function displayChoices(options) {
+            console.log("--------------------");
+            console.log("displayChoices called");
+            choiceButtonsElement.innerHTML = '';
 
-                options.forEach(option => {
-                    const button = document.createElement('button');
-                    button.classList.add('choice-button');
-                    button.textContent = option.text;
-                    button.addEventListener('click', () => {
-                        console.log("Choice button clicked:", option.text);
-                        currentStoryline = option.next;
-                        currentLine = -1;// 選択肢後の最初の行に移動
-                    });
-                    choiceButtonsElement.appendChild(button);
+            options.forEach(option => {
+                const button = document.createElement('button');
+                button.classList.add('choice-button');
+                button.textContent = option.text;
+                button.addEventListener('click', () => {
+                    console.log("Choice button clicked:", option.text);
+                    currentStoryline = option.next;
+                    currentLine = -1;// 選択肢後の最初の行に移動
                 });
-                console.log("--------------------");
+                choiceButtonsElement.appendChild(button);
+            });
+            console.log("--------------------");
+        }
+
+
+        function displayCharacterImage(imageNames) {
+            characterImageContainer.innerHTML = ''; // 既存の画像を削除
+
+            if (imageNames) {
+                // imageNames が配列かどうかを確認
+                if (Array.isArray(imageNames)) {
+                    imageNames.forEach(imageName => {
+                        addImage(imageName);
+                    });
+                } else {
+                    // 配列でない場合は、従来通り単一の画像を追加
+                    addImage(imageNames);
+                }
             }
+        }
+
+        function addImage(imageName) {
+            const [name, position] = imageName.split('-');
+            const imageData = storylines.images.find(img => img.name === name);
+
+            if (imageData) {
+                const imageElement = document.createElement('img');
+                imageElement.src = imageData.url;
+                imageElement.classList.add('character-image');
+
+                // position に応じて画像を左右に配置
+                if (position === "l") {
+                    characterImageContainer.insertBefore(imageElement, characterImageContainer.firstChild);
+                } else if (position === "r") {
+                    characterImageContainer.appendChild(imageElement);
+                }
+            }
+        }
+
+
+
         displayLine();
     </script>
 </body>

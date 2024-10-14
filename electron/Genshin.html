@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>原神風物語ゲーム</title>
+    <style>
+        @font-face {
+            font-family: 'YuanShenFont';
+            src: url('zh-cn.ttf') format('truetype');
+            /* 原神フォントへのパスを適切に設定 */
+        }
+
+        body {
+            font-family: 'YuanShenFont', sans-serif;
+            background-image: url('https://th.bing.com/th/id/R.cea9ab9267205eceedbf5c1ef07ee806?rik=rDsP3MZMZbUkjQ&riu=http%3a%2f%2fi2.hdslb.com%2fbfs%2farchive%2f0468b145c276a46a7faae59d840f46576f1909e7.jpg&ehk=NgOLOKvClgQr%2fwTtYDYglad7SCYNxGSpzRcnt53RvME%3d&risl=&pid=ImgRaw&r=0');
+            background-size: cover;
+            color: #fff;
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .dialogue-box {
+            background-color: rgba(39, 38, 35, 0.9);
+            border: 4px solid #d9ab79;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            width: 80%;
+            max-width: 800px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .dialogue-box::before,
+        .dialogue-box::after {
+            content: '';
+            display: block;
+            position: absolute;
+            background-color: #d9ab79;
+            z-index: -1;
+        }
+
+        .dialogue-box::before {
+            width: 100%;
+            height: 6px;
+            top: -2px;
+            left: 0;
+            border-radius: 10px 10px 0 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .dialogue-box::after {
+            width: 100%;
+            height: 4px;
+            bottom: -2px;
+            left: 0;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .character-name {
+            background-color: rgba(58, 55, 4f, 0.8);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #d9ab79;
+            margin: 10px 15px;
+            position: relative;
+        }
+
+        .character-name::before,
+        .character-name::after {
+            content: '';
+            display: block;
+            position: absolute;
+            background-color: #d9ab79;
+            height: 2px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .character-name::before {
+            left: -10px;
+            width: 15px;
+        }
+
+        .character-name::after {
+            right: -10px;
+            width: 15px;
+        }
+
+        .dialogue-text {
+            margin: 10px 15px;
+            font-size: 1.1em;
+            background-color: rgba(0, 0, 0, 0.6);
+            border: 2px solid #d9ab79;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .choice-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin: 15px;
+        }
+
+        .choice-button {
+            background-color: #4d483e;
+            border: 2px solid #d9ab79;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1em;
+            color: #ffffff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .choice-button:hover {
+            background-color: #6b614f;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dialogue-box">
+        <div class="character-name"></div>
+        <div class="dialogue-text"></div>
+        <div class="choice-buttons"></div>
+    </div>
+
+    <script>
+        const characterNameElement = document.querySelector('.character-name');
+        const dialogueTextElement = document.querySelector('.dialogue-text');
+        const choiceButtonsElement = document.querySelector('.choice-buttons');
+
+        const storylines = {
+                start: [
+                    { character: "パイモン", text: "ねぇ、旅人！面白いものを見つけたよ！" },
+                    {
+                        choiceTime: true,
+                        options: [
+                            { text: "何を見つけたの？", next: "found1" },
+                            { text: "また宝箱？", next: "found2" },
+                            { text: "お腹減ったんだけど…", next: "hungry" }
+                        ]
+                    }
+                ],
+                found1: [
+                    { character: "パイモン", text: "んー、これは…なんだか不思議な石だね！キラキラ光ってる！" },
+                    { character: "旅人", text: "本当だ…綺麗だけど、見たことないな。調べてみようか。" },
+                    { character: "パイモン", text: "触ってみたら…急に光った！うわっ、なんか声が聞こえる！" },
+                    { character: "謎の声", text: "…選ばれし者よ…汝に試練を与えよう…" },
+                    { character: "旅人", text: "え、誰！？ どこから声が…？" },
+                    { character: "パイモン", text: "わ、なんか怖いよ！逃げよう！" },
+                    {
+                        choiceTime: true,
+                        options: [
+                            { text: "声の主に従う", next: "obey" },
+                            { text: "パイモンと一緒に逃げる", next: "escape" }
+                        ]
+                    }
+                ],
+                found2: [
+                    { character: "パイモン", text: "宝箱じゃないけど、すごいやつかも！" },
+                    { character: "旅人", text: "どれどれ？ もしかして宝の地図の一部とか？" },
+                    { character: "パイモン", text: "んんー…なんか古い巻物みたい。文字がいっぱい書いてある！" },
+                    { character: "旅人", text: "古代文字…かな？ 読めないけど、重要なものかもしれない。" },
+                    { character: "パイモン", text: "街に戻ってリサさんに解読してもらおう！" },
+                    { character: "旅人", text: "そうだな。急いでモンド城に戻ろう！" },
+                    { character: "リサ", text: "あら、旅人さんとパイモンさん。どうしたのかしら？" },
+                    { character: "旅人", text: "リサさん、この巻物を解読してくれませんか？" },
+                    { character: "リサ", text: "ふふっ、面白そうね。ちょっと見せて。" },
+                    { character: "リサ", text: "…なるほど…これは古代の秘宝の在り処を示した地図ね。" },
+                    { character: "パイモン", text: "秘宝！？ どんな秘宝なの？" },
+                    { character: "リサ", text: "それは…伝説の風神の聖遺物よ。" },
+                    { character: "旅人", text: "風神の聖遺物…？" },
+                    { character: "リサ", text: "ええ。風の力を司る強力なアイテムらしいわ。でも、地図を見る限り、入手するのは容易じゃないみたいね。" },
+                    {
+                        choiceTime: true,
+                        options: [
+                            { text: "風神の聖遺物を探しに行く", next: "searchRelic" },
+                            { text: "危険すぎるから諦める", next: "giveUpRelic" }
+                        ]
+                    }
+                ],
+                hungry: [
+                    { character: "パイモン", text: "えー、今？ まぁ、後で美味しいもの食べに行こう！" },
+                    { character: "旅人", text: "そうだな、もう少し我慢するか…" },
+                    { character: "パイモン", text: "そういえば、この近くに美味しそうな匂いがするレストランがあったような…" },
+                    { character: "旅人", text: "本当？ じゃあ、ちょっと寄り道して行ってみよう！" },
+                    { character: "パイモン", text: "やったー！ 美味しいものが食べられるぞー！" },
+                    { character: "旅人", text: "…あれ？ 店の前に人が集まってる…" },
+                    { character: "パイモン", text: "どうしたんだろう？" },
+                    { character: "村人", text: "大変なんだ！ 店主が魔物にさらわれちゃった！" },
+                    { character: "旅人", text: "魔物！？" },
+                    {
+                        choiceTime: true,
+                        options: [
+                            { text: "魔物を倒して店主を助ける", next: "rescueOwner" },
+                            { text: "お腹が空いたから他の店を探す", next: "findOtherRestaurant" }
+                        ]
+                    }
+
+                ],
+                obey: [
+                    { character: "旅人", text: "声の主よ、私はここにいます。試練とは何ですか？" },
+                    { character: "謎の声", text: "ふむ…勇気ある者よ。汝の力は本物か…試してみよう。" },
+                    { character: "パイモン", text: "ちょ、旅人！ 大丈夫なの？" },
+                    { character: "謎の声", text: "汝の目の前に現れる魔物を倒せ！ それが試練だ！" },
+                    { character: "旅人", text: "魔物…！？" },
+                    { character: "パイモン", text: "うわっ！ 凶暴そうなヒルチャールだ！" },
+                    { character: "旅人", text: "パイモン、行くぞ！" },
+                    { character: "パイモン", text: "了解！" },
+                    // 戦闘シーン (ここではテキストで表現)
+                    { character: "旅人", text: "ふう…なんとか倒したぞ。" },
+                    { character: "謎の声", text: "見事だ…汝は真の勇者である。褒美として、この剣を与えよう。" },
+                    { character: "旅人", text: "これは…！" },
+                    { character: "パイモン", text: "すごい！ すごく強い剣みたい！" },
+                    { character: "謎の声", text: "さらばだ、勇者よ。また会う日まで…" },
+                    { character: "旅人", text: "…声は消えてしまった…" },
+                    { character: "パイモン", text: "なんだか不思議な体験だったね…" },
+                    { character: "旅人", text: "ああ…でも、この剣はきっと役に立つだろう。" },
+                    { text: "エンディング：試練を乗り越えた旅人", next: "end" }
+                ],
+                escape: [
+                    { character: "旅人", text: "パイモン、行こう！" },
+                    { character: "パイモン", text: "うん！ 怖いよー！" },
+                    { character: "旅人", text: "…なんとか逃げ切れたみたいだな。" },
+                    { character: "パイモン", text: "はぁはぁ…怖かった…" },
+                    { character: "旅人", text: "でも、あの声は何だったんだろう…？" },
+                    { character: "パイモン", text: "わからないけど…もうあんな怖い思いはしたくないよ！" },
+                    { character: "旅人", text: "そうだな…気をつけよう。" },
+                    { text: "エンディング：謎の声から逃れた旅人", next: "end" }
+                ],
+                searchRelic: [
+                    { character: "旅人", text: "風神の聖遺物…探してみましょう。" },
+                    { character: "パイモン", text: "でも、どこにあるかわからないよね？" },
+                    { character: "リサ", text: "地図によると…風龍廃墟の奥深くにあるみたいよ。" },
+                    { character: "パイモン", text: "風龍廃墟！？ 危ないところじゃないか！" },
+                    { character: "旅人", text: "でも、風神の聖遺物はきっとテイワットを守るために必要なものだ。行こう、パイモン。" },
+                    { character: "パイモン", text: "わかったよ…旅人のためなら頑張る！" },
+                    // 風龍廃墟での冒険シーン (ここではテキストで表現)
+                    { character: "旅人", text: "…ふう、やっと聖遺物を手に入れたぞ。" },
+                    { character: "パイモン", text: "すごい！ キラキラ光ってる！" },
+                    { character: "旅人", text: "これでテイワットを守ることができるかもしれない。" },
+                    { text: "エンディング：風神の聖遺物を手に入れた旅人", next: "end" }
+                ],
+                giveUpRelic: [
+                    { character: "旅人", text: "リサさん、ありがとうございます。でも、今回は諦めます。" },
+                    { character: "パイモン", text: "そうだね…危険すぎるよ！" },
+                    { character: "リサ", text: "そう…残念だわ。でも、あなたの判断は賢明だと思うわ。" },
+                    { character: "旅人", text: "また別の機会に、テイワットを守る方法を探しましょう。" },
+                    { text: "エンディング：風神の聖遺物を諦めた旅人", next: "end" }
+                ],
+                rescueOwner: [
+                    { character: "旅人", text: "魔物を倒して、店主を助けましょう！" },
+                    { character: "パイモン", text: "うん！ 任せて！" },
+                    // 魔物との戦闘シーン (ここではテキストで表現)
+                    { character: "旅人", text: "やった！ 魔物を倒したぞ！" },
+                    { character: "店主", text: "ありがとうございます！ 助けてくれて！" },
+                    { character: "パイモン", text: "お腹空いたから、ご飯食べよう！" },
+                    { character: "店主", text: "もちろんです！ 感謝の気持ちです、無料で好きなだけ食べてください！" },
+                    { text: "エンディング：美味しいご飯を食べた旅人", next: "end" }
+                ],
+                findOtherRestaurant: [
+                    { character: "旅人", text: "そうだな…他に店を探そう。" },
+                    { character: "パイモン", text: "早く美味しいものが食べたいよ！" },
+                    // 別のレストランを探すシーン (ここではテキストで表現)
+                    { character: "パイモン", text: "あ！ あそこに美味しそうな店がある！" },
+                    { character: "旅人", text: "行ってみよう！" },
+                    { text: "エンディング：別のレストランでご飯を食べた旅人", next: "end" }
+                ],
+                end: [
+                    { text: "ゲームクリア！ お疲れ様でした！" }
+                ]
+                // 他のストーリーラインもここに追加
+            };
+
+        let currentStoryline = "start";
+        let currentLine = 0;
+
+        document.addEventListener('click', handleNext);
+        document.addEventListener('keydown', (event) => {
+            if (event.code === 'Space') {
+                handleNext();
+            }
+        });
+
+        function displayLine() {
+                console.log("--------------------");
+                console.log("currentStoryline:", currentStoryline);
+                console.log("currentLine:", currentLine);
+
+                if (currentLine < storylines[currentStoryline].length) {
+                    const line = storylines[currentStoryline][currentLine];
+
+                    if (line.choiceTime) {
+                        displayChoices(line.options);
+                    } else {
+                        console.log("Displaying dialogue:");
+                        console.log("Character:", line.character);
+                        console.log("Text:", line.text);
+                        characterNameElement.textContent = line.character;
+                        dialogueTextElement.textContent = line.text;
+                        choiceButtonsElement.innerHTML = '';
+                    }
+                } else {
+                }
+                console.log("--------------------");
+            }
+
+            function handleNext() {
+                console.log("--------------------");
+                console.log("currentStoryline:", currentStoryline);
+                console.log("currentLine:", currentLine);
+
+                currentLine++;
+                console.log("currentLine incremented:", currentLine);
+
+                if (currentLine < storylines[currentStoryline].length) {
+                    displayLine();
+                } else {
+                    // ストーリーラインの最後まで到達した場合の処理
+                    console.log("ストーリーライン終了");
+                }
+                console.log("--------------------");
+            }
+
+            function displayChoices(options) {
+                console.log("--------------------");
+                console.log("displayChoices called");
+                choiceButtonsElement.innerHTML = '';
+
+                options.forEach(option => {
+                    const button = document.createElement('button');
+                    button.classList.add('choice-button');
+                    button.textContent = option.text;
+                    button.addEventListener('click', () => {
+                        console.log("Choice button clicked:", option.text);
+                        currentStoryline = option.next;
+                        currentLine = -1;// 選択肢後の最初の行に移動
+                    });
+                    choiceButtonsElement.appendChild(button);
+                });
+                console.log("--------------------");
+            }
+        displayLine();
+    </script>
+</body>
+
+</html>

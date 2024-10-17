@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>原神コード変換</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 800px;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 10px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            resize: vertical;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 5px;
+            border-radius: 3px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #markdown-output {
+            width: 100%;
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            white-space: pre-wrap;
+            font-size: 16px;
+            resize: vertical;
+            min-height: 200px;
+        }
+
+        #error-message {
+            color: red;
+            margin-top: 10px;
+        }
+
+        #file-info {
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        #discord-webhook-settings {
+            display: none;
+            /* 初期状態は非表示 */
+            margin-top: 10px;
+        }
+
+        #discord-webhook-settings label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        #discord-webhook-settings input[type="text"],
+        #discord-webhook-settings textarea {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+
+        /* メッセージID入力欄 */
+        #message-id-input {
+            display: none;
+            /* 初期状態は非表示 */
+            margin-top: 5px;
+        }
+
+
+        #json-merge-tool {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        #json-merge-tool h2 {
+            margin-bottom: 10px;
+        }
+
+        #json-merge-tool textarea {
+            height: 150px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>原神コード変換</h1>
+
+        <input type="file" id="data-file-input">
+        <label for="data-file-input" id="data-file-label" class="button">データJSONファイルを選択</label>
+        <span id="file-info"></span> <br>
+        <textarea id="json-input" placeholder="またはここにデータJSONデータを貼り付けてください"></textarea>
+        <button id="convert-button">変換</button>
+        <button id="settings-button">設定</button>
+
+        <div id="error-message"></div>
+
+        <pre id="markdown-output"></pre>
+        <button id="copy-button">コピー</button>
+        <button id="send-to-discord-button" style="display: none;">Discordに送信</button>
+
+        <div id="json-merge-tool">
+            <h2>JSONの統合</h2>
+            <textarea id="existing-json" placeholder="既存のJSONデータ"></textarea>
+            <textarea id="new-json" placeholder="新規のJSONデータ"></textarea>
+            <button id="merge-json-button">統合</button>
+            <textarea id="merged-json" placeholder="統合結果" readonly></textarea>
+            <button id="copy-merged-json-button">コピー</button> <br>
+        </div>
+    </div>
+
+    <!-- 設定モーダル -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <span class="close">×</span>
+            <h2>設定</h2>
+
+            <input type="file" id="settings-file-input">
+            <label for="settings-file-input" id="settings-file-label">設定ファイルを読み込む</label>
+
+            <textarea id="markdown-template" placeholder="Markdownテンプレート"></textarea>
+            <textarea id="script-code" placeholder="JavaScriptコード"></textarea>
+
+            <h3>Discord Webhook</h3>
+            <label>
+                <input type="checkbox" id="use-discord-webhook"> Discord Webhookを使用する
+            </label>
+            <div id="discord-webhook-settings">
+                <label for="webhook-url">Webhook URL:</label>
+                <input type="text" id="webhook-url" placeholder="Webhook URLを入力してください">
+                <label for="webhook-content">Webhook メッセージ内容:</label>
+                <textarea id="webhook-content" placeholder="@[message] で変換後のメッセージが挿入されます"></textarea>
+
+                <label>
+                    <input type="checkbox" id="edit-existing-message"> 既存のメッセージを編集する
+                </label>
+                <div id="message-id-input">
+                    <label for="message-id">メッセージID:</label>
+                    <input type="text" id="message-id" placeholder="編集するメッセージのIDを入力してください">
+                </div>
+            </div>
+
+            <button id="save-settings">保存</button>
+        </div>
+    </div>
+
+    <script>
+        const convertButton = document.getElementById('convert-button');
+        const jsonInput = document.getElementById('json-input');
+        const markdownOutput = document.getElementById('markdown-output');
+        const errorMessage = document.getElementById('error-message');
+        const copyButton = document.getElementById('copy-button');
+        const settingsButton = document.getElementById('settings-button');
+        const settingsModal = document.getElementById('settingsModal');
+        const markdownTemplate = document.getElementById('markdown-template');
+        const scriptCode = document.getElementById('script-code');
+        const saveSettingsButton = document.getElementById('save-settings');
+        const modalClose = document.getElementsByClassName("close")[0];
+        const dataFileInput = document.getElementById('data-file-input');
+        const dataFileLabel = document.getElementById('data-file-label');
+        const settingsFileInput = document.getElementById('settings-file-input');
+        const settingsFileLabel = document.getElementById('settings-file-label');
+        const sendToDiscordButton = document.getElementById('send-to-discord-button');
+        const useDiscordWebhookCheckbox = document.getElementById('use-discord-webhook');
+        const discordWebhookSettings = document.getElementById('discord-webhook-settings');
+        const webhookUrlInput = document.getElementById('webhook-url');
+        const webhookContentTextarea = document.getElementById('webhook-content');
+        const copyMergedJsonButton = document.getElementById('copy-merged-json-button');
+        const editExistingMessageCheckbox = document.getElementById('edit-existing-message');
+        const messageIdInput = document.getElementById('message-id-input');
+        const messageIdInputTextbox = document.getElementById('message-id');
+
+
+        // 設定の読み込み (localStorageまたはデフォルト値)
+        let currentMarkdownTemplate = localStorage.getItem('markdownTemplate') || `# 原神コード配布 (最終: {{lastUpdatedDate}})\n\n**コードの期限は分からないので各々で確認してください(一応最新のコードから順に並べてあります)**\n\n \n\n{{codeItems}}`;
+        let currentScriptCode = localStorage.getItem('scriptCode') || `
+jsonData.sort((a, b) => {
+    const dateA = new Date(a.addedDate.replace('追加日：', ''));
+    const dateB = new Date(b.addedDate.replace('追加日：', ''));
+    return dateB - dateA; // 降順
+});
+const lastUpdatedDate = jsonData[0].addedDate;
+const codeItems = jsonData.map(code => {
+    const rewardText = code.rewards.map(reward => {
+        const rewardParts = reward.split('×');
+        let emoji = ':404:'; // デフォルトの絵文字
+        switch (rewardParts[0].trim()) {
+            case 'モラ':
+                emoji = ':mora:'; 
+                break;
+            case '原石':
+                emoji = ':Genseki:'; 
+                break;
+            case '冒険家の経験':
+                emoji = ':honLev2:'; 
+                break;
+            case '大英雄の経験':
+                emoji = ':honLev3:';
+                break;
+            case '仕上げ用良鉱':
+                emoji = ':xpLev2:'; 
+                break;
+            case '仕上げ用魔鉱':
+                emoji = ':xpLev3:'; 
+                break;
+        }
+        return \`\${emoji} \${reward}\`;
+    }).join('\\n');
+
+    return \`## \${code.code} (\${code.addedDate})\n\n\` +
+           \`**コード:** [\${code.code}](https://genshin.hoyoverse.com/ja/gift?code=\${code.code})\n\n\` +
+           \`**報酬内容:**\n\${rewardText}\n\n\`;
+}).join('');
+return { lastUpdatedDate, codeItems };
+`;
+
+        // Discord Webhook 設定の読み込み
+        let useDiscordWebhook = localStorage.getItem('useDiscordWebhook') === 'true';
+        let webhookUrl = localStorage.getItem('webhookUrl') || '';
+        let webhookContent = localStorage.getItem('webhookContent') || '@[message]';
+        let editExistingMessage = localStorage.getItem('editExistingMessage') === 'true';
+        let messageId = localStorage.getItem('messageId') || '';
+
+        editExistingMessageCheckbox.checked = editExistingMessage;
+        messageIdInputTextbox.value = messageId;
+
+        // 既存メッセージ編集設定の表示/非表示
+        editExistingMessageCheckbox.addEventListener('change', () => {
+            messageIdInput.style.display = editExistingMessageCheckbox.checked ? 'block' : 'none';
+        });
+
+        markdownTemplate.value = currentMarkdownTemplate;
+        scriptCode.value = currentScriptCode;
+        useDiscordWebhookCheckbox.checked = useDiscordWebhook;
+        webhookUrlInput.value = webhookUrl;
+        webhookContentTextarea.value = webhookContent;
+
+
+        // Discord Webhook 設定の表示/非表示
+        useDiscordWebhookCheckbox.addEventListener('change', () => {
+            discordWebhookSettings.style.display = useDiscordWebhookCheckbox.checked ? 'block' : 'none';
+        });
+
+
+        // 設定ファイルの読み込み (モーダル内)
+        settingsFileInput.addEventListener('change', () => {
+            const file = settingsFileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = (event) => {
+                try {
+                    const settings = JSON.parse(event.target.result);
+                    markdownTemplate.value = settings.markdownTemplate;
+                    scriptCode.value = settings.scriptCode;
+                    alert('設定ファイルを読み込みました。');
+                } catch (error) {
+                    errorMessage.textContent = '設定ファイルの形式が正しくありません。';
+                    console.error(error);
+                }
+            };
+
+            reader.readAsText(file);
+        });
+
+        convertButton.addEventListener('click', () => {
+            errorMessage.textContent = ''; // エラーメッセージをクリア
+
+            if (dataFileInput.files.length > 0) {
+                // データファイルが選択されている場合
+                const file = dataFileInput.files[0];
+                const reader = new FileReader();
+
+                reader.onload = (event) => {
+                    try {
+                        const jsonData = JSON.parse(event.target.result);
+                        processJsonData(jsonData); // JSONデータを処理する関数
+                    } catch (error) {
+                        errorMessage.textContent = 'データJSONデータの形式が正しくありません。または、スクリプトにエラーがあります。';
+                        console.error(error);
+                    }
+                };
+
+                reader.readAsText(file);
+            } else if (jsonInput.value.trim() !== '') {
+                // textareaにJSONデータが入力されている場合
+                try {
+                    const jsonData = JSON.parse(jsonInput.value);
+                    processJsonData(jsonData); // JSONデータを処理する関数
+                } catch (error) {
+                    errorMessage.textContent = 'データJSONデータの形式が正しくありません。または、スクリプトにエラーがあります。';
+                    console.error(error);
+                }
+            } else {
+                errorMessage.textContent = 'データJSONデータを入力するか、ファイルを選択してください。';
+            }
+        });
+
+        // JSONデータを処理する関数
+        function processJsonData(jsonData) {
+            // カスタムスクリプトの実行
+            const scriptFunction = new Function('jsonData', currentScriptCode);
+            const {
+                lastUpdatedDate,
+                codeItems
+            } = scriptFunction(jsonData);
+
+            // Markdownテンプレートへの埋め込み
+            const markdownContent = currentMarkdownTemplate
+                .replace('{{lastUpdatedDate}}', lastUpdatedDate)
+                .replace('{{codeItems}}', codeItems);
+
+            markdownOutput.textContent = markdownContent;
+
+            // Discord Webhook が有効な場合、送信ボタンを表示
+            if (useDiscordWebhook) {
+                sendToDiscordButton.style.display = 'inline-block';
+            } else {
+                sendToDiscordButton.style.display = 'none';
+            }
+        }
+
+        copyButton.addEventListener('click', () => {
+            const textToCopy = markdownOutput.textContent;
+            navigator.clipboard.writeText(textToCopy)
+                .then(() => {
+                    alert('クリップボードにコピーしました！');
+                })
+                .catch(err => {
+                    console.error('コピーに失敗しました: ', err);
+                    alert('コピーに失敗しました。ブラウザの権限を確認してください。');
+                });
+        });
+
+        copyMergedJsonButton.addEventListener('click', () => {
+            const textToCopy = mergedJsonTextarea.value;
+            navigator.clipboard.writeText(textToCopy)
+                .then(() => {
+                    alert('統合結果をクリップボードにコピーしました！');
+                })
+                .catch(err => {
+                    console.error('コピーに失敗しました: ', err);
+                    alert('コピーに失敗しました。ブラウザの権限を確認してください。');
+                });
+        });
+
+        // Discordへの送信処理
+        sendToDiscordButton.addEventListener('click', async () => {
+                const longText = markdownOutput.textContent; // 長いテキスト
+                const chunkSize = 2000; // 分割サイズ
+                const currentTime = new Date().toLocaleString('ja-JP');
+                const timeline = Math.floor(Date.now() / 1000);
+
+                // Webhook メッセージ内容をカスタム
+               let customMessageContent = webhookContent.replace('@[message]', longText);
+                   customMessageContent = customMessageContent.replace('@[time]', currentTime);
+                   customMessageContent = customMessageContent.replace('@[timeline]',timeline)
+
+                // メッセージIDが指定されている場合は編集、そうでない場合は新規投稿
+                const method = editExistingMessage && messageId ? 'PATCH' : 'POST';
+                const url = editExistingMessage && messageId ? `${webhookUrl}/messages/${messageId}` : webhookUrl;
+
+                for (let i = 0; i < customMessageContent.length; i += chunkSize) {
+                    const chunk = customMessageContent.slice(i, i + chunkSize);
+
+                    const message = {
+                        content: chunk
+                    };
+
+                    try {
+                        const response = await fetch(url, {
+                            method: method,
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(message)
+                        });
+
+                        if (response.ok) {
+                            // 各チャンクの送信が成功した場合は特に何もしない
+                        } else {
+                            alert(`Discordへの${method === 'PATCH' ? '編集' : '送信'}に失敗しました (チャンク ${i / chunkSize + 1})。Webhook URLとメッセージIDを確認してください。`);
+                            return; // エラーが発生したらループを中断
+                        }
+                    } catch (error) {
+                        console.error(`Discordへの${method === 'PATCH' ? '編集' : '送信'}中にエラーが発生しました (チャンク ${i / chunkSize + 1}):`, error);
+                        alert(`Discordへの${method === 'PATCH' ? '編集' : '送信'}中にエラーが発生しました (チャンク ${i / chunkSize + 1})。`);
+                        return; // エラーが発生したらループを中断
+                    }
+                }
+
+                alert(`Discordに${method === 'PATCH' ? '編集' : '送信'}しました！`); // 全てのチャンクの送信が成功した場合のみ表示
+            });
+
+        // 設定モーダルの開閉
+        settingsButton.onclick = function () {
+            settingsModal.style.display = "block";
+        }
+        modalClose.onclick = function () {
+            settingsModal.style.display = "none";
+        }
+        window.onclick = function (event) {
+            if (event.target == settingsModal) {
+                settingsModal.style.display = "none";
+            }
+        }
+
+        // 設定の保存
+        saveSettingsButton.addEventListener('click', () => {
+            currentMarkdownTemplate = markdownTemplate.value;
+            currentScriptCode = scriptCode.value;
+            useDiscordWebhook = useDiscordWebhookCheckbox.checked;
+            webhookUrl = webhookUrlInput.value;
+            webhookContent = webhookContentTextarea.value;
+            editExistingMessage = editExistingMessageCheckbox.checked;
+            messageId = messageIdInputTextbox.value;
+
+            localStorage.setItem('markdownTemplate', currentMarkdownTemplate);
+            localStorage.setItem('scriptCode', currentScriptCode);
+            localStorage.setItem('useDiscordWebhook', useDiscordWebhook);
+            localStorage.setItem('webhookUrl', webhookUrl);
+            localStorage.setItem('webhookContent', webhookContent);
+            localStorage.setItem('editExistingMessage', editExistingMessage);
+            localStorage.setItem('messageId', messageId);
+            alert('設定を保存しました。');
+            settingsModal.style.display = "none";
+        });
+
+        // ファイル選択時の処理を追加
+        dataFileInput.addEventListener('change', () => {
+            const file = dataFileInput.files[0];
+            if (file) {
+                dataFileLabel.textContent = file.name;
+                document.getElementById('file-info').textContent = `選択されたファイル: ${file.name}`;
+            } else {
+                dataFileLabel.textContent = 'データJSONファイルを選択';
+                document.getElementById('file-info').textContent = '';
+            }
+        });
+
+
+
+        // JSON統合ツールの処理
+        const existingJsonTextarea = document.getElementById('existing-json');
+        const newJsonTextarea = document.getElementById('new-json');
+        const mergedJsonTextarea = document.getElementById('merged-json');
+        const mergeJsonButton = document.getElementById('merge-json-button');
+
+        mergeJsonButton.addEventListener('click', () => {
+            try {
+                const existingJson = JSON.parse(existingJsonTextarea.value);
+                const newJson = JSON.parse(newJsonTextarea.value);
+
+                // 既存のJSONデータが配列であることを確認
+                if (!Array.isArray(existingJson)) {
+                    throw new Error('既存のJSONデータは配列である必要があります。');
+                }
+
+                // 新規のJSONデータが配列またはオブジェクトであることを確認
+                if (!Array.isArray(newJson) && typeof newJson !== 'object') {
+                    throw new Error('新規のJSONデータは配列またはオブジェクトである必要があります。');
+                }
+
+                // 新規データを追加 (重複チェック)
+                if (Array.isArray(newJson)) {
+                    newJson.forEach(newItem => {
+                        if (!existingJson.some(existingItem => JSON.stringify(existingItem) === JSON.stringify(newItem))) {
+                            existingJson.push(newItem);
+                        }
+                    });
+                } else {
+                    if (!existingJson.some(existingItem => JSON.stringify(existingItem) === JSON.stringify(newJson))) {
+                        existingJson.push(newJson);
+                    }
+                }
+
+                mergedJsonTextarea.value = JSON.stringify(existingJson, null, 2);
+            } catch (error) {
+                alert('JSONデータの形式が正しくありません。または、データが重複しています。\nエラーメッセージ: ' + error.message);
+            }
+        });
+    </script>
+
+</body>
+
+</html>

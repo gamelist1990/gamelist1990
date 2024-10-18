@@ -5,6 +5,7 @@
     <title>Markdown Editor</title>
     <script src="https://unpkg.com/prettier@2.8.8/standalone.js"></script>
     <script src="https://unpkg.com/prettier@2.8.8/parser-markdown.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lz-string@1.4.4/libs/lz-string.min.js"></script>
     <style>
         /* Basic styles to reset margins and padding */
         body,
@@ -123,54 +124,7 @@
             background-color: #f8f8f8;
         }
 
-        /* Markdown syntax highlighting */
-        .hljs-keyword {
-            color: #000080;
-        }
-
-        /* 見出し (例: 青) */
-        .hljs-string {
-            color: #a31515;
-        }
-
-        /* コード (インライン) (例: 赤) */
-        .hljs-code {
-            color: #008000;
-            background: #f8f8f8;
-            padding: 10px;
-        }
-
-        /* コードブロック (例: 緑、背景色あり) */
-        .hljs-bullet {
-            color: #000000;
-        }
-
-        /* リスト (箇条書き) (例: 黒) */
-        .hljs-number {
-            color: #000000;
-        }
-
-        /* リスト (番号付き) (例: 黒) */
-        .hljs-strong {
-            color: #000000;
-            font-weight: bold;
-        }
-
-        /* 強調 (太字) (例: 黒、太字) */
-        .hljs-emphasis {
-            color: #000000;
-            font-style: italic;
-        }
-
-        /* 強調 (斜体) (例: 黒、斜体) */
-        .hljs-link {
-            color: #0000ff;
-        }
-
-        /* リンク (例: 青) */
-        .hljs-image {
-            color: #800080;
-        }
+       
 
         /* 画像 (例: 紫) */
     </style>
@@ -184,6 +138,7 @@
             <button id="saveBtn">保存</button>
             <button id="loadBtn">読み込み</button>
             <button id="exportBtn">エクスポート</button>
+            <button id="shareBtn">共有</button>
         </div>
     </div>
 
@@ -197,6 +152,7 @@
     <ul class="context-menu" id="contextMenu">
         <li id="refactorBtn">リファクター</li>
         <li id="formatBtn">ドキュメントのフォーマット</li>
+        <li id="showBlankBtn">別ウィンドウでプレビュー</li>
     </ul>
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -205,18 +161,33 @@
             const saveBtn = document.getElementById('saveBtn');
             const loadBtn = document.getElementById('loadBtn');
             const exportBtn = document.getElementById('exportBtn');
+            const shareBtn = document.getElementById('shareBtn');
             const markdownEditor = document.getElementById('markdown-editor');
             const preview = document.getElementById('preview');
             const contextMenu = document.getElementById('contextMenu');
             const refactorBtn = document.getElementById('refactorBtn');
             const formatBtn = document.getElementById('formatBtn');
-        
+            const showBlankBtn = document.getElementById('showBlankBtn');
+
+            
+
+
+
 
             markdownEditor.addEventListener('input', () => {
                 const markdownText = markdownEditor.innerText; // Get innerText instead of value
                 const html = marked.parse(markdownText);
                 preview.innerHTML = html;
             });
+
+
+            // URLパラメータから圧縮データを取得し、解凍
+            const urlParams = new URLSearchParams(window.location.search);
+            const compressedTextFromUrl = urlParams.get('data');
+            if (compressedTextFromUrl) {
+                const decompressedText = LZString.decompressFromEncodedURIComponent(compressedTextFromUrl);
+                markdownEditor.innerText = decompressedText;
+            }
 
             saveBtn.addEventListener('click', () => {
                 const markdownText = markdownEditor.innerText;
@@ -238,7 +209,6 @@
                     const reader = new FileReader();
                     reader.onload = (e) => {
                         markdownEditor.innerText = e.target.result;
-                        hljs.highlightAll(); // 読み込み時にハイライト処理を実行
                     };
                     reader.readAsText(file);
                 });
@@ -258,6 +228,27 @@
             });
 
 
+            shareBtn.addEventListener('click', () => {
+                const markdownText = markdownEditor.innerText;
+
+                // LZStringで圧縮
+                const compressedText = LZString.compressToEncodedURIComponent(markdownText);
+
+                // URLパラメータに圧縮データを含める
+                const shareUrl = window.location.origin + '/?data=' + compressedText;
+
+                // URLをクリップボードにコピー
+                navigator.clipboard.writeText(shareUrl)
+                    .then(() => {
+                        alert('共有URLをクリップボードにコピーしました: ' + shareUrl);
+                    })
+                    .catch(err => {
+                        console.error('URLのコピーに失敗しました: ', err);
+                        alert('URLのコピーに失敗しました。');
+                    });
+            });
+
+
             markdownEditor.addEventListener('contextmenu', (event) => {
                 event.preventDefault(); // Prevent default context menu
 
@@ -272,6 +263,38 @@
                 contextMenu.style.top = event.clientY + 'px';
                 contextMenu.style.display = 'block';
             });
+
+            showBlankBtn.addEventListener('click', () => {
+                const markdownText = markdownEditor.innerText;
+                const html = marked.parse(markdownText);
+
+                // 新しいウィンドウを作成
+                const newWindow = window.open('', '_blank');
+
+                // 新しいウィンドウにHTMLコンテンツを書き込み
+                newWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Markdown Preview</title>
+                    <style>
+                        /* プレビューウィンドウのスタイル */
+                        body {
+                            margin: 20px;
+                            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${html}
+                </body>
+                </html>
+            `);
+
+                // 書き込みを完了
+                newWindow.document.close();
+            });
+
 
             document.addEventListener('click', (event) => {
                 // Hide context menu when clicking outside of it
@@ -289,10 +312,18 @@
 
 - リスト項目 1
 - リスト項目 2
+- リスト項目 3
+  - ネストしたリスト項目 1
+  - ネストしたリスト項目 2
 
 \`\`\`javascript
-// コードブロック
+// コードブロック (JavaScript)
 console.log("Hello, world!");
+\`\`\`
+
+\`\`\`python
+# コードブロック (Python)
+print("Hello, world!")
 \`\`\`
 
 **太字**、*斜体*、~~取り消し線~~
@@ -300,8 +331,18 @@ console.log("Hello, world!");
 [リンク](https://www.example.com)
 
 ![画像](https://via.placeholder.com/150)
+
+> 引用
+
+***
+
+水平線
+
+| ヘッダー1 | ヘッダー2 |
+|---|---|
+| セル1 | セル2 |
+| セル3 | セル4 |
 `;
-                hljs.highlightAll(); // リファクター時にハイライト処理を実行
             });
 
             formatBtn.addEventListener('click', () => {
@@ -312,7 +353,6 @@ console.log("Hello, world!");
                 });
                 markdownEditor.innerText = formattedText;
                 alert("ドキュメントをフォーマットしました")
-                hljs.highlightAll(); // フォーマット時にハイライト処理を実行
             });
         });
     </script>

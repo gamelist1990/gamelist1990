@@ -16,17 +16,18 @@
         <input type="number" id="score" name="score"><br><br>
         <button type="submit">送信</button>
     </form>
+    <div id="postResult"></div>
+    <div id="getResult"></div>
 
     <h1>GET リクエスト</h1>
     <button id="getButton">取得</button>
 
-    <div id="result"></div>
-
     <script>
         const postForm = $('#postForm');
         const getButton = $('#getButton');
-        const resultDiv = $('#result');
-        const apiUrl ='https://script.google.com/macros/s/AKfycbzGk2qcBPqFsFa_7dKdPeRGtGnTMCXQpL0n9vl8aDUhYbNfzNqk8hNpLWY_vHfLYjidqQ/exec';
+        const postResultDiv = $('#postResult'); // POST結果表示用
+        const getResultDiv = $('#getResult'); // GET結果表示用
+        const apiUrl = 'https://script.google.com/macros/s/AKfycbzGk2qcBPqFsFa_7dKdPeRGtGnTMCXQpL0n9vl8aDUhYbNfzNqk8hNpLWY_vHfLYjidqQ/exec';
 
         postForm.on('submit', (event) => {
             event.preventDefault();
@@ -41,10 +42,10 @@
                     points: score
                 },
                 success: function (data) {
-                    displayResult(data);
+                    displayPostResult(data); // POST結果を表示
                 },
                 error: function (error) {
-                    displayResult({
+                    displayPostResult({
                         error: error.message
                     });
                 }
@@ -56,18 +57,26 @@
                 url: apiUrl,
                 type: 'GET',
                 success: function (data) {
-                    displayResult(data);
+                    displayGetResult(data); // GET結果を表示
                 },
                 error: function (error) {
-                    displayResult({
+                    displayGetResult({
                         error: error.message
                     });
                 }
             });
         });
 
-        function displayResult(result) {
-            resultDiv.html(JSON.stringify(result));
+        // POST結果表示関数
+        function displayPostResult(result) {
+            postResultDiv.html('<p><strong>POST リクエスト結果:</strong></p>');
+            postResultDiv.append('<pre>' + JSON.stringify(result, null, 2) + '</pre>');
+        }
+
+        // GET結果表示関数
+        function displayGetResult(result) {
+            getResultDiv.html('<p><strong>GET リクエスト結果:</strong></p>');
+            getResultDiv.append('<pre>' + JSON.stringify(result, null, 2) + '</pre>');
         }
     </script>
 </body>

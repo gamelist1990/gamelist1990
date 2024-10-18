@@ -124,14 +124,12 @@
             background-color: #f8f8f8;
         }
 
-       
 
         /* 画像 (例: 紫) */
     </style>
 </head>
 
 <body>
-
     <div class="toolbar">
         <span>編集メニュー</span>
         <div>
@@ -169,16 +167,19 @@
             const formatBtn = document.getElementById('formatBtn');
             const showBlankBtn = document.getElementById('showBlankBtn');
 
-            
-
-
 
 
             markdownEditor.addEventListener('input', () => {
-                const markdownText = markdownEditor.innerText; // Get innerText instead of value
+                updatePreview();
+            });
+
+            // プレビューを更新する関数
+            function updatePreview() {
+                const markdownText = markdownEditor.innerText;
                 const html = marked.parse(markdownText);
                 preview.innerHTML = html;
-            });
+            }
+
 
 
             // URLパラメータから圧縮データを取得し、解凍

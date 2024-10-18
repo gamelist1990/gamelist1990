@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Google Apps Script Web API Test</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // データ保存ボタン
+            $("#saveButton").click(function () {
+                const sheetName = $("#sheetName").val();
+                const title = $("#title").val();
+                const jsonData = {
+                    key1: $("#key1").val(),
+                    key2: $("#key2").val(),
+                    key3: $("#key3").val()
+                };
+
+                $.ajax({
+                    url: 'https://script.google.com/macros/s/AKfycby7u-iUaM8I_IiLN9CFPE4p90zkLsuIFXFexhleThNuGh0g1plMuc5AyzaHmzBW_Flq/exec', // ここは取得したGASのウェブアプリURLに置き換える
+                    type: 'POST',
+                    data: {
+                        sheet: sheetName,
+                        title: title,
+                        json: JSON.stringify(jsonData)
+                    },
+                    success: function (response) {
+                        alert(response);
+                    },
+                    error: function (error) {
+                        console.error(error);
+                        alert("Error: " + error.responseText);
+                    }
+                });
+            });
+
+            // データ取得ボタン
+            $("#getButton").click(function () {
+                const sheetName = $("#sheetName").val();
+                const title = $("#title").val();
+
+                $.ajax({
+                    url: 'https://script.google.com/macros/s/AKfycby7u-iUaM8I_IiLN9CFPE4p90zkLsuIFXFexhleThNuGh0g1plMuc5AyzaHmzBW_Flq/exec', // ここは取得したGASのウェブアプリURLに置き換える
+                    type: 'GET',
+                    data: {
+                        sheet: sheetName,
+                        title: title
+                    },
+                    success: function (response) {
+                        const data = JSON.parse(response);
+                        $("#key1").val(data.key1);
+                        $("#key2").val(data.key2);
+                        $("#key3").val(data.key3);
+                    },
+                    error: function (error) {
+                        console.error(error);
+                        alert("Error: " + error.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <h1>Google Apps Script Web API Test</h1>
+    <label for="sheetName">シート名:</label>
+    <input type="text" id="sheetName" value="Sheet1"><br>
+
+    <label for="title">タイトル:</label>
+    <input type="text" id="title"><br>
+
+    <label for="key1">Key 1:</label>
+    <input type="text" id="key1"><br>
+
+    <label for="key2">Key 2:</label>
+    <input type="text" id="key2"><br>
+
+    <label for="key3">Key 3:</label>
+    <input type="text" id="key3"><br>
+
+    <button id="saveButton">保存</button>
+    <button id="getButton">取得</button>
+</body>
+
+</html>

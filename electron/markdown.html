@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Markdown Editor</title>
+    <script src="https://unpkg.com/prettier@2.8.8/standalone.js"></script>
+    <script src="https://unpkg.com/prettier@2.8.8/parser-markdown.js"></script>
+    <style>
+        /* Basic styles to reset margins and padding */
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        /* Modern and clean styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            /* Light background */
+            color: #333;
+            /* Dark text */
+        }
+
+        .container {
+            display: flex;
+            height: 100%;
+        }
+
+        .editor-pane {
+            width: 50%;
+            border-right: 1px solid #ddd;
+            /* Light divider */
+        }
+
+        #markdown-editor {
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            background-color: #fff;
+            /* White editor background */
+            color: #333;
+            border: none;
+            resize: none;
+            font-size: 16px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+
+        .preview-pane {
+            width: 50%;
+            padding: 20px;
+            background-color: #fff;
+            /* White preview background */
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+
+        /* Modern scrollbar (adjust as needed) */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        .toolbar {
+            background-color: #eee;
+            /* Light toolbar background */
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .toolbar button {
+            background-color: #fff;
+            color: #333;
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .toolbar button:hover {
+            background-color: #f8f8f8;
+        }
+
+        .context-menu {
+            position: absolute;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 5px 0;
+            z-index: 10;
+            /* Ensure it's above other elements */
+            display: none;
+            /* Hide by default */
+            border: 1px solid #ccc;
+            /* Add border */
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            /* Add shadow */
+        }
+
+        .context-menu li {
+            list-style: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .context-menu li:hover {
+            background-color: #f8f8f8;
+        }
+
+        /* Markdown syntax highlighting */
+        .hljs-keyword {
+            color: #000080;
+        }
+
+        /* 見出し (例: 青) */
+        .hljs-string {
+            color: #a31515;
+        }
+
+        /* コード (インライン) (例: 赤) */
+        .hljs-code {
+            color: #008000;
+            background: #f8f8f8;
+            padding: 10px;
+        }
+
+        /* コードブロック (例: 緑、背景色あり) */
+        .hljs-bullet {
+            color: #000000;
+        }
+
+        /* リスト (箇条書き) (例: 黒) */
+        .hljs-number {
+            color: #000000;
+        }
+
+        /* リスト (番号付き) (例: 黒) */
+        .hljs-strong {
+            color: #000000;
+            font-weight: bold;
+        }
+
+        /* 強調 (太字) (例: 黒、太字) */
+        .hljs-emphasis {
+            color: #000000;
+            font-style: italic;
+        }
+
+        /* 強調 (斜体) (例: 黒、斜体) */
+        .hljs-link {
+            color: #0000ff;
+        }
+
+        /* リンク (例: 青) */
+        .hljs-image {
+            color: #800080;
+        }
+
+        /* 画像 (例: 紫) */
+    </style>
+</head>
+
+<body>
+
+    <div class="toolbar">
+        <span>編集メニュー</span>
+        <div>
+            <button id="saveBtn">保存</button>
+            <button id="loadBtn">読み込み</button>
+            <button id="exportBtn">エクスポート</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="editor-pane">
+            <div id="markdown-editor" contenteditable="true" placeholder="Markdown を入力してください..."></div>
+        </div>
+        <div class="preview-pane" id="preview"></div>
+    </div>
+
+    <ul class="context-menu" id="contextMenu">
+        <li id="refactorBtn">リファクター</li>
+        <li id="formatBtn">ドキュメントのフォーマット</li>
+    </ul>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const saveBtn = document.getElementById('saveBtn');
+            const loadBtn = document.getElementById('loadBtn');
+            const exportBtn = document.getElementById('exportBtn');
+            const markdownEditor = document.getElementById('markdown-editor');
+            const preview = document.getElementById('preview');
+            const contextMenu = document.getElementById('contextMenu');
+            const refactorBtn = document.getElementById('refactorBtn');
+            const formatBtn = document.getElementById('formatBtn');
+        
+
+            markdownEditor.addEventListener('input', () => {
+                const markdownText = markdownEditor.innerText; // Get innerText instead of value
+                const html = marked.parse(markdownText);
+                preview.innerHTML = html;
+            });
+
+            saveBtn.addEventListener('click', () => {
+                const markdownText = markdownEditor.innerText;
+                const blob = new Blob([markdownText], { type: 'text/markdown' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'markdown.md';
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+
+            loadBtn.addEventListener('click', () => {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.md';
+                input.addEventListener('change', (event) => {
+                    const file = event.target.files[0];
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        markdownEditor.innerText = e.target.result;
+                        hljs.highlightAll(); // 読み込み時にハイライト処理を実行
+                    };
+                    reader.readAsText(file);
+                });
+                input.click();
+            });
+
+            exportBtn.addEventListener('click', () => {
+                // HTML export (simple download)
+                const htmlContent = `<!DOCTYPE html><html><head><title>Exported Markdown</title><style>/* Add any necessary styles here */</style></head><body>${preview.innerHTML}</body></html>`;
+                const blob = new Blob([htmlContent], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'markdown.html';
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+
+
+            markdownEditor.addEventListener('contextmenu', (event) => {
+                event.preventDefault(); // Prevent default context menu
+
+                // Show/hide refactor button based on editor content
+                if (markdownEditor.innerText.trim() === "") {
+                    refactorBtn.style.display = 'block';
+                } else {
+                    refactorBtn.style.display = 'none';
+                }
+
+                contextMenu.style.left = event.clientX + 'px';
+                contextMenu.style.top = event.clientY + 'px';
+                contextMenu.style.display = 'block';
+            });
+
+            document.addEventListener('click', (event) => {
+                // Hide context menu when clicking outside of it
+                if (!contextMenu.contains(event.target)) {
+                    contextMenu.style.display = 'none';
+                }
+            });
+
+            refactorBtn.addEventListener('click', () => {
+                markdownEditor.innerText = `# サンプル Markdown
+
+これはサンプルの Markdown です。
+
+## 見出し 2
+
+- リスト項目 1
+- リスト項目 2
+
+\`\`\`javascript
+// コードブロック
+console.log("Hello, world!");
+\`\`\`
+
+**太字**、*斜体*、~~取り消し線~~
+
+[リンク](https://www.example.com)
+
+![画像](https://via.placeholder.com/150)
+`;
+                hljs.highlightAll(); // リファクター時にハイライト処理を実行
+            });
+
+            formatBtn.addEventListener('click', () => {
+                const markdownText = markdownEditor.innerText;
+                const formattedText = prettier.format(markdownText, {
+                    parser: "markdown",
+                    plugins: prettierPlugins
+                });
+                markdownEditor.innerText = formattedText;
+                alert("ドキュメントをフォーマットしました")
+                hljs.highlightAll(); // フォーマット時にハイライト処理を実行
+            });
+        });
+    </script>
+</body>
+
+</html>

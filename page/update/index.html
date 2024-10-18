@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>更新履歴</title>
+    <link href="./images/logo.png" rel="icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e0ffff, #cce0ff);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            padding: 2em;
+            flex: 1;
+        }
+
+        .update-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .update-item {
+            background-color: white;
+            padding: 1.5em;
+            margin-bottom: 1em;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .update-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        .update-title {
+            font-weight: bold;
+            margin-bottom: 0.5em;
+        }
+
+        .update-date {
+            color: #777;
+            font-size: 0.8em;
+        }
+
+        .update-details {
+            margin-top: 1em;
+            display: none;
+        }
+
+        .update-details.show {
+            display: block;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1em 0;
+            margin-top: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>更新履歴</h1>
+        <ul class="update-list">
+
+            <li class="update-item" onclick="toggleDetails(this)">
+                <h2 class="update-title"><i class="fa-brands fa-github"></i>MenuClientの大幅なUIの更新とその他</h2>
+                <p class="update-date">2024年7月4日</p>
+                <div class="update-details">
+                    <p>お知らせ:</p>
+                    <ul>
+                        <li>13:28時点で新MenuClientのUIは完成しました次にもう機能しないファイル等を廃棄します<a href="https://gamelist1990.github.io/gamelist1990">URL</a><br>
+                        URLpageのhtmlも更新しました</li>
+                    </ul>
+                </div>
+            </li>
+
+
+            <li class="update-item" onclick="toggleDetails(this)">
+                <h2 class="update-title"><i class="fas fa-tools"></i>MenuCLientをさらに使いやすく改善！</h2>
+                <p class="update-date">2024年7月4日</p>
+                <div class="update-details">
+                    <p>お知らせ:</p>
+                    <ul>
+                        <li>お久しぶりです。ここ5ヶ月ほどWebAPI等の開発に注力していましたが、ようやく安定してきたので、次はMenuCLientの更なる改善を進めていきます。</li>
+                    </ul>
+                </div>
+            </li>
+
+
+
+            <li class="update-item" onclick="toggleDetails(this)">
+                <h2 class="update-title"><i class="fas fa-comments"></i>AIchatサービス開始</h2>
+                <p class="update-date">2024年4月25日</p>
+                <div class="update-details">
+                    <p>新機能:</p>
+                    <ul>
+                        <li>最新AI技術を活用したAIchatサービスを開始しました！WEB APIとしても利用可能です。</li>
+                    </ul>
+                    <p>バグ修正:</p>
+                    <ul>
+                        <li>スタイルの修正</li>
+                    </ul>
+                </div>
+            </li>
+
+
+            <li class="update-item" onclick="toggleDetails(this)">
+                <h2 class="update-title"><i class="fas fa-comments"></i>コメント欄β版公開</h2>
+                <p class="update-date">2024年4月12日</p>
+                <div class="update-details">
+                    <p>新機能:</p>
+                    <ul>
+                        <li>コメント欄機能を追加しました。Gasで作成</li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <footer>
+        @Gamelist1990 /kokunn_
+    </footer>
+
+    <script>
+        function toggleDetails(item) {
+            const details = item.querySelector('.update-details');
+            details.classList.toggle('show');
+        }
+    </script>
+</body>
+
+</html>

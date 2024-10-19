@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Excelマクロ ビジュアルエディタ</title>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+
+        .container {
+            width: 800px;
+            margin: 0 auto;
+            display: flex;
+            /* height: 500px; /* コンテナの高さを固定 (必要に応じて調整) */
+        
+        }
+
+        #toolbox {
+            width: 250px;
+            padding: 20px;
+            border-right: 1px solid #ccc;
+            /* overflow-y: auto; */
+        }
+
+        #workspace {
+            width: 300px;
+            padding: 20px;
+            border-right: 1px solid #ccc;
+            /* overflow-y: auto; */
+        }
+
+        #code-output {
+            width: calc(100% - 550px);
+            padding: 20px;
+            font-family: monospace;
+            white-space: pre;
+            /* overflow-y: auto; */
+        }
+
+        .block {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #aed7ff;
+            cursor: move;
+            position: relative;
+        }
+
+        .block:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 20px;
+            background-color: white;
+        }
+
+        .block:first-child:before {
+            display: none;
+        }
+
+        .block:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 20px;
+            background-color: white;
+        }
+
+        .block:last-child:after {
+            display: none;
+        }
+
+        .block-title {
+            font-weight: bold;
+        }
+
+        .block input[type="text"],
+        .block select {
+            width: calc(100% - 10px);
+            padding: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 5px;
+        }
+
+        #generate-button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        #copy-button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .block.selected {
+            /* 選択されたブロックのスタイル */
+            outline: 2px solid blue;
+        }
+
+        .nested-block-container {
+            margin-left: 20px;
+            border-left: 2px dotted #ccc;
+            min-height: 20px;
+            /* 最低の高さを設定して、空の場合でも領域を確保 */
+        }
+
+        .nested-parent>.block-title:before {
+            content: '+';
+            /* 入れ子可能なブロックを示す記号 */
+            margin-right: 5px;
+        }
+
+        .nested-parent.collapsed>.block-title:before {
+            content: '-';
+            /* 入れ子が折りたたまれていることを示す記号 */
+        }
+
+        .nested-parent.collapsed>.nested-block-container {
+            display: none;
+            /* 入れ子が折りたたまれている場合は非表示 */
+        }
+
+        #toolbox .category {
+            margin-bottom: 20px;
+        }
+
+        #toolbox .category-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div id="toolbox">
+            <h2>ブロック</h2>
+            <div class="category">
+                <div class="category-title">セル操作</div>
+                <div class="block" draggable="true" data-code="Range('[cell]').Value = '[value]'"
+                    data-input="cell,value">
+                    <div class="block-title">セルに値を入力</div>
+                    セル: <input type="text" name="cell" value="A1"><br>
+                    値: <input type="text" name="value" value="Hello">
+                </div>
+                <div class="block" draggable="true"
+                    data-code="Range('[sourceRange]').Copy Destination:=Range('[destinationRange]')"
+                    data-input="sourceRange,destinationRange">
+                    <div class="block-title">範囲をコピー</div>
+                    コピー元範囲: <input type="text" name="sourceRange" value="A1:B10"><br>
+                    コピー先範囲: <input type="text" name="destinationRange" value="C1">
+                </div>
+                <div class="block" draggable="true" data-code="Range('[range]').ClearContents" data-input="range">
+                    <div class="block-title">セルの内容をクリア</div>
+                    範囲: <input type="text" name="range" value="A1:B10">
+                </div>
+                <!-- ... 他のセル操作ブロック ... -->
+            </div>
+            <div class="category">
+                <div class="category-title">シート操作</div>
+                <div class="block" draggable="true" data-code="Sheets('[sheetName]').Select" data-input="sheetName">
+                    <div class="block-title">シートを選択</div>
+                    シート名: <input type="text" name="sheetName" value="Sheet1">
+                </div>
+                <div class="block" draggable="true" data-code="Sheets.Add After:=Sheets(Sheets.Count)" data-input="">
+                    <div class="block-title">シートを追加</div>
+                </div>
+                <div class="block" draggable="true" data-code="Sheets('[sheetName]').Name = '[newSheetName]'"
+                    data-input="sheetName,newSheetName">
+                    <div class="block-title">シート名を変更</div>
+                    シート名: <input type="text" name="sheetName" value="Sheet1"><br>
+                    新しいシート名: <input type="text" name="newSheetName" value="NewSheet">
+                </div>
+                <!-- ... 他のシート操作ブロック ... -->
+            </div>
+            <div class="category">
+                <div class="category-title">制御構文</div>
+                <div class="block" draggable="true" data-code="For i = [start] To [end]
+  [nestedBlocks]
+Next i" data-input="start,end" data-nested="true">
+                    <div class="block-title">Forループ</div>
+                    開始: <input type="text" name="start" value="1"><br>
+                    終了: <input type="text" name="end" value="10"><br>
+                    <div class="nested-block-container"></div>
+                </div>
+                <div class="block" draggable="true" data-code="If [condition] Then
+  [nestedBlocks]
+End If" data-input="condition" data-nested="true">
+                    <div class="block-title">If文</div>
+                    条件: <input type="text" name="condition" value="A1 > 10"><br>
+                    <div class="nested-block-container"></div>
+                </div>
+                <!-- ... 他の制御構文ブロック ... -->
+            </div>
+            <!-- ... 他のカテゴリ ... -->
+        </div>
+        <div id="workspace">
+            <!-- ここにブロックをドロップ -->
+        </div>
+        <div id="code-output">
+            <h2>生成されたコード</h2>
+            <pre></pre>
+            <div id="error-message" style="color: red;"></div>
+            <button id="generate-button">コード生成</button>
+            <button id="copy-button">コードをコピー</button>
+        </div>
+    </div>
+
+    <script>
+        const workspace = document.getElementById('workspace');
+        const codeOutput = document.querySelector('#code-output pre');
+        const errorMessage = document.getElementById('error-message');
+        const generateButton = document.getElementById('generate-button');
+        const toolbox = document.getElementById('toolbox');
+        const copyButton = document.getElementById('copy-button');
+
+        // 各ブロックの入力フィールドの値を取得
+        function getBlockData(block) {
+            const data = {};
+            const inputs = block.querySelectorAll('input, select');
+            inputs.forEach(input => {
+                data[input.name] = input.value;
+            });
+            return data;
+        }
+
+        function validateCode(codeLines) {
+            // 簡易的なエラーチェック
+            const sheetNameRegex = /Sheets\('(.*?)'\)\.Select/;
+            const cellRangeRegex = /Range\('(.*?)'\)\.(Value|Select)/;
+            for (const codeLine of codeLines) {
+                const sheetNameMatch = codeLine.match(sheetNameRegex);
+                const cellRangeMatch = codeLine.match(cellRangeRegex);
+
+                if (sheetNameMatch && sheetNameMatch[1].trim() === "") {
+                    return "シート名が空です。シート名を指定してください。";
+                } else if (cellRangeMatch && cellRangeMatch[1].trim() === "") {
+                    return "セル範囲が空です。セル範囲を指定してください。";
+                }
+            }
+
+            return "";
+        }
+
+        // ドラッグ＆ドロップ
+        let draggedBlock = null;
+
+        document.addEventListener('dragstart', (event) => {
+            if (event.target.classList.contains('block')) {
+                draggedBlock = event.target;
+                event.dataTransfer.setData('text/html', event.target.outerHTML);
+            }
+        });
+
+        document.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            const targetBlock = getBlockUnderMouse(event);
+
+            if (targetBlock && targetBlock !== draggedBlock && targetBlock.hasAttribute('data-nested')) {
+                // 入れ子可能なブロックの上にドラッグしている場合、ドロップ可能なことを示すスタイルを設定
+                targetBlock.classList.add('droppable');
+            } else {
+                // それ以外の場合は、ドロップ可能なことを示すスタイルを解除
+                const droppableBlocks = document.querySelectorAll('.block.droppable');
+                droppableBlocks.forEach(block => block.classList.remove('droppable'));
+            }
+        });
+
+        workspace.addEventListener('drop', (event) => {
+            event.preventDefault();
+
+            const targetBlock = getBlockUnderMouse(event);
+
+            if (targetBlock && targetBlock !== draggedBlock && targetBlock.hasAttribute('data-nested')) {
+                // 入れ子可能なブロックの上にドロップした場合、入れ子にする
+                const nestedContainer = targetBlock.querySelector('.nested-block-container');
+                const newBlock = document.createElement('div');
+                newBlock.innerHTML = event.dataTransfer.getData('text/html');
+                nestedContainer.appendChild(newBlock.firstChild);
+
+                // ドロップ後にブロックの入れ子を更新
+                updateBlockNesting();
+
+                // ドロップ可能なことを示すスタイルを解除
+                targetBlock.classList.remove('droppable');
+            } else if (event.target === workspace) {
+                // ワークスペースにドロップした場合
+                const newBlock = document.createElement('div');
+                newBlock.innerHTML = event.dataTransfer.getData('text/html');
+                workspace.appendChild(newBlock.firstChild);
+
+                // ドロップ後にブロックの入れ子を更新
+                updateBlockNesting();
+            }
+
+            draggedBlock = null; // ドラッグ終了
+        });
+
+        toolbox.addEventListener('dragstart', (event) => {
+            if (event.target.classList.contains('block')) {
+                draggedBlock = event.target;
+                event.dataTransfer.setData('text/html', event.target.outerHTML);
+            }
+        });
+
+        // マウス下のブロックを取得する関数
+        function getBlockUnderMouse(event) {
+            const element = document.elementFromPoint(event.clientX, event.clientY);
+            return element && element.closest('.block');
+        }
+
+        // ブロックの選択と削除
+        workspace.addEventListener('click', (event) => {
+            if (event.target.classList.contains('block')) {
+                // 他のブロックの選択を解除
+                const selectedBlocks = workspace.querySelectorAll('.block.selected');
+                selectedBlocks.forEach(block => block.classList.remove('selected'));
+
+                // クリックされたブロックを選択
+                event.target.classList.add('selected');
+
+                // 入れ子可能なブロックをクリックした場合は、入れ子を展開/折りたたむ
+                if (event.target.classList.contains('nested-parent')) {
+                    event.target.classList.toggle('collapsed');
+                }
+            }
+        });
+
+        // mousedown イベントでフォーカスを設定
+        workspace.addEventListener('mousedown', (event) => {
+            if (event.target.classList.contains('block')) {
+                event.target.focus();
+            }
+        });
+
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === "Delete") {
+                const selectedBlock = workspace.querySelector('.block.selected');
+                if (selectedBlock) {
+                    selectedBlock.remove();
+                    sortBlocks(); // 削除後にソート
+                    updateBlockNesting(); // 削除後にブロックの入れ子を更新
+                }
+            }
+        });
+
+        // ブロックのソート
+        function sortBlocks() {
+            const blocks = Array.from(workspace.querySelectorAll('.block'));
+            blocks.sort((a, b) => {
+                const posA = a.offsetTop;
+                const posB = b.offsetTop;
+                return posA - posB;
+            });
+
+            // ソートされた順にブロックを再配置
+            blocks.forEach(block => workspace.appendChild(block));
+        }
+
+
+        // コード生成
+        generateButton.addEventListener('click', () => {
+            function generateCode(blocks) {
+                const codeLines = [];
+                blocks.forEach(block => {
+                    const codeTemplate = block.getAttribute('data-code');
+                    const inputData = getBlockData(block);
+                    let codeLine = codeTemplate;
+                    for (const key in inputData) {
+                        codeLine = codeLine.replace(`'[${key}]'`, `"${inputData[key]}"`);
+                    }
+
+                    // ネストされたブロックがある場合
+                    if (block.hasAttribute('data-nested')) {
+                        const nestedContainers = block.querySelectorAll('.nested-block-container');
+                        nestedContainers.forEach(container => {
+                            const nestedId = container.getAttribute('data-nested-id') || '';
+                            const nestedCode = generateCode(container.querySelectorAll('.block'));
+                            codeLine = codeLine.replace(`[nestedBlocks${nestedId}]`, nestedCode.join('\n'));
+                        });
+                    }
+
+                    codeLines.push(`  ${codeLine}`);
+                });
+                return codeLines;
+            }
+
+            const codeLines = ['Sub Macro1()'];
+            codeLines.push(...generateCode(workspace.querySelectorAll('.block')));
+            codeLines.push('End Sub');
+
+            const validationError = validateCode(codeLines);
+            if (validationError) {
+                errorMessage.textContent = validationError;
+                codeOutput.textContent = "";
+            } else {
+                errorMessage.textContent = "";
+                codeOutput.textContent = codeLines.join('\n');
+            }
+        });
+
+
+        // コピーボタン
+        copyButton.addEventListener('click', () => {
+            const codeToCopy = codeOutput.textContent;
+            navigator.clipboard.writeText(codeToCopy)
+                .then(() => {
+                    alert('コードをクリップボードにコピーしました！');
+                })
+                .catch(err => {
+                    console.error('コピーに失敗しました: ', err);
+                    alert('コードのコピーに失敗しました。');
+                });
+        });
+
+        // ブロックの入れ子を更新する関数
+        function updateBlockNesting() {
+            const blocks = workspace.querySelectorAll('.block');
+            blocks.forEach(block => {
+                // ネストされたブロックコンテナを持つブロックの場合
+                if (block.hasAttribute('data-nested')) {
+                    const nestedContainer = block.querySelector('.nested-block-container');
+
+                    // ネストされたブロックコンテナ内のブロックを取得
+                    const nestedBlocks = nestedContainer.querySelectorAll('.block');
+
+                    // ネストされたブロックがある場合、入れ子構造を反映したクラスを追加
+                    if (nestedBlocks.length > 0) {
+                        block.classList.add('nested-parent');
+                        nestedBlocks.forEach(nestedBlock => {
+                            nestedBlock.classList.add('nested-child');
+
+                            // 入れ子レベルを視覚的に表現するためのインデントを設定
+                            const nestingLevel = getNestingLevel(nestedBlock);
+                            nestedBlock.style.marginLeft = `${nestingLevel * 20}px`;
+                        });
+                    } else {
+                        // ネストされたブロックがない場合、クラスを削除
+                        block.classList.remove('nested-parent');
+                        nestedBlocks.forEach(nestedBlock => {
+                            nestedBlock.classList.remove('nested-child');
+                            nestedBlock.style.marginLeft = '0'; // インデントをリセット
+                        });
+                    }
+                }
+            });
+        }
+
+        // ブロックの入れ子レベルを取得する関数
+        function getNestingLevel(block) {
+            let level = 0;
+            let parent = block.parentElement;
+            while (parent && parent.classList.contains('nested-block-container')) {
+                level++;
+                parent = parent.parentElement;
+            }
+            return level;
+        }
+
+        // 初期化時にブロックの入れ子を更新
+        updateBlockNesting();
+    </script>
+</body>
+
+</html>

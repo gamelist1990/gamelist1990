@@ -13,7 +13,7 @@
             margin: 0 auto;
             display: flex;
             /* height: 500px; /* コンテナの高さを固定 (必要に応じて調整) */
-        
+
         }
 
         #toolbox {
@@ -151,14 +151,12 @@
             <h2>ブロック</h2>
             <div class="category">
                 <div class="category-title">セル操作</div>
-                <div class="block" draggable="true" data-code="Range('[cell]').Value = '[value]'"
-                    data-input="cell,value">
+                <div class="block" draggable="true" data-code="Range('[cell]').Value = '[value]'" data-input="cell,value">
                     <div class="block-title">セルに値を入力</div>
                     セル: <input type="text" name="cell" value="A1"><br>
                     値: <input type="text" name="value" value="Hello">
                 </div>
-                <div class="block" draggable="true"
-                    data-code="Range('[sourceRange]').Copy Destination:=Range('[destinationRange]')"
+                <div class="block" draggable="true" data-code="Range('[sourceRange]').Copy Destination:=Range('[destinationRange]')"
                     data-input="sourceRange,destinationRange">
                     <div class="block-title">範囲をコピー</div>
                     コピー元範囲: <input type="text" name="sourceRange" value="A1:B10"><br>
@@ -168,7 +166,33 @@
                     <div class="block-title">セルの内容をクリア</div>
                     範囲: <input type="text" name="range" value="A1:B10">
                 </div>
-                <!-- ... 他のセル操作ブロック ... -->
+                <div class="block" draggable="true" data-code="Range('[cell]').Formula = '[formula]'" data-input="cell,formula">
+                    <div class="block-title">セルに数式を入力</div>
+                    セル: <input type="text" name="cell" value="A1"><br>
+                    数式: <input type="text" name="formula" value="=SUM(B1:B10)">
+                </div>
+                <div class="block" draggable="true" data-code="Range('[range]').NumberFormat = '[format]'"
+                    data-input="range,format">
+                    <div class="block-title">セルの書式設定</div>
+                    範囲: <input type="text" name="range" value="A1:B10"><br>
+                    書式: <input type="text" name="format" value="#,##0">
+                </div>
+                <div class="block" draggable="true" data-code="MsgBox Range('[cell]').Value" data-input="cell">
+                    <div class="block-title">セルの値を表示</div>
+                    セル: <input type="text" name="cell" value="A1">
+                </div>
+                <div class="block" draggable="true" data-code="[variableName] = Range('[cell]').Value"
+                    data-input="variableName,cell">
+                    <div class="block-title">セルの値を変数に代入</div>
+                    変数名: <input type="text" name="variableName" value="myVariable"><br>
+                    セル: <input type="text" name="cell" value="A1">
+                </div>
+                <div class="block" draggable="true" data-code="Range('[cell]').Value = [variableName]"
+                    data-input="cell,variableName">
+                    <div class="block-title">変数の値をセルに代入</div>
+                    セル: <input type="text" name="cell" value="A1"><br>
+                    変数名: <input type="text" name="variableName" value="myVariable">
+                </div>
             </div>
             <div class="category">
                 <div class="category-title">シート操作</div>
@@ -185,26 +209,245 @@
                     シート名: <input type="text" name="sheetName" value="Sheet1"><br>
                     新しいシート名: <input type="text" name="newSheetName" value="NewSheet">
                 </div>
-                <!-- ... 他のシート操作ブロック ... -->
+                <div class="block" draggable="true" data-code="Sheets('[sheetName]').Delete" data-input="sheetName">
+                    <div class="block-title">シートを削除</div>
+                    シート名: <input type="text" name="sheetName" value="Sheet1">
+                </div>
+                <div class="block" draggable="true" data-code="Sheets('[sheetName]').Visible = xlSheetVisible"
+                    data-input="sheetName">
+                    <div class="block-title">シートを表示</div>
+                    シート名: <input type="text" name="sheetName" value="Sheet1">
+                </div>
+                <div class="block" draggable="true" data-code="Sheets('[sheetName]').Visible = xlSheetHidden"
+                    data-input="sheetName">
+                    <div class="block-title">シートを非表示</div>
+                    シート名: <input type="text" name="sheetName" value="Sheet1">
+                </div>
+                <div class="block" draggable="true" data-code="Sheets('[sheetName]').Move Before:=Sheets(1)" data-input="sheetName">
+                    <div class="block-title">シートを先頭に移動</div>
+                    シート名: <input type="text" name="sheetName" value="Sheet1">
+                </div>
+                <div class="block" draggable="true" data-code="Sheets('[sheetName]').Move After:=Sheets(Sheets.Count)"
+                    data-input="sheetName">
+                    <div class="block-title">シートを最後に移動</div>
+                    シート名: <input type="text" name="sheetName" value="Sheet1">
+                </div>
+                <div class="block" draggable="true" data-code="ThisWorkbook.Sheets('[sheetName]').Activate" data-input="sheetName">
+                    <div class="block-title">シートをアクティブにする</div>
+                    シート名: <input type="text" name="sheetName" value="Sheet1">
+                </div>
             </div>
             <div class="category">
                 <div class="category-title">制御構文</div>
                 <div class="block" draggable="true" data-code="For i = [start] To [end]
-  [nestedBlocks]
-Next i" data-input="start,end" data-nested="true">
+                  [nestedBlocks]
+                Next i" data-input="start,end" data-nested="true">
                     <div class="block-title">Forループ</div>
                     開始: <input type="text" name="start" value="1"><br>
                     終了: <input type="text" name="end" value="10"><br>
                     <div class="nested-block-container"></div>
                 </div>
                 <div class="block" draggable="true" data-code="If [condition] Then
-  [nestedBlocks]
-End If" data-input="condition" data-nested="true">
+                  [nestedBlocks]
+                End If" data-input="condition" data-nested="true">
                     <div class="block-title">If文</div>
                     条件: <input type="text" name="condition" value="A1 > 10"><br>
                     <div class="nested-block-container"></div>
                 </div>
-                <!-- ... 他の制御構文ブロック ... -->
+                <div class="block" draggable="true" data-code="ElseIf [condition] Then
+                  [nestedBlocks]
+                " data-input="condition" data-nested="true">
+                    <div class="block-title">ElseIf</div>
+                    条件: <input type="text" name="condition" value="A1 < 0"><br>
+                    <div class="nested-block-container"></div>
+                </div>
+                <div class="block" draggable="true" data-code="Else
+                  [nestedBlocks]
+                " data-input="" data-nested="true">
+                    <div class="block-title">Else</div>
+                    <div class="nested-block-container"></div>
+                </div>
+                <div class="block" draggable="true" data-code="Do While [condition]
+                  [nestedBlocks]
+                Loop" data-input="condition" data-nested="true">
+                    <div class="block-title">Do Whileループ</div>
+                    条件: <input type="text" name="condition" value="i < 10"><br>
+                    <div class="nested-block-container"></div>
+                </div>
+                <div class="block" draggable="true" data-code="For Each cell In Range('[range]')
+                  [nestedBlocks]
+                Next cell" data-input="range" data-nested="true">
+                    <div class="block-title">For Eachループ (セル)</div>
+                    範囲: <input type="text" name="range" value="A1:B10"><br>
+                    <div class="nested-block-container"></div>
+                </div>
+                <div class="block" draggable="true" data-code="For Each sheet In ThisWorkbook.Sheets
+                  [nestedBlocks]
+                Next sheet" data-input="" data-nested="true">
+                    <div class="block-title">For Eachループ (シート)</div>
+                    <div class="nested-block-container"></div>
+                </div>
+                <div class="block" draggable="true" data-code="While [condition]
+                  [nestedBlocks]
+                Wend" data-input="condition" data-nested="true">
+                    <div class="block-title">Whileループ</div>
+                    条件: <input type="text" name="condition" value="i < 10"><br>
+                    <div class="nested-block-container"></div>
+                </div>
+            </div>
+            <div class="category">
+                <div class="category-title">変数と定数</div>
+                <div class="block" draggable="true" data-code="Dim [variableName] As [dataType]" data-input="variableName,dataType">
+                    <div class="block-title">変数を宣言</div>
+                    変数名: <input type="text" name="variableName" value="myVariable"><br>
+                    データ型: <select name="dataType">
+                        <option value="Integer">Integer</option>
+                        <option value="String">String</option>
+                        <option value="Double">Double</option>
+                        <!-- ... 他のデータ型 ... -->
+                    </select>
+                </div>
+                <div class="block" draggable="true" data-code="[variableName] = [value]" data-input="variableName,value">
+                    <div class="block-title">変数に値を代入</div>
+                    変数名: <input type="text" name="variableName" value="myVariable"><br>
+                    値: <input type="text" name="value" value="10">
+                </div>
+                <div class="block" draggable="true" data-code="MsgBox [variableName]" data-input="variableName">
+                    <div class="block-title">変数の値を表示</div>
+                    変数名: <input type="text" name="variableName" value="myVariable">
+                </div>
+                <div class="block" draggable="true" data-code="[variableName1] = [variableName2] [operator] [variableName3]"
+                    data-input="variableName1,variableName2,operator,variableName3">
+                    <div class="block-title">変数同士の演算</div>
+                    変数名1: <input type="text" name="variableName1" value="result"><br>
+                    変数名2: <input type="text" name="variableName2" value="a"><br>
+                    演算子: <select name="operator">
+                        <option value="+">+</option>
+                        <option value="-">-</option>
+                        <option value="*">*</option>
+                        <option value="/">/</option>
+                    </select><br>
+                    変数名3: <input type="text" name="variableName3" value="b">
+                </div>
+            </div>
+            <div class="category">
+                <div class="category-title">ファイル操作</div>
+                <div class="block" draggable="true" data-code="Workbooks.Open '[filePath]'" data-input="filePath">
+                    <div class="block-title">ブックを開く</div>
+                    ファイルパス: <input type="text" name="filePath" value="C:\MyExcelFile.xlsx">
+                </div>
+                <div class="block" draggable="true" data-code="ActiveWorkbook.SaveAs '[filePath]'" data-input="filePath">
+                    <div class="block-title">ブックを名前を付けて保存</div>
+                    ファイルパス: <input type="text" name="filePath" value="C:\MyNewExcelFile.xlsx">
+                </div>
+                <div class="block" draggable="true" data-code="ActiveWorkbook.Close" data-input="">
+                    <div class="block-title">ブックを閉じる</div>
+                </div>
+            </div>
+            <div class="category">
+                <div class="category-title">メッセージと入力</div>
+                <div class="block" draggable="true" data-code="MsgBox '[message]'" data-input="message">
+                    <div class="block-title">メッセージを表示</div>
+                    メッセージ: <input type="text" name="message" value="Hello!">
+                </div>
+                <div class="block" draggable="true" data-code="[variableName] = CStr(InputBox('[prompt]', '[title]'))"
+                    data-input="variableName,prompt,title">
+                    <div class="block-title">入力を求める</div>
+                    変数名: <input type="text" name="variableName" value="userInput"><br>
+                    メッセージ: <input type="text" name="prompt" value="値を入力してください"><br>
+                    タイトル: <input type="text" name="title" value="入力">
+                </div>
+            </div>
+            <div class="category">
+                <div class="category-title">日付と時刻</div>
+                <div class="block" draggable="true" data-code="[variableName] = Now()" data-input="variableName">
+                    <div class="block-title">現在の日時を取得</div>
+                    変数名: <input type="text" name="variableName" value="currentDate">
+                </div>
+                <div class="block" draggable="true" data-code="[variableName] = Date()" data-input="variableName">
+                    <div class="block-title">現在の日付を取得</div>
+                    変数名: <input type="text" name="variableName" value="currentDate">
+                </div>
+                <div class="block" draggable="true" data-code="[variableName] = Time()" data-input="variableName">
+                    <div class="block-title">現在の時刻を取得</div>
+                    変数名: <input type="text" name="variableName" value="currentTime">
+                </div>
+            </div>
+            <div class="category">
+                <div class="category-title">文字列操作</div>
+                <div class="block" draggable="true" data-code="[variableName] = Len('[string]')" data-input="variableName,string">
+                    <div class="block-title">文字列の長さを取得</div>
+                    変数名: <input type="text" name="variableName" value="stringLength"><br>
+                    文字列: <input type="text" name="string" value="Hello">
+                </div>
+                <div class="block" draggable="true" data-code="[variableName] = UCase('[string]')" data-input="variableName,string">
+                    <div class="block-title">文字列を大文字に変換</div>
+                    変数名: <input type="text" name="variableName" value="uppercaseString"><br>
+                    文字列: <input type="text" name="string" value="Hello">
+                </div>
+                <div class="block" draggable="true" data-code="[variableName] = LCase('[string]')" data-input="variableName,string">
+                    <div class="block-title">文字列を小文字に変換</div>
+                    変数名: <input type="text" name="variableName" value="lowercaseString"><br>
+                    文字列: <input type="text" name="string" value="Hello">
+                </div>
+                <div class="block" draggable="true" data-code="[variableName] = Mid('[string]', [start], [length])"
+                    data-input="variableName,string,start,length">
+                    <div class="block-title">文字列の一部を取得</div>
+                    変数名: <input type="text" name="variableName" value="substring"><br>
+                    文字列: <input type="text" name="string" value="Hello"><br>
+                    開始位置: <input type="text" name="start" value="2"><br>
+                    長さ: <input type="text" name="length" value="3">
+                </div>
+            </div>
+            <div class="category">
+                <div class="category-title">オブジェクト操作</div>
+                <div class="block" draggable="true" data-code="ActiveSheet.Range('[range]').Select" data-input="range">
+                    <div class="block-title">セル範囲を選択</div>
+                    セル範囲: <input type="text" name="range" value="A1:B10">
+                </div>
+            </div>
+            <div class="category">
+                <div class="category-title">配列</div>
+                <div class="block" draggable="true" data-code="Dim [arrayName]([size]) As [dataType]"
+                    data-input="arrayName,size,dataType">
+                    <div class="block-title">配列を宣言</div>
+                    配列名: <input type="text" name="arrayName" value="myArray"><br>
+                    サイズ: <input type="text" name="size" value="10"><br>
+                    データ型: <select name="dataType">
+                        <option value="Integer">Integer</option>
+                        <option value="String">String</option>
+                        <option value="Double">Double</option>
+                        <!-- ... 他のデータ型 ... -->
+                    </select>
+                </div>
+                <div class="block" draggable="true" data-code="[arrayName]([index]) = [value]" data-input="arrayName,index,value">
+                    <div class="block-title">配列に値を代入</div>
+                    配列名: <input type="text" name="arrayName" value="myArray"><br>
+                    インデックス: <input type="text" name="index" value="1"><br>
+                    値: <input type="text" name="value" value="10">
+                </div>
+                <div class="block" draggable="true" data-code="[variableName] = [arrayName]([index])"
+                    data-input="variableName,arrayName,index">
+                    <div class="block-title">配列の値を取得</div>
+                    変数名: <input type="text" name="variableName" value="myVariable"><br>
+                    配列名: <input type="text" name="arrayName" value="myArray"><br>
+                    インデックス: <input type="text" name="index" value="1">
+                </div>
+            </div>
+            <div class="category">
+                <div class="category-title">その他</div>
+                <div class="block" draggable="true" data-code="'[comment]" data-input="comment">
+                    <div class="block-title">コメント</div>
+                    コメント: <input type="text" name="comment" value="ここにコメントを入力">
+                </div>
+                <div class="block" draggable="true" data-code="[subName] [arguments]" data-input="subName,arguments">
+                    <div class="block-title">サブルーチン/関数呼び出し</div>
+                    サブルーチン/関数名: <input type="text" name="subName" value="MySub"><br>
+                    引数: <input type="text" name="arguments" value="">
+                </div>
+                <div class="block" draggable="true" data-code="Exit Sub" data-input="">
+                    <div class="block-title">プロシージャの終了</div>
+                </div>
             </div>
             <!-- ... 他のカテゴリ ... -->
         </div>
@@ -217,8 +460,19 @@ End If" data-input="condition" data-nested="true">
             <div id="error-message" style="color: red;"></div>
             <button id="generate-button">コード生成</button>
             <button id="copy-button">コードをコピー</button>
+            <div id="instructions">
+                <h3>使い方</h3>
+                <p>1. 左側のツールボックスからブロックをドラッグ＆ドロップして、ワークスペースに配置します。</p>
+                <p>2. ブロック内の入力フィールドに必要な値を入力します。</p>
+                <p>3. 「コード生成」ボタンをクリックすると、VBAコードが生成されます。</p>
+                <p>4. 生成されたコードをコピーして、ExcelのVBAエディタに貼り付けて実行します。</p>
+                <h3>注意</h3>
+                <p>- InputBox を使用する場合は、入力を受け取る変数を事前に宣言しておく必要があります。</p>
+                <p>- VBAコードの実行には注意が必要です。誤ったコードを実行すると、Excelのデータが破損する可能性があります。</p>
+            </div>
         </div>
     </div>
+
 
     <script>
         const workspace = document.getElementById('workspace');
@@ -238,23 +492,7 @@ End If" data-input="condition" data-nested="true">
             return data;
         }
 
-        function validateCode(codeLines) {
-            // 簡易的なエラーチェック
-            const sheetNameRegex = /Sheets\('(.*?)'\)\.Select/;
-            const cellRangeRegex = /Range\('(.*?)'\)\.(Value|Select)/;
-            for (const codeLine of codeLines) {
-                const sheetNameMatch = codeLine.match(sheetNameRegex);
-                const cellRangeMatch = codeLine.match(cellRangeRegex);
 
-                if (sheetNameMatch && sheetNameMatch[1].trim() === "") {
-                    return "シート名が空です。シート名を指定してください。";
-                } else if (cellRangeMatch && cellRangeMatch[1].trim() === "") {
-                    return "セル範囲が空です。セル範囲を指定してください。";
-                }
-            }
-
-            return "";
-        }
 
         // ドラッグ＆ドロップ
         let draggedBlock = null;
@@ -373,6 +611,8 @@ End If" data-input="condition" data-nested="true">
         }
 
 
+
+
         // コード生成
         generateButton.addEventListener('click', () => {
             function generateCode(blocks) {
@@ -380,10 +620,19 @@ End If" data-input="condition" data-nested="true">
                 blocks.forEach(block => {
                     const codeTemplate = block.getAttribute('data-code');
                     const inputData = getBlockData(block);
+
                     let codeLine = codeTemplate;
-                    for (const key in inputData) {
-                        codeLine = codeLine.replace(`'[${key}]'`, `"${inputData[key]}"`);
-                    }
+
+                    // '[key]' 形式のプレースホルダーを置き換え
+                    codeLine = codeLine.replace(/'\[(\w+)\]'/g, (match, key) => {
+                        return `"${inputData[key] || ''}"`; // 値がない場合は空文字列を返す
+                    });
+
+                    // '[key]' 形式のプレースホルダーを置き換え (既存のコード用)
+                    codeLine = codeLine.replace(/\[(\w+)\]/g, (match, key) => {
+                        return inputData[key] || ''; // 値がない場合は空文字列を返す
+                    });
+
 
                     // ネストされたブロックがある場合
                     if (block.hasAttribute('data-nested')) {
@@ -404,14 +653,10 @@ End If" data-input="condition" data-nested="true">
             codeLines.push(...generateCode(workspace.querySelectorAll('.block')));
             codeLines.push('End Sub');
 
-            const validationError = validateCode(codeLines);
-            if (validationError) {
-                errorMessage.textContent = validationError;
-                codeOutput.textContent = "";
-            } else {
-                errorMessage.textContent = "";
-                codeOutput.textContent = codeLines.join('\n');
-            }
+
+            errorMessage.textContent = "";
+            codeOutput.textContent = codeLines.join('\n');
+
         });
 
 

@@ -236,7 +236,7 @@
                 const compressedText = LZString.compressToEncodedURIComponent(markdownText);
 
                 // URLパラメータに圧縮データを含める
-                const shareUrl = window.location.href + '/?data=' + compressedText;
+                const shareUrl = window.location.href + '?data=' + compressedText;
 
                 // URLをクリップボードにコピー
                 navigator.clipboard.writeText(shareUrl)

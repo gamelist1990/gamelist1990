@@ -4,6 +4,7 @@
 <head>
     <title>ランダム迷路生成</title>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
             display: flex;
@@ -11,6 +12,8 @@
             align-items: center;
             min-height: 100vh;
             background-color: #f0f0f0;
+            touch-action: manipulation;
+            /* スワイプによる画面スクロールを防ぐ */
         }
 
         #maze-container {
@@ -23,14 +26,29 @@
             border: 2px solid gray;
             /* 外壁をグレーに設定 */
         }
+
+        #buttons {
+            margin-bottom: 10px;
+        }
+
+        button {
+            margin: 0 5px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
     </style>
 </head>
 
 <body>
     <div id="maze-container">
         <div>
+            <p>幅と高さは出来るだけ奇数にしてください(なぜなら偶数だと生成しにくいから)</p>
             <label for="width">幅:</label>
-            <input type="number" id="width" value="20">
+            <input type="number" id="width" value="15">
             <label for="height">高さ:</label>
             <input type="number" id="height" value="15">
             <button id="generateButton">迷路生成</button>
@@ -56,47 +74,59 @@
 
             const maze = Array.from({ length: height }, () => Array(width).fill(1));
 
-            // ゴール地点を設定 (右端から2列目、下端から2行目)
-            const goalX = width - 2;
+            // ゴール地点の座標を設定 (右下隅)
+            const goalX = width - 1;
             const goalY = height - 2;
-            maze[goalY][goalX] = 0; // 修正: 行と列のインデックスを修正
 
-            return maze;
+            // スタート地点とゴール地点を道にする
+            maze[1][1] = 0;
+            maze[goalY][goalX] = 0;
+
+            if (goalY > 0) {
+                maze[goalY - 1][goalX] = 1; // 上
+            }
+            if (goalX > 0) {
+                maze[goalY][goalX - 1] = 1; // 左
+            }
+
+
+
+            return { maze, goalX, goalY }; // goalX, goalY を返す
         }
 
         async function dig(maze, x, y, goalX, goalY) {
-                console.log(`dig(${x}, ${y}) called`);
-                maze[y][x] = 0;
+            console.log(`dig(${x}, ${y}) called`);
+            maze[y][x] = 0;
 
-                // 掘削可能な方向をシャッフル
-                const directions = shuffle([[1, 0], [-1, 0], [0, 1], [0, -1]]);
+            // 掘削可能な方向をシャッフル
+            const directions = shuffle([[1, 0], [-1, 0], [0, 1], [0, -1]]);
 
-                for (const [dx, dy] of directions) {
-                    const nx = x + dx * 2;
-                    const ny = y + dy * 2;
+            for (const [dx, dy] of directions) {
+                const nx = x + dx * 2;
+                const ny = y + dy * 2;
 
-                    // 範囲内チェックと未訪問チェック
-                    if (
-                        nx >= 1 && nx < maze[0].length - 1 &&
-                        ny >= 1 && ny < maze.length - 1 &&
-                        maze[ny][nx] === 1
-                    ) {
-                        console.log(`Trying to dig to (${nx}, ${ny}), maze[${ny}][${nx}] = ${maze[ny][nx]}`); // 位置を変更
-                        console.log(`Digging to (${nx}, ${ny})`);
-                        maze[y + dy][x + dx] = 0; // 壁を壊す
+                // 範囲内チェックと未訪問チェック
+                if (
+                    nx >= 1 && nx < maze[0].length - 1 && // 外壁を残すため、範囲を狭める
+                    ny >= 1 && ny < maze.length - 1 && // 外壁を残すため、範囲を狭める
+                    maze[ny][nx] === 1
+                ) {
+                    console.log(`Trying to dig to (${nx}, ${ny}), maze[${ny}][${nx}] = ${maze[ny][nx]}`);
+                    console.log(`Digging to (${nx}, ${ny})`);
+                    maze[y + dy][x + dx] = 0; // 壁を壊す
 
-                        if (isVisualizing) {
-                            drawMaze(maze);
-                            await new Promise(resolve => setTimeout(resolve, 50));
-                        }
-
-                        await dig(maze, nx, ny, goalX, goalY); // 再帰的に掘る
-                    } else {
-                        console.log(`Cannot dig to (${nx}, ${ny})`);
+                    if (isVisualizing) {
+                        drawMaze(maze, goalX, goalY);
+                        await new Promise(resolve => setTimeout(resolve, 50));
                     }
+
+                    await dig(maze, nx, ny, goalX, goalY); // 再帰的に掘る
+                } else {
+                    console.log(`Cannot dig to (${nx}, ${ny})`);
                 }
-                console.log(`dig(${x}, ${y}) finished`);
             }
+            console.log(`dig(${x}, ${y}) finished`);
+        }
 
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
@@ -107,7 +137,7 @@
         }
 
 
-        function drawMaze(maze) {
+        function drawMaze(maze, goalX, goalY) { // goalX, goalY を受け取る
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             for (let y = 0; y < maze.length; y++) {
                 for (let x = 0; x < maze[0].length; x++) {
@@ -126,9 +156,9 @@
             ctx.fillRect(1 * cellSize, 1 * cellSize, cellSize, cellSize);
 
 
-            // ゴール地点を赤で描画 (右端)
+            // ゴール地点を赤で描画 (goalX, goalY を使用)
             ctx.fillStyle = 'red';
-            ctx.fillRect((mazeWidth - 2) * cellSize, (mazeHeight - 2) * cellSize, cellSize, cellSize);
+            ctx.fillRect(goalX * cellSize, goalY * cellSize, cellSize, cellSize);
 
             // 現在位置を水色で描画
             ctx.fillStyle = 'aqua';
@@ -143,27 +173,28 @@
             if (newX >= 0 && newX < mazeWidth && newY >= 0 && newY < mazeHeight && maze[newY][newX] === 0) {
                 currentX = newX;
                 currentY = newY;
-                if (currentX === mazeWidth - 2 && currentY === mazeHeight - 2) { // ゴール条件を変更
+                if (currentX === mazeWidth - 1 && currentY === mazeHeight - 2) { // ゴール条件を修正
                     alert("ゴールに到着！");
                     resetGame();
                     return;
                 }
-                drawMaze(maze);
+                drawMaze(maze, mazeWidth - 1, mazeHeight - 2); // 正しいゴール座標を渡す
             }
         }
 
         function resetGame() {
             currentX = 1;
             currentY = 1;
-            drawMaze(maze);
+            drawMaze(maze, mazeWidth - 1, mazeHeight - 2); // 正しいゴール座標を渡す
         }
 
 
         generateButton.addEventListener('click', () => {
             mazeWidth = parseInt(widthInput.value);
             mazeHeight = parseInt(heightInput.value);
-            maze = generateMaze(mazeWidth, mazeHeight);
-            dig(maze, 1, 1, mazeWidth - 2, mazeHeight - 2)
+            const { maze: newMaze, goalX, goalY } = generateMaze(mazeWidth, mazeHeight); // goalX, goalY を受け取る
+            maze = newMaze;
+            dig(maze, 1, 1, goalX, goalY) // goalX, goalY を渡す
                 .then(() => {
                     resetGame();
                 });
@@ -173,8 +204,9 @@
             isVisualizing = true;
             mazeWidth = parseInt(widthInput.value);
             mazeHeight = parseInt(heightInput.value);
-            maze = generateMaze(mazeWidth, mazeHeight);
-            dig(maze, 1, 1, mazeWidth - 2, mazeHeight - 2)
+            const { maze: newMaze, goalX, goalY } = generateMaze(mazeWidth, mazeHeight); // goalX, goalY を受け取る
+            maze = newMaze;
+            dig(maze, 1, 1, goalX, goalY) // goalX, goalY を渡す
                 .then(() => {
                     resetGame();
                     isVisualizing = false;
@@ -197,6 +229,45 @@
                     break;
             }
         });
+
+
+        function handleTouchStart(event) {
+            const touch = event.touches[0];
+            const startX = touch.clientX;
+            const startY = touch.clientY;
+
+            function handleTouchMove(event) {
+                const touch = event.touches[0];
+                const deltaX = touch.clientX - startX;
+                const deltaY = touch.clientY - startY;
+
+                if (Math.abs(deltaX) > Math.abs(deltaY)) { // 横方向の移動が大きい場合
+                    if (deltaX > 0) {
+                        move(1, 0); // 右に移動
+                    } else {
+                        move(-1, 0); // 左に移動
+                    }
+                } else { // 縦方向の移動が大きい場合
+                    if (deltaY > 0) {
+                        move(0, 1); // 下に移動
+                    } else {
+                        move(0, -1); // 上に移動
+                    }
+                }
+
+                event.preventDefault(); // スワイプによる画面スクロールを防ぐ
+            }
+
+            function handleTouchEnd() {
+                canvas.removeEventListener('touchmove', handleTouchMove);
+                canvas.removeEventListener('touchend', handleTouchEnd);
+            }
+
+            canvas.addEventListener('touchmove', handleTouchMove);
+            canvas.addEventListener('touchend', handleTouchEnd);
+        }
+
+        canvas.addEventListener('touchstart', handleTouchStart);
 
         generateButton.click();
 

@@ -163,10 +163,27 @@
       let selectedBlock = null;
       let blockCount = 0;
 
+      //keydownイベントリスナーをdocumentに追加
+      document.addEventListener('keydown', (event) => {
+        if (selectedBlock) {
+          if (event.ctrlKey && event.key === 'd') {
+            duplicateBlock();
+          } else if (event.ctrlKey && event.key === 'x') {
+            deleteBlock();
+          }
+        }
+      });
+
       addBlockButton.addEventListener('click', () => {
+        createNewBlock();
+      });
+
+      function createNewBlock() {
         blockCount++;
         const block = document.createElement('div');
         block.classList.add('block');
+        block.style.width = '100px';
+        block.style.height = '100px';
         block.id = `block-${blockCount}`;
         block.style.left = '50px';
         block.style.top = '50px';
@@ -182,7 +199,7 @@
         selectBlock(block);
         updateCssCode();
         updateHtmlCode();
-      });
+      }
 
       function selectBlock(block) {
         if (selectedBlock) {
@@ -231,6 +248,8 @@
           // マウスボタンを離したタイミングでCSSを更新
           updateCssCode();
           updateHtmlCode();
+          // マウスアップ時に選択状態にする
+          selectBlock(element);
         }
       }
 
@@ -383,6 +402,38 @@
             outputMessageHtml.textContent = 'コピーに失敗しました: ' + err;
           });
       });
+
+      // ブロックを複製する関数
+      function duplicateBlock() {
+        if (selectedBlock) {
+          const newBlock = selectedBlock.cloneNode(true);
+          const newIdNumber = blockCount + 1;
+          newBlock.id = `block-${newIdNumber}`;
+          blockCount = newIdNumber;
+          newBlock.textContent = `ブロック${newIdNumber}`;
+          //複製したブロックの位置を少しずらす
+          newBlock.style.left = parseInt(selectedBlock.style.left) + 20 + 'px';
+          newBlock.style.top = parseInt(selectedBlock.style.top) + 20 + 'px';
+          preview.appendChild(newBlock);
+          // 複製したブロックにもドラッグ機能を追加
+          makeDraggable(newBlock);
+          updateCssCode();
+          updateHtmlCode();
+          // 新しいブロックを選択状態にする
+          selectBlock(newBlock);
+        }
+      }
+
+
+      //ブロックを削除する関数
+      function deleteBlock() {
+        if (selectedBlock) {
+          selectedBlock.remove();
+          selectedBlock = null;
+          updateCssCode();
+          updateHtmlCode();
+        }
+      }
     });
   </script>
 

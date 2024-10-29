@@ -347,7 +347,7 @@
                     if (block.style.fontSize) css += `  font-size: ${block.style.fontSize};\n`;
                     if (block.style.fontFamily) css += `  font-family: ${block.style.fontFamily};\n`;
                     if (block.style.transform) css += `  transform: ${block.style.transform};\n`;
-                    css += `  position: absolute;\n`;
+                    css += `  position: relative;\n`;
                     css += `  left: ${block.style.left};\n`;
                     css += `  top: ${block.style.top};\n`;
                     css += `}\n\n`;
@@ -389,7 +389,7 @@
                         color: ${rgbToHex(block.style.color)};
                         font-size: ${block.style.fontSize};
                         font-family: ${block.style.fontFamily};
-                        position: absolute;
+                        position: relative;
                         left: ${block.style.left};
                         top: ${block.style.top};
                         transform: ${block.style.transform};

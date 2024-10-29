@@ -22,7 +22,7 @@
         .block {
             width: 100px;
             height: 100px;
-            background-color: red;
+            background-color: black;
             position: absolute;
             cursor: move;
             border: 1px solid #ccc;
@@ -65,6 +65,10 @@
                         <li class="nav-item">
                             <a class="nav-link" id="text-tab" data-toggle="tab" href="#text" role="tab"
                                 aria-controls="text" aria-selected="false">テキスト</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="transform-tab" data-toggle="tab" href="#transform" role="tab"
+                                aria-controls="transform" aria-selected="false">変形</a>
                         </li>
                     </ul>
                     <div class="tab-content" id="myTabContent">
@@ -110,12 +114,29 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="tab-pane fade p-3" id="transform" role="tabpanel" aria-labelledby="transform-tab">
+                            <div class="form-group">
+                                <label for="blockSkewX">斜めX:</label>
+                                <input type="range" class="form-control-range" id="blockSkewX" min="-90" max="90"
+                                    value="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="blockSkewY">斜めY:</label>
+                                <input type="range" class="form-control-range" id="blockSkewY" min="-90" max="90"
+                                    value="0">
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <h2 class="mt-5">生成されたCSSコード</h2>
                 <textarea id="cssCode" class="form-control" readonly style="height: 150px;"></textarea>
                 <button id="copyCss" class="btn btn-success mt-3">CSSをコピー</button>
                 <div id="outputMessage" class="mt-3"></div>
+
+                <h2 class="mt-5">HTMLコード</h2>
+                <textarea id="htmlCode" class="form-control" readonly style="height: 150px;"></textarea>
+                <button id="copyHtml" class="btn btn-success mt-3">HTMLをコピー</button>
+                <div id="outputMessageHtml" class="mt-3"></div>
             </div>
         </div>
     </div>
@@ -136,9 +157,14 @@
             const blockTextColorControl = document.getElementById('blockTextColor');
             const blockFontSizeControl = document.getElementById('blockFontSize');
             const blockFontFamilyControl = document.getElementById('blockFontFamily');
+            const blockSkewXControl = document.getElementById('blockSkewX');
+            const blockSkewYControl = document.getElementById('blockSkewY');
             const cssCodeArea = document.getElementById('cssCode');
             const copyCssButton = document.getElementById('copyCss');
             const outputMessage = document.getElementById('outputMessage');
+            const htmlCodeArea = document.getElementById('htmlCode');
+            const copyHtmlButton = document.getElementById('copyHtml');
+            const outputMessageHtml = document.getElementById('outputMessageHtml');
 
             let selectedBlock = null;
             let blockCount = 0;
@@ -161,6 +187,7 @@
                 controls.style.display = 'block';
                 selectBlock(block);
                 updateCssCode();
+                updateHtmlCode();
             });
 
             function selectBlock(block) {
@@ -170,16 +197,19 @@
                 selectedBlock = block;
                 selectedBlock.classList.add('selected');
 
-                // Update control values
+                // Update control values with checks for null
                 blockWidthControl.value = parseInt(block.style.width) || 100;
                 blockHeightControl.value = parseInt(block.style.height) || 100;
-                blockBgColorControl.value = rgbToHex(block.style.backgroundColor) || '#ff0000';
+                blockBgColorControl.value = block.style.backgroundColor ? rgbToHex(block.style.backgroundColor) : '#ff0000';
                 blockBorderRadiusControl.value = parseInt(block.style.borderRadius) || 0;
-                blockTextColorControl.value = rgbToHex(block.style.color) || '#000000';
+                blockTextColorControl.value = block.style.color ? rgbToHex(block.style.color) : '#000000';
                 blockFontSizeControl.value = parseInt(block.style.fontSize) || 16;
                 blockFontFamilyControl.value = block.style.fontFamily || 'sans-serif';
+                blockSkewXControl.value = parseInt(block.style.transform.replace(/[^-\d]/g, '')) || 0;
+                blockSkewYControl.value = parseInt(block.style.transform.replace(/[^-\d]/g, '')) || 0;
 
                 updateCssCode();
+                updateHtmlCode();
             }
 
             function makeDraggable(element) {
@@ -206,14 +236,17 @@
                     document.removeEventListener('mouseup', onMouseUp);
                     // マウスボタンを離したタイミングでCSSを更新
                     updateCssCode();
+                    updateHtmlCode();
                 }
             }
+
 
             // Event listeners for control changes
             blockWidthControl.addEventListener('input', () => {
                 if (selectedBlock) {
                     selectedBlock.style.width = blockWidthControl.value + 'px';
                     updateCssCode();
+                    updateHtmlCode();
                 }
             });
 
@@ -221,6 +254,7 @@
                 if (selectedBlock) {
                     selectedBlock.style.height = blockHeightControl.value + 'px';
                     updateCssCode();
+                    updateHtmlCode();
                 }
             });
 
@@ -228,6 +262,7 @@
                 if (selectedBlock) {
                     selectedBlock.style.backgroundColor = blockBgColorControl.value;
                     updateCssCode();
+                    updateHtmlCode();
                 }
             });
 
@@ -235,6 +270,7 @@
                 if (selectedBlock) {
                     selectedBlock.style.borderRadius = blockBorderRadiusControl.value + 'px';
                     updateCssCode();
+                    updateHtmlCode();
                 }
             });
 
@@ -242,6 +278,7 @@
                 if (selectedBlock) {
                     selectedBlock.style.color = blockTextColorControl.value;
                     updateCssCode();
+                    updateHtmlCode();
                 }
             });
 
@@ -249,6 +286,7 @@
                 if (selectedBlock) {
                     selectedBlock.style.fontSize = blockFontSizeControl.value + 'px';
                     updateCssCode();
+                    updateHtmlCode();
                 }
             });
 
@@ -256,21 +294,40 @@
                 if (selectedBlock) {
                     selectedBlock.style.fontFamily = blockFontFamilyControl.value;
                     updateCssCode();
+                    updateHtmlCode();
                 }
             });
+
+            blockSkewXControl.addEventListener('input', () => {
+                if (selectedBlock) {
+                    selectedBlock.style.transform = `skewX(${blockSkewXControl.value}deg) skewY(${blockSkewYControl.value}deg)`;
+                    updateCssCode();
+                    updateHtmlCode();
+                }
+            });
+
+            blockSkewYControl.addEventListener('input', () => {
+                if (selectedBlock) {
+                    selectedBlock.style.transform = `skewX(${blockSkewXControl.value}deg) skewY(${blockSkewYControl.value}deg)`;
+                    updateCssCode();
+                    updateHtmlCode();
+                }
+            });
+
 
             function updateCssCode() {
                 let css = '';
                 const blocks = preview.querySelectorAll('.block');
                 blocks.forEach((block, index) => {
                     css += `#${block.id} {\n`;
-                    css += `  width: ${block.style.width};\n`;
-                    css += `  height: ${block.style.height};\n`;
-                    css += `  background-color: ${rgbToHex(block.style.backgroundColor)};\n`;
-                    css += `  border-radius: ${block.style.borderRadius};\n`;
-                    css += `  color: ${rgbToHex(block.style.color)};\n`;
-                    css += `  font-size: ${block.style.fontSize};\n`;
-                    css += `  font-family: ${block.style.fontFamily};\n`;
+                    if (block.style.width) css += `  width: ${block.style.width};\n`;
+                    if (block.style.height) css += `  height: ${block.style.height};\n`;
+                    if (block.style.backgroundColor) css += `  background-color: ${rgbToHex(block.style.backgroundColor)};\n`;
+                    if (block.style.borderRadius) css += `  border-radius: ${block.style.borderRadius};\n`;
+                    if (block.style.color) css += `  color: ${rgbToHex(block.style.color)};\n`;
+                    if (block.style.fontSize) css += `  font-size: ${block.style.fontSize};\n`;
+                    if (block.style.fontFamily) css += `  font-family: ${block.style.fontFamily};\n`;
+                    if (block.style.transform) css += `  transform: ${block.style.transform};\n`;
                     css += `  position: absolute;\n`;
                     css += `  left: ${block.style.left};\n`;
                     css += `  top: ${block.style.top};\n`;
@@ -298,6 +355,38 @@
                     })
                     .catch(err => {
                         outputMessage.textContent = 'コピーに失敗しました: ' + err;
+                    });
+            });
+
+            function updateHtmlCode() {
+                let html = '';
+                const blocks = preview.querySelectorAll('.block');
+                blocks.forEach((block, index) => {
+                    html += `<div id="${block.id}" style="
+                        width: ${block.style.width};
+                        height: ${block.style.height};
+                        background-color: ${rgbToHex(block.style.backgroundColor)};
+                        border-radius: ${block.style.borderRadius};
+                        color: ${rgbToHex(block.style.color)};
+                        font-size: ${block.style.fontSize};
+                        font-family: ${block.style.fontFamily};
+                        position: absolute;
+                        left: ${block.style.left};
+                        top: ${block.style.top};
+                        transform: ${block.style.transform};
+                    ">${block.textContent}</div>\n`;
+                });
+                htmlCodeArea.value = html;
+            }
+
+            copyHtmlButton.addEventListener('click', () => {
+                const htmlCode = htmlCodeArea.value;
+                navigator.clipboard.writeText(htmlCode)
+                    .then(() => {
+                        outputMessageHtml.textContent = 'HTMLをクリップボードにコピーしました！';
+                    })
+                    .catch(err => {
+                        outputMessageHtml.textContent = 'コピーに失敗しました: ' + err;
                     });
             });
         });

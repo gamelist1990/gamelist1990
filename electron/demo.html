@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ランダム迷路生成</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        #maze-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #maze {
+            border: 2px solid gray;
+            /* 外壁をグレーに設定 */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="maze-container">
+        <div>
+            <label for="width">幅:</label>
+            <input type="number" id="width" value="20">
+            <label for="height">高さ:</label>
+            <input type="number" id="height" value="15">
+            <button id="generateButton">迷路生成</button>
+            <button id="visualizeButton">視覚的に生成</button>
+        </div>
+        <canvas id="maze"></canvas>
+    </div>
+    <script>
+        const canvas = document.getElementById('maze');
+        const ctx = canvas.getContext('2d');
+        const widthInput = document.getElementById('width');
+        const heightInput = document.getElementById('height');
+        const generateButton = document.getElementById('generateButton');
+        const visualizeButton = document.getElementById('visualizeButton');
+
+        let mazeWidth, mazeHeight, cellSize = 20, maze;
+        let currentX, currentY;
+        let isVisualizing = false;
+
+        function generateMaze(width, height) {
+            canvas.width = width * cellSize;
+            canvas.height = height * cellSize;
+
+            const maze = Array.from({ length: height }, () => Array(width).fill(1));
+
+            // ゴール地点を設定 (右端から2列目、下端から2行目)
+            const goalX = width - 2;
+            const goalY = height - 2;
+            maze[goalY][goalX] = 0; // 修正: 行と列のインデックスを修正
+
+            return maze;
+        }
+
+        async function dig(maze, x, y, goalX, goalY) {
+                console.log(`dig(${x}, ${y}) called`);
+                maze[y][x] = 0;
+
+                // 掘削可能な方向をシャッフル
+                const directions = shuffle([[1, 0], [-1, 0], [0, 1], [0, -1]]);
+
+                for (const [dx, dy] of directions) {
+                    const nx = x + dx * 2;
+                    const ny = y + dy * 2;
+
+                    // 範囲内チェックと未訪問チェック
+                    if (
+                        nx >= 1 && nx < maze[0].length - 1 &&
+                        ny >= 1 && ny < maze.length - 1 &&
+                        maze[ny][nx] === 1
+                    ) {
+                        console.log(`Trying to dig to (${nx}, ${ny}), maze[${ny}][${nx}] = ${maze[ny][nx]}`); // 位置を変更
+                        console.log(`Digging to (${nx}, ${ny})`);
+                        maze[y + dy][x + dx] = 0; // 壁を壊す
+
+                        if (isVisualizing) {
+                            drawMaze(maze);
+                            await new Promise(resolve => setTimeout(resolve, 50));
+                        }
+
+                        await dig(maze, nx, ny, goalX, goalY); // 再帰的に掘る
+                    } else {
+                        console.log(`Cannot dig to (${nx}, ${ny})`);
+                    }
+                }
+                console.log(`dig(${x}, ${y}) finished`);
+            }
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+
+        function drawMaze(maze) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let y = 0; y < maze.length; y++) {
+                for (let x = 0; x < maze[0].length; x++) {
+                    if (maze[y][x] === 1) {
+                        ctx.fillStyle = 'black';
+                        ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+                    } else {
+                        ctx.fillStyle = 'white';
+                        ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+                    }
+                }
+            }
+
+            // スタート地点を緑で描画
+            ctx.fillStyle = 'green';
+            ctx.fillRect(1 * cellSize, 1 * cellSize, cellSize, cellSize);
+
+
+            // ゴール地点を赤で描画 (右端)
+            ctx.fillStyle = 'red';
+            ctx.fillRect((mazeWidth - 2) * cellSize, (mazeHeight - 2) * cellSize, cellSize, cellSize);
+
+            // 現在位置を水色で描画
+            ctx.fillStyle = 'aqua';
+            ctx.fillRect(currentX * cellSize, currentY * cellSize, cellSize, cellSize);
+        }
+
+
+        function move(dx, dy) {
+            const newX = currentX + dx;
+            const newY = currentY + dy;
+
+            if (newX >= 0 && newX < mazeWidth && newY >= 0 && newY < mazeHeight && maze[newY][newX] === 0) {
+                currentX = newX;
+                currentY = newY;
+                if (currentX === mazeWidth - 2 && currentY === mazeHeight - 2) { // ゴール条件を変更
+                    alert("ゴールに到着！");
+                    resetGame();
+                    return;
+                }
+                drawMaze(maze);
+            }
+        }
+
+        function resetGame() {
+            currentX = 1;
+            currentY = 1;
+            drawMaze(maze);
+        }
+
+
+        generateButton.addEventListener('click', () => {
+            mazeWidth = parseInt(widthInput.value);
+            mazeHeight = parseInt(heightInput.value);
+            maze = generateMaze(mazeWidth, mazeHeight);
+            dig(maze, 1, 1, mazeWidth - 2, mazeHeight - 2)
+                .then(() => {
+                    resetGame();
+                });
+        });
+
+        visualizeButton.addEventListener('click', () => {
+            isVisualizing = true;
+            mazeWidth = parseInt(widthInput.value);
+            mazeHeight = parseInt(heightInput.value);
+            maze = generateMaze(mazeWidth, mazeHeight);
+            dig(maze, 1, 1, mazeWidth - 2, mazeHeight - 2)
+                .then(() => {
+                    resetGame();
+                    isVisualizing = false;
+                });
+        });
+
+        document.addEventListener('keydown', (event) => {
+            switch (event.key) {
+                case 'w':
+                    move(0, -1);
+                    break;
+                case 's':
+                    move(0, 1);
+                    break;
+                case 'a':
+                    move(-1, 0);
+                    break;
+                case 'd':
+                    move(1, 0);
+                    break;
+            }
+        });
+
+        generateButton.click();
+
+    </script>
+</body>
+
+</html>

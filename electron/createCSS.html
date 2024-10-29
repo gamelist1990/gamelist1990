@@ -4,82 +4,302 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create CSS α Version</title>
+    <title>CSS Creator</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        #container {
-            display: flex;
+        body {
+            font-family: sans-serif;
         }
 
         #preview {
-            width: 50%;
-            height: 500px;
-            border: 1px solid black;
-            padding: 20px;
-        }
-
-        #controls {
-            width: 50%;
-            padding: 20px;
-        }
-
-        .control-group {
-            margin-bottom: 10px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        input[type="range"] {
             width: 100%;
+            height: 400px;
+            border: 1px dashed #ccc;
+            position: relative;
+            background-color: #f8f9fa;
+        }
+
+        .block {
+            width: 100px;
+            height: 100px;
+            background-color: red;
+            position: absolute;
+            cursor: move;
+            border: 1px solid #ccc;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+        }
+
+        .block.selected {
+            border: 2px solid blue;
         }
     </style>
 </head>
 
 <body>
 
-    <h1>CSS</h1>
-
-    <div id="container">
-        <div id="preview">
-            <div id="element" style="width: 100px; height: 100px; background-color: red;"></div>
-        </div>
-
-        <div id="controls">
-            <div class="control-group">
-                <label for="width">幅:</label>
-                <input type="range" id="width" min="0" max="300" value="100">
+    <div class="container-fluid mt-5">
+        <div class="row">
+            <div class="col-md-6">
+                <h2>プレビュー</h2>
+                <div id="preview">
+                    <!-- ブロックはここに追加されます -->
+                </div>
             </div>
-
-            <div class="control-group">
-                <label for="height">高さ:</label>
-                <input type="range" id="height" min="0" max="300" value="100">
-            </div>
-
-            <div class="control-group">
-                <label for="bgColor">背景色:</label>
-                <input type="color" id="bgColor" value="#ff0000">
+            <div class="col-md-6">
+                <h2>コントロール</h2>
+                <button id="addBlock" class="btn btn-primary mb-3">ブロックを追加</button>
+                <div id="controls" style="display: none;">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="size-tab" data-toggle="tab" href="#size" role="tab"
+                                aria-controls="size" aria-selected="true">サイズ</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="color-tab" data-toggle="tab" href="#color" role="tab"
+                                aria-controls="color" aria-selected="false">色</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="text-tab" data-toggle="tab" href="#text" role="tab"
+                                aria-controls="text" aria-selected="false">テキスト</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active p-3" id="size" role="tabpanel" aria-labelledby="size-tab">
+                            <div class="form-group">
+                                <label for="blockWidth">幅:</label>
+                                <input type="range" class="form-control-range" id="blockWidth" min="0" max="300"
+                                    value="100">
+                            </div>
+                            <div class="form-group">
+                                <label for="blockHeight">高さ:</label>
+                                <input type="range" class="form-control-range" id="blockHeight" min="0" max="300"
+                                    value="100">
+                            </div>
+                            <div class="form-group">
+                                <label for="blockBorderRadius">角丸:</label>
+                                <input type="range" class="form-control-range" id="blockBorderRadius" min="0" max="50"
+                                    value="0">
+                            </div>
+                        </div>
+                        <div class="tab-pane fade p-3" id="color" role="tabpanel" aria-labelledby="color-tab">
+                            <div class="form-group">
+                                <label for="blockBgColor">背景色:</label>
+                                <input type="color" class="form-control" id="blockBgColor" value="#ff0000">
+                            </div>
+                            <div class="form-group">
+                                <label for="blockTextColor">文字色:</label>
+                                <input type="color" class="form-control" id="blockTextColor" value="#000000">
+                            </div>
+                        </div>
+                        <div class="tab-pane fade p-3" id="text" role="tabpanel" aria-labelledby="text-tab">
+                            <div class="form-group">
+                                <label for="blockFontSize">フォントサイズ:</label>
+                                <input type="range" class="form-control-range" id="blockFontSize" min="10" max="50"
+                                    value="16">
+                            </div>
+                            <div class="form-group">
+                                <label for="blockFontFamily">フォント:</label>
+                                <select class="form-control" id="blockFontFamily">
+                                    <option value="sans-serif">sans-serif</option>
+                                    <option value="serif">serif</option>
+                                    <option value="monospace">monospace</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h2 class="mt-5">生成されたCSSコード</h2>
+                <textarea id="cssCode" class="form-control" readonly style="height: 150px;"></textarea>
+                <button id="copyCss" class="btn btn-success mt-3">CSSをコピー</button>
+                <div id="outputMessage" class="mt-3"></div>
             </div>
         </div>
     </div>
 
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
-        const element = document.getElementById('element');
-        const widthControl = document.getElementById('width');
-        const heightControl = document.getElementById('height');
-        const bgColorControl = document.getElementById('bgColor');
+        $(document).ready(function () {
+            const preview = document.getElementById('preview');
+            const addBlockButton = document.getElementById('addBlock');
+            const controls = document.getElementById('controls');
+            const blockWidthControl = document.getElementById('blockWidth');
+            const blockHeightControl = document.getElementById('blockHeight');
+            const blockBgColorControl = document.getElementById('blockBgColor');
+            const blockBorderRadiusControl = document.getElementById('blockBorderRadius');
+            const blockTextColorControl = document.getElementById('blockTextColor');
+            const blockFontSizeControl = document.getElementById('blockFontSize');
+            const blockFontFamilyControl = document.getElementById('blockFontFamily');
+            const cssCodeArea = document.getElementById('cssCode');
+            const copyCssButton = document.getElementById('copyCss');
+            const outputMessage = document.getElementById('outputMessage');
 
-        widthControl.addEventListener('input', () => {
-            element.style.width = widthControl.value + 'px';
-        });
+            let selectedBlock = null;
+            let blockCount = 0;
 
-        heightControl.addEventListener('input', () => {
-            element.style.height = heightControl.value + 'px';
-        });
+            addBlockButton.addEventListener('click', () => {
+                blockCount++;
+                const block = document.createElement('div');
+                block.classList.add('block');
+                block.id = `block-${blockCount}`;
+                block.style.left = '50px';
+                block.style.top = '50px';
+                block.textContent = `ブロック${blockCount}`;
+                preview.appendChild(block);
 
-        bgColorControl.addEventListener('input', () => {
-            element.style.backgroundColor = bgColorControl.value;
+                block.addEventListener('click', () => {
+                    selectBlock(block);
+                });
+
+                makeDraggable(block);
+                controls.style.display = 'block';
+                selectBlock(block);
+                updateCssCode();
+            });
+
+            function selectBlock(block) {
+                if (selectedBlock) {
+                    selectedBlock.classList.remove('selected');
+                }
+                selectedBlock = block;
+                selectedBlock.classList.add('selected');
+
+                // Update control values
+                blockWidthControl.value = parseInt(block.style.width) || 100;
+                blockHeightControl.value = parseInt(block.style.height) || 100;
+                blockBgColorControl.value = rgbToHex(block.style.backgroundColor) || '#ff0000';
+                blockBorderRadiusControl.value = parseInt(block.style.borderRadius) || 0;
+                blockTextColorControl.value = rgbToHex(block.style.color) || '#000000';
+                blockFontSizeControl.value = parseInt(block.style.fontSize) || 16;
+                blockFontFamilyControl.value = block.style.fontFamily || 'sans-serif';
+
+                updateCssCode();
+            }
+
+            function makeDraggable(element) {
+                let offsetX, offsetY;
+
+                element.addEventListener('mousedown', (e) => {
+                    // ドラッグ開始時にtransitionを無効化
+                    element.style.transition = 'none';
+                    offsetX = e.clientX - element.offsetLeft;
+                    offsetY = e.clientY - element.offsetTop;
+                    document.addEventListener('mousemove', onMouseMove);
+                    document.addEventListener('mouseup', onMouseUp);
+                });
+
+                function onMouseMove(e) {
+                    element.style.left = (e.clientX - offsetX) + 'px';
+                    element.style.top = (e.clientY - offsetY) + 'px';
+                }
+
+                function onMouseUp() {
+                    // ドラッグ終了時にtransitionを再度有効化
+                    element.style.transition = 'all 0.2s ease';
+                    document.removeEventListener('mousemove', onMouseMove);
+                    document.removeEventListener('mouseup', onMouseUp);
+                    // マウスボタンを離したタイミングでCSSを更新
+                    updateCssCode();
+                }
+            }
+
+            // Event listeners for control changes
+            blockWidthControl.addEventListener('input', () => {
+                if (selectedBlock) {
+                    selectedBlock.style.width = blockWidthControl.value + 'px';
+                    updateCssCode();
+                }
+            });
+
+            blockHeightControl.addEventListener('input', () => {
+                if (selectedBlock) {
+                    selectedBlock.style.height = blockHeightControl.value + 'px';
+                    updateCssCode();
+                }
+            });
+
+            blockBgColorControl.addEventListener('input', () => {
+                if (selectedBlock) {
+                    selectedBlock.style.backgroundColor = blockBgColorControl.value;
+                    updateCssCode();
+                }
+            });
+
+            blockBorderRadiusControl.addEventListener('input', () => {
+                if (selectedBlock) {
+                    selectedBlock.style.borderRadius = blockBorderRadiusControl.value + 'px';
+                    updateCssCode();
+                }
+            });
+
+            blockTextColorControl.addEventListener('input', () => {
+                if (selectedBlock) {
+                    selectedBlock.style.color = blockTextColorControl.value;
+                    updateCssCode();
+                }
+            });
+
+            blockFontSizeControl.addEventListener('input', () => {
+                if (selectedBlock) {
+                    selectedBlock.style.fontSize = blockFontSizeControl.value + 'px';
+                    updateCssCode();
+                }
+            });
+
+            blockFontFamilyControl.addEventListener('change', () => {
+                if (selectedBlock) {
+                    selectedBlock.style.fontFamily = blockFontFamilyControl.value;
+                    updateCssCode();
+                }
+            });
+
+            function updateCssCode() {
+                let css = '';
+                const blocks = preview.querySelectorAll('.block');
+                blocks.forEach((block, index) => {
+                    css += `#${block.id} {\n`;
+                    css += `  width: ${block.style.width};\n`;
+                    css += `  height: ${block.style.height};\n`;
+                    css += `  background-color: ${rgbToHex(block.style.backgroundColor)};\n`;
+                    css += `  border-radius: ${block.style.borderRadius};\n`;
+                    css += `  color: ${rgbToHex(block.style.color)};\n`;
+                    css += `  font-size: ${block.style.fontSize};\n`;
+                    css += `  font-family: ${block.style.fontFamily};\n`;
+                    css += `  position: absolute;\n`;
+                    css += `  left: ${block.style.left};\n`;
+                    css += `  top: ${block.style.top};\n`;
+                    css += `}\n\n`;
+                });
+                cssCodeArea.value = css;
+            }
+
+            function rgbToHex(rgb) {
+                if (!rgb) return '#000000'; // Default to black if rgb is not defined
+                rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+                return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+            }
+
+            function hex(x) {
+                const hexDigits = "0123456789abcdef";
+                return isNaN(x) ? "00" : hexDigits[(x - x % 16) / 16] + hexDigits[x % 16];
+            }
+
+            copyCssButton.addEventListener('click', () => {
+                const cssCode = cssCodeArea.value;
+                navigator.clipboard.writeText(cssCode)
+                    .then(() => {
+                        outputMessage.textContent = 'CSSをクリップボードにコピーしました！';
+                    })
+                    .catch(err => {
+                        outputMessage.textContent = 'コピーに失敗しました: ' + err;
+                    });
+            });
         });
     </script>
 

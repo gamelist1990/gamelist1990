@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS Creator</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+
+    #preview {
+      width: 100%;
+      height: 400px;
+      border: 1px dashed #ccc;
+      position: relative;
+      background-color: #f8f9fa;
+    }
+
+    .block {
+      width: 100px;
+      height: 100px;
+      background-color: black;
+      position: absolute;
+      cursor: move;
+      border: 1px solid #ccc;
+      transition: all 0.2s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 16px;
+    }
+
+    .block.selected {
+      border: 2px solid blue;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container-fluid mt-5">
+    <div class="row">
+      <div class="col-md-6">
+        <h2>プレビュー</h2>
+        <div id="preview">
+          <!-- ブロックはここに追加されます -->
+        </div>
+      </div>
+      <div class="col-md-6">
+        <h2>コントロール</h2>
+        <button id="addBlock" class="btn btn-primary mb-3">ブロックを追加</button>
+        <div id="controls" style="display: none;">
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="size-tab" data-toggle="tab" href="#size" role="tab" aria-controls="size"
+                aria-selected="true">サイズ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="color-tab" data-toggle="tab" href="#color" role="tab" aria-controls="color"
+                aria-selected="false">色</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="text-tab" data-toggle="tab" href="#text" role="tab" aria-controls="text"
+                aria-selected="false">テキスト</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="transform-tab" data-toggle="tab" href="#transform" role="tab"
+                aria-controls="transform" aria-selected="false">変形</a>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active p-3" id="size" role="tabpanel" aria-labelledby="size-tab">
+              <div class="form-group">
+                <label for="blockWidth">幅:</label>
+                <input type="range" class="form-control-range" id="blockWidth" min="0" max="300" value="100">
+              </div>
+              <div class="form-group">
+                <label for="blockHeight">高さ:</label>
+                <input type="range" class="form-control-range" id="blockHeight" min="0" max="300" value="100">
+              </div>
+              <div class="form-group">
+                <label for="blockBorderRadius">角丸:</label>
+                <input type="range" class="form-control-range" id="blockBorderRadius" min="0" max="50" value="0">
+              </div>
+            </div>
+            <div class="tab-pane fade p-3" id="color" role="tabpanel" aria-labelledby="color-tab">
+              <div class="form-group">
+                <label for="blockBgColor">背景色:</label>
+                <input type="color" class="form-control" id="blockBgColor" value="#ff0000">
+              </div>
+              <div class="form-group">
+                <label for="blockTextColor">文字色:</label>
+                <input type="color" class="form-control" id="blockTextColor" value="#000000">
+              </div>
+            </div>
+            <div class="tab-pane fade p-3" id="text" role="tabpanel" aria-labelledby="text-tab">
+              <div class="form-group">
+                <label for="blockFontSize">フォントサイズ:</label>
+                <input type="range" class="form-control-range" id="blockFontSize" min="10" max="50" value="16">
+              </div>
+              <div class="form-group">
+                <label for="blockFontFamily">フォント:</label>
+                <select class="form-control" id="blockFontFamily">
+                  <option value="sans-serif">sans-serif</option>
+                  <option value="serif">serif</option>
+                  <option value="monospace">monospace</option>
+                </select>
+              </div>
+            </div>
+            <div class="tab-pane fade p-3" id="transform" role="tabpanel" aria-labelledby="transform-tab">
+              <div class="form-group">
+                <label for="blockSkewX">斜めX:</label>
+                <input type="range" class="form-control-range" id="blockSkewX" min="-90" max="90" value="0">
+              </div>
+              <div class="form-group">
+                <label for="blockSkewY">斜めY:</label>
+                <input type="range" class="form-control-range" id="blockSkewY" min="-90" max="90" value="0">
+              </div>
+            </div>
+          </div>
+        </div>
+        <h2 class="mt-5">生成されたCSSコード</h2>
+        <textarea id="cssCode" class="form-control" readonly style="height: 150px;"></textarea>
+        <button id="copyCss" class="btn btn-success mt-3">CSSをコピー</button>
+        <div id="outputMessage" class="mt-3"></div>
+
+        <h2 class="mt-5">HTMLコード</h2>
+        <textarea id="htmlCode" class="form-control" readonly style="height: 150px;"></textarea>
+        <button id="copyHtml" class="btn btn-success mt-3">HTMLをコピー</button>
+        <div id="outputMessageHtml" class="mt-3"></div>
+      </div>
+    </div>
+  </div>
+
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      const preview = document.getElementById('preview');
+      const addBlockButton = document.getElementById('addBlock');
+      const controls = document.getElementById('controls');
+      const blockWidthControl = document.getElementById('blockWidth');
+      const blockHeightControl = document.getElementById('blockHeight');
+      const blockBgColorControl = document.getElementById('blockBgColor');
+      const blockBorderRadiusControl = document.getElementById('blockBorderRadius');
+      const blockTextColorControl = document.getElementById('blockTextColor');
+      const blockFontSizeControl = document.getElementById('blockFontSize');
+      const blockFontFamilyControl = document.getElementById('blockFontFamily');
+      const blockSkewXControl = document.getElementById('blockSkewX');
+      const blockSkewYControl = document.getElementById('blockSkewY');
+      const cssCodeArea = document.getElementById('cssCode');
+      const copyCssButton = document.getElementById('copyCss');
+      const outputMessage = document.getElementById('outputMessage');
+      const htmlCodeArea = document.getElementById('htmlCode');
+      const copyHtmlButton = document.getElementById('copyHtml');
+      const outputMessageHtml = document.getElementById('outputMessageHtml');
+
+      let selectedBlock = null;
+      let blockCount = 0;
+
+      addBlockButton.addEventListener('click', () => {
+        blockCount++;
+        const block = document.createElement('div');
+        block.classList.add('block');
+        block.id = `block-${blockCount}`;
+        block.style.left = '50px';
+        block.style.top = '50px';
+        block.textContent = `ブロック${blockCount}`;
+        preview.appendChild(block);
+
+        block.addEventListener('click', () => {
+          selectBlock(block);
+        });
+
+        makeDraggable(block);
+        controls.style.display = 'block';
+        selectBlock(block);
+        updateCssCode();
+        updateHtmlCode();
+      });
+
+      function selectBlock(block) {
+        if (selectedBlock) {
+          selectedBlock.classList.remove('selected');
+        }
+        selectedBlock = block;
+        selectedBlock.classList.add('selected');
+
+        // Update control values with checks for null
+        blockWidthControl.value = parseInt(block.style.width) || 100;
+        blockHeightControl.value = parseInt(block.style.height) || 100;
+        blockBgColorControl.value = block.style.backgroundColor ? rgbToHex(block.style.backgroundColor) : '#ff0000';
+        blockBorderRadiusControl.value = parseInt(block.style.borderRadius) || 0;
+        blockTextColorControl.value = block.style.color ? rgbToHex(block.style.color) : '#000000';
+        blockFontSizeControl.value = parseInt(block.style.fontSize) || 16;
+        blockFontFamilyControl.value = block.style.fontFamily || 'sans-serif';
+        blockSkewXControl.value = parseInt(block.style.transform.replace(/[^-\d]/g, '')) || 0;
+        blockSkewYControl.value = parseInt(block.style.transform.replace(/[^-\d]/g, '')) || 0;
+
+        updateCssCode();
+        updateHtmlCode();
+      }
+
+      function makeDraggable(element) {
+        let offsetX, offsetY;
+
+        element.addEventListener('mousedown', (e) => {
+          // ドラッグ開始時にtransitionを無効化
+          element.style.transition = 'none';
+          offsetX = e.clientX - element.offsetLeft;
+          offsetY = e.clientY - element.offsetTop;
+          document.addEventListener('mousemove', onMouseMove);
+          document.addEventListener('mouseup', onMouseUp);
+        });
+
+        function onMouseMove(e) {
+          element.style.left = (e.clientX - offsetX) + 'px';
+          element.style.top = (e.clientY - offsetY) + 'px';
+        }
+
+        function onMouseUp() {
+          // ドラッグ終了時にtransitionを再度有効化
+          element.style.transition = 'all 0.2s ease';
+          document.removeEventListener('mousemove', onMouseMove);
+          document.removeEventListener('mouseup', onMouseUp);
+          // マウスボタンを離したタイミングでCSSを更新
+          updateCssCode();
+          updateHtmlCode();
+        }
+      }
+
+
+      // Event listeners for control changes
+      blockWidthControl.addEventListener('input', () => {
+        if (selectedBlock) {
+          selectedBlock.style.width = blockWidthControl.value + 'px';
+          updateCssCode();
+          updateHtmlCode();
+        }
+      });
+
+      blockHeightControl.addEventListener('input', () => {
+        if (selectedBlock) {
+          selectedBlock.style.height = blockHeightControl.value + 'px';
+          updateCssCode();
+          updateHtmlCode();
+        }
+      });
+
+      blockBgColorControl.addEventListener('input', () => {
+        if (selectedBlock) {
+          selectedBlock.style.backgroundColor = blockBgColorControl.value;
+          updateCssCode();
+          updateHtmlCode();
+        }
+      });
+
+      blockBorderRadiusControl.addEventListener('input', () => {
+        if (selectedBlock) {
+          selectedBlock.style.borderRadius = blockBorderRadiusControl.value + 'px';
+          updateCssCode();
+          updateHtmlCode();
+        }
+      });
+
+      blockTextColorControl.addEventListener('input', () => {
+        if (selectedBlock) {
+          selectedBlock.style.color = blockTextColorControl.value;
+          updateCssCode();
+          updateHtmlCode();
+        }
+      });
+
+      blockFontSizeControl.addEventListener('input', () => {
+        if (selectedBlock) {
+          selectedBlock.style.fontSize = blockFontSizeControl.value + 'px';
+          updateCssCode();
+          updateHtmlCode();
+        }
+      });
+
+      blockFontFamilyControl.addEventListener('change', () => {
+        if (selectedBlock) {
+          selectedBlock.style.fontFamily = blockFontFamilyControl.value;
+          updateCssCode();
+          updateHtmlCode();
+        }
+      });
+
+      blockSkewXControl.addEventListener('input', () => {
+        if (selectedBlock) {
+          selectedBlock.style.transform = `skewX(${blockSkewXControl.value}deg) skewY(${blockSkewYControl.value}deg)`;
+          updateCssCode();
+          updateHtmlCode();
+        }
+      });
+
+      blockSkewYControl.addEventListener('input', () => {
+        if (selectedBlock) {
+          selectedBlock.style.transform = `skewX(${blockSkewXControl.value}deg) skewY(${blockSkewYControl.value}deg)`;
+          updateCssCode();
+          updateHtmlCode();
+        }
+      });
+
+
+      function updateCssCode() {
+        let css = '';
+        const blocks = preview.querySelectorAll('.block');
+        blocks.forEach((block, index) => {
+          css += `#${block.id} {\n`;
+          if (block.style.width) css += `  width: ${block.style.width};\n`;
+          if (block.style.height) css += `  height: ${block.style.height};\n`;
+          if (block.style.backgroundColor) css += `  background-color: ${rgbToHex(block.style.backgroundColor)};\n`;
+          if (block.style.borderRadius) css += `  border-radius: ${block.style.borderRadius};\n`;
+          if (block.style.color) css += `  color: ${rgbToHex(block.style.color)};\n`;
+          if (block.style.fontSize) css += `  font-size: ${block.style.fontSize};\n`;
+          if (block.style.fontFamily) css += `  font-family: ${block.style.fontFamily};\n`;
+          if (block.style.transform) css += `  transform: ${block.style.transform};\n`;
+          css += `  position: absolute;\n`;
+          css += `  left: ${block.style.left};\n`;
+          css += `  top: ${block.style.top};\n`;
+          css += `}\n\n`;
+        });
+        cssCodeArea.value = css;
+      }
+
+      function rgbToHex(rgb) {
+        if (!rgb) return '#000000'; // Default to black if rgb is not defined
+        rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+        return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+      }
+
+      function hex(x) {
+        const hexDigits = "0123456789abcdef";
+        return isNaN(x) ? "00" : hexDigits[(x - x % 16) / 16] + hexDigits[x % 16];
+      }
+
+      copyCssButton.addEventListener('click', () => {
+        const cssCode = cssCodeArea.value;
+        navigator.clipboard.writeText(cssCode)
+          .then(() => {
+            outputMessage.textContent = 'CSSをクリップボードにコピーしました！';
+          })
+          .catch(err => {
+            outputMessage.textContent = 'コピーに失敗しました: ' + err;
+          });
+      });
+
+      function updateHtmlCode() {
+        let html = '';
+        const blocks = preview.querySelectorAll('.block');
+        blocks.forEach((block, index) => {
+          html += `<div id="${block.id}" style="
+                        width: ${block.style.width};
+                        height: ${block.style.height};
+                        background-color: ${rgbToHex(block.style.backgroundColor)};
+                        border-radius: ${block.style.borderRadius};
+                        color: ${rgbToHex(block.style.color)};
+                        font-size: ${block.style.fontSize};
+                        font-family: ${block.style.fontFamily};
+                        position: absolute;
+                        left: ${block.style.left};
+                        top: ${block.style.top};
+                        transform: ${block.style.transform};
+                    ">${block.textContent}</div>\n`;
+        });
+        htmlCodeArea.value = html;
+      }
+
+      copyHtmlButton.addEventListener('click', () => {
+        const htmlCode = htmlCodeArea.value;
+        navigator.clipboard.writeText(htmlCode)
+          .then(() => {
+            outputMessageHtml.textContent = 'HTMLをクリップボードにコピーしました！';
+          })
+          .catch(err => {
+            outputMessageHtml.textContent = 'コピーに失敗しました: ' + err;
+          });
+      });
+    });
+  </script>
+
+</body>
+
+</html>

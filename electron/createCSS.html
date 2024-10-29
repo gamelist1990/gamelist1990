@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create CSS α Version</title>
+    <style>
+        #container {
+            display: flex;
+        }
+
+        #preview {
+            width: 50%;
+            height: 500px;
+            border: 1px solid black;
+            padding: 20px;
+        }
+
+        #controls {
+            width: 50%;
+            padding: 20px;
+        }
+
+        .control-group {
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>CSS</h1>
+
+    <div id="container">
+        <div id="preview">
+            <div id="element" style="width: 100px; height: 100px; background-color: red;"></div>
+        </div>
+
+        <div id="controls">
+            <div class="control-group">
+                <label for="width">幅:</label>
+                <input type="range" id="width" min="0" max="300" value="100">
+            </div>
+
+            <div class="control-group">
+                <label for="height">高さ:</label>
+                <input type="range" id="height" min="0" max="300" value="100">
+            </div>
+
+            <div class="control-group">
+                <label for="bgColor">背景色:</label>
+                <input type="color" id="bgColor" value="#ff0000">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const element = document.getElementById('element');
+        const widthControl = document.getElementById('width');
+        const heightControl = document.getElementById('height');
+        const bgColorControl = document.getElementById('bgColor');
+
+        widthControl.addEventListener('input', () => {
+            element.style.width = widthControl.value + 'px';
+        });
+
+        heightControl.addEventListener('input', () => {
+            element.style.height = heightControl.value + 'px';
+        });
+
+        bgColorControl.addEventListener('input', () => {
+            element.style.backgroundColor = bgColorControl.value;
+        });
+    </script>
+
+</body>
+
+</html>

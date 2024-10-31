@@ -3,476 +3,304 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>不思議な森の冒険</title>
+    <title>テトリス</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             min-height: 100vh;
-            background-color: #f0f0f0;
+            background-color: #e0e0e0;
             margin: 0;
+            font-family: sans-serif;
         }
 
-        /* タイトル */
-        h1 {
-            margin-bottom: 20px;
-            font-size: 3em;
-            color: #333;
-            text-shadow: 2px 2px 4px #ddd;
+        canvas {
+            border: 2px solid #333;
+            background-color: #f0f0f0;
         }
 
-        /* メインゲームエリア */
-        #game-area {
+        .container {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
-        /* 木 */
-        #tree {
-            width: 250px;
-            height: 350px;
-            background-image: url('https://png.pngtree.com/png-clipart/20220823/original/pngtree-oak-tree-on-a-transparent-background-png-image_8474102.png');
-            /* 木の画像を設定 */
-            background-size: cover;
-            background-position: center;
-            position: relative;
-            cursor: pointer;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            margin-bottom: 20px;
-        }
-
-        /* ポイント */
-        #points {
-            font-size: 24px;
-            margin-bottom: 10px;
-            color: #333;
-            text-shadow: 2px 2px 4px #ddd;
-        }
-
-        /* アップグレードセクション */
-        .upgrade-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 20px;
-        }
-
-        /* アップグレードカード */
-        .upgrade-card {
-            display: flex;
-            align-items: center;
-            width: 250px;
-            padding: 15px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 10px;
-            transition: box-shadow 0.2s ease-in-out;
-        }
-
-        /* アップグレードカード ホバー */
-        .upgrade-card:hover {
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        /* アップグレードアイコン */
-        .upgrade-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #ddd;
-            margin-right: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* アップグレードテキスト */
-        .upgrade-text {
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        /* アップグレードボタン */
-        .upgrade-button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 8px 15px;
-            cursor: pointer;
-            transition: background-color 0.2s ease-in-out;
-            font-weight: bold;
-        }
-
-        /* アップグレードボタン ホバー */
-        .upgrade-button:hover {
-            background-color: #45a049;
-        }
-
-        /* メッセージ */
-        #message {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 15px;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: white;
-            border-radius: 5px;
+        .right-panel {
+            margin-left: 20px;
             text-align: center;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
-            pointer-events: none;
         }
 
-        #message.show {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        /* クエストエリア */
-        #quests {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 20px;
-        }
-
-        /* クエストカード */
-        .quest-card {
-            display: flex;
-            align-items: center;
-            width: 250px;
-            padding: 15px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        .right-panel h2 {
             margin-bottom: 10px;
-            transition: box-shadow 0.2s ease-in-out;
         }
 
-        /* クエストカード ホバー */
-        .quest-card:hover {
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        /* クエスト アイコン */
-        .quest-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #ddd;
-            margin-right: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* クエスト テキスト */
-        .quest-text {
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        /* クエスト ボタン */
-        .quest-button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
+        .controls button {
+            font-size: 16px;
+            margin: 5px;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
             border-radius: 5px;
-            padding: 8px 15px;
+            background-color: #f5f5f5;
             cursor: pointer;
-            transition: background-color 0.2s ease-in-out;
-            font-weight: bold;
         }
 
-        /* クエスト ボタン ホバー */
-        .quest-button:hover {
-            background-color: #45a049;
+        .controls button:hover {
+            background-color: #e0e0e0;
         }
 
-        /* 敵 (クモ) */
-        #enemy {
-            width: 100px;
-            height: 100px;
-            background-image: url('spider.png');
-            /* 敵の画像を設定 */
-            background-size: cover;
-            background-position: center;
-            position: absolute;
-            top: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            /* 最初は非表示 */
-            transition: opacity 0.5s ease-in-out;
-            animation: enemy-move 3s linear infinite;
-        }
-
-        #enemy.show {
-            opacity: 1;
-        }
-
-        @keyframes enemy-move {
-            0% {
-                transform: translateX(-50%) translateY(0);
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
             }
 
-            50% {
-                transform: translateX(-50%) translateY(10px);
-            }
-
-            100% {
-                transform: translateX(-50%) translateY(0);
+            .right-panel {
+                margin-top: 20px;
+                margin-left: 0;
             }
         }
     </style>
 </head>
 
 <body>
-    <h1>不思議な森の冒険</h1>
-
-    <div id="game-area">
-        <div id="tree"></div>
-        <div id="points">ポイント: 0</div>
-
-        <div class="upgrade-section">
-            <div class="upgrade-card">
-                <div class="upgrade-icon" style="background-color: #ffbb33;">🌲</div>
-                <div class="upgrade-text">木を強化</div>
-                <button class="upgrade-button" id="upgradeTree">強化する</button>
+    <div class="container">
+        <canvas id="gameCanvas" width="300" height="600"></canvas>
+        <div class="right-panel">
+            <h2>テトリス</h2>
+            <div class="controls">
+                <button onclick="rotate()">回転</button><br>
+                <button onclick="moveLeft()">左</button>
+                <button onclick="moveDown()">下</button>
+                <button onclick="moveRight()">右</button><br>
+                <button onclick="drop()">ドロップ</button>
             </div>
-
-            <div class="upgrade-card">
-                <div class="upgrade-icon" style="background-color: #00bcd4;">🍎</div>
-                <div class="upgrade-text">果実を強化</div>
-                <button class="upgrade-button" id="upgradeFruit">強化する</button>
-            </div>
-
-            <div class="upgrade-card">
-                <div class="upgrade-icon" style="background-color: #673ab7;">🌱</div>
-                <div class="upgrade-text">種を購入</div>
-                <button class="upgrade-button" id="buySeed">購入する</button>
-            </div>
-        </div>
-
-        <div id="quests">
-            <div class="quest-card" id="quest1">
-                <div class="quest-icon" style="background-color: #e91e63;">🏆</div>
-                <div class="quest-text">100ポイント貯める</div>
-                <button class="quest-button" id="completeQuest1" disabled>達成</button>
-            </div>
-            <div class="quest-card" id="quest2">
-                <div class="quest-icon" style="background-color: #009688;">🏆</div>
-                <div class="quest-text">3匹のクモを倒す</div>
-                <button class="quest-button" id="completeQuest2" disabled>達成</button>
-            </div>
+            <div id="score">スコア: 0</div>
         </div>
     </div>
 
-    <div id="message"></div>
-    <div id="enemy"></div>
-
     <script>
-        let points = 0;
-        let treeLevel = 1;
-        let fruitLevel = 1;
-        let seedPrice = 10;
-        let seedOwned = 1;
-        let upgradeTreeCost = 10;
-        let upgradeFruitCost = 20;
-        let enemyHealth = 10;
-        let attackPower = 1;
-        let enemiesDefeated = 0;
-        let currentSeed = "basic"; // 現在の種の種類
-        let fruitBonus = 1; // 果実のボーナス
-        let quest1Completed = false;
-        let quest2Completed = false;
-        const pointsElement = document.getElementById('points');
-        const treeElement = document.getElementById('tree');
-        const upgradeTreeButton = document.getElementById('upgradeTree');
-        const upgradeFruitButton = document.getElementById('upgradeFruit');
-        const buySeedButton = document.getElementById('buySeed');
-        const messageElement = document.getElementById('message');
-        const enemyElement = document.getElementById('enemy');
-        const completeQuest1Button = document.getElementById('completeQuest1');
-        const completeQuest2Button = document.getElementById('completeQuest2');
+        // JavaScriptコード (変更なし)
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const ROWS = 20;
+        const COLS = 10;
+        const SQUARE_SIZE = 30;
+        let score = 0;
+        const scoreDisplay = document.getElementById('score');
 
-        // クエストの状態を更新
-        function updateQuest(questId, completed) {
-            if (completed) {
-                document.getElementById(questId).classList.add("completed");
-                document.getElementById(`complete${questId}`).disabled = true;
-            } else {
-                document.getElementById(questId).classList.remove("completed");
-                document.getElementById(`complete${questId}`).disabled = false;
+
+
+        const SHAPES = [
+            [[1, 1, 1, 1]], // I
+            [[1, 1, 1], [0, 1, 0]], // T
+            [[1, 1], [1, 1]], // O
+            [[1, 1], [0, 1, 1]], // Z
+            [[0, 1, 1], [1, 1]], // S
+            [[1, 1, 0], [0, 1, 1]], // J
+            [[0, 1, 0], [1, 1, 1]] // L
+        ];
+
+        let currentShape = getRandomShape();
+        let currentX = 3;
+        let currentY = -2; // Start above the visible area
+
+        let board = [];
+        for (let r = 0; r < ROWS; r++) {
+            board[r] = [];
+            for (let c = 0; c < COLS; c++) {
+                board[r][c] = 'white';
             }
         }
 
-        function updatePoints() {
-            pointsElement.textContent = `ポイント: ${points}`;
+        function getRandomShape() {
+            return SHAPES[Math.floor(Math.random() * SHAPES.length)];
         }
 
-        function showMessage(message) {
-            messageElement.textContent = message;
-            messageElement.classList.add('show');
-            setTimeout(() => {
-                messageElement.classList.remove('show');
-            }, 1500);
+        function drawSquare(x, y, color) {
+            ctx.fillStyle = color;
+            ctx.fillRect(x * SQUARE_SIZE, y * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
+            ctx.strokeStyle = 'white';
+            ctx.strokeRect(x * SQUARE_SIZE, y * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
         }
 
-        function fightEnemy() {
-            enemyHealth -= attackPower;
-            showMessage(`敵に ${attackPower} ダメージを与えた！`);
-
-            if (enemyHealth <= 0) {
-                showMessage("敵を倒した！");
-                enemyElement.classList.remove('show');
-                enemiesDefeated++;
-
-                // クエスト 2 の達成状況を確認
-                if (enemiesDefeated >= 3 && !quest2Completed) {
-                    showMessage("クエスト 2 達成！ 種の選択画面が開きます。");
-                    quest2Completed = true;
-                    updateQuest("quest2", true);
+        function drawBoard() {
+            for (let r = 0; r < ROWS; r++) {
+                for (let c = 0; c < COLS; c++) {
+                    drawSquare(c, r, board[r][c]);
                 }
-
-                // 敵を倒した時の処理 (報酬や次の敵の出現など)
-            } else {
-                showMessage(`敵の HP: ${enemyHealth}`);
             }
         }
 
-        function spawnEnemy() {
-            enemyHealth = 10;
-            enemyElement.classList.add('show');
-            // 敵出現時のイベント処理を追加
-        }
-
-        function changeSeed() {
-            const newSeed = prompt("次の種を選んでください: basic, red, blue");
-            if (newSeed === "basic" || newSeed === "red" || newSeed === "blue") {
-                currentSeed = newSeed;
-                showMessage(`新しい種：${currentSeed}`);
-            } else {
-                showMessage("無効な種です。");
+        function drawShape() {
+            for (let y = 0; y < currentShape.length; y++) {
+                for (let x = 0; x < currentShape[y].length; x++) {
+                    if (currentShape[y][x]) {
+                        drawSquare(currentX + x, currentY + y, 'red');
+                    }
+                }
             }
         }
 
-        treeElement.addEventListener('click', () => {
-            let fruitGain = 1 * treeLevel * fruitLevel * fruitBonus; // 種のボーナス適用
-            points += fruitGain;
-            updatePoints();
 
-            // クエスト 1 の達成状況を確認
-            if (points >= 100 && !quest1Completed) {
-                showMessage("クエスト 1 達成！ 果実のボーナスアップ！");
-                fruitBonus *= 1.5;
-                quest1Completed = true;
-                updateQuest("quest1", true);
+        function undrawShape() {
+            for (let y = 0; y < currentShape.length; y++) {
+                for (let x = 0; x < currentShape[y].length; x++) {
+                    if (currentShape[y][x]) {
+                        drawSquare(currentX + x, currentY + y, 'white');
+                    }
+                }
             }
-
-            // 木が成長するアニメーション
-            treeElement.style.transition = 'transform 0.3s ease-in-out';
-            treeElement.style.transform = 'scale(1.1)';
-            setTimeout(() => {
-                treeElement.style.transform = 'scale(1)';
-            }, 300);
-
-            // ランダムな確率で敵出現
-            if (Math.random() < 0.2) {
-                spawnEnemy();
-            }
-        });
-
-        upgradeTreeButton.addEventListener('click', () => {
-            if (points >= upgradeTreeCost) {
-                points -= upgradeTreeCost;
-                treeLevel += 1;
-                upgradeTreeCost *= 1.5;
-                updatePoints();
-                showMessage("木が成長しました！");
-                // 木を大きくするアニメーション
-                treeElement.style.width = (treeElement.offsetWidth + 10) + 'px';
-                treeElement.style.height = (treeElement.offsetHeight + 10) + 'px';
-            } else {
-                showMessage("ポイントが足りません！");
-            }
-        });
-
-        upgradeFruitButton.addEventListener('click', () => {
-            if (points >= upgradeFruitCost) {
-                points -= upgradeFruitCost;
-                fruitLevel += 1;
-                upgradeFruitCost *= 1.5;
-                updatePoints();
-                showMessage("果実が大きくなりました！");
-            } else {
-                showMessage("ポイントが足りません！");
-            }
-        });
-
-        buySeedButton.addEventListener('click', () => {
-            if (points >= seedPrice && seedOwned < 5) {
-                points -= seedPrice;
-                seedOwned += 1;
-                seedPrice *= 1.5;
-                updatePoints();
-                showMessage("新しい種を手に入れました！");
-            } else if (points < seedPrice) {
-                showMessage("ポイントが足りません！");
-            } else {
-                showMessage("種は最大5個までです！");
-            }
-        });
-
-        completeQuest1Button.addEventListener('click', () => {
-            if (points >= 100) {
-                showMessage("クエスト 1 達成！ 果実のボーナスアップ！");
-                fruitBonus *= 1.5;
-                quest1Completed = true;
-                updateQuest("quest1", true);
-            } else {
-                showMessage("ポイントが足りません！");
-            }
-        });
-
-        completeQuest2Button.addEventListener('click', () => {
-            if (enemiesDefeated >= 3) {
-                showMessage("クエスト 2 達成！ 種の選択画面が開きます。");
-                changeSeed();
-                quest2Completed = true;
-                updateQuest("quest2", true);
-            } else {
-                showMessage("クモをもっと倒してください！");
-            }
-        });
-
-        // 種ごとの果実のボーナス設定
-        if (currentSeed === "red") {
-            fruitBonus = 1.2;
-            showMessage("赤色の種: 果実のボーナスアップ！");
-        } else if (currentSeed === "blue") {
-            fruitBonus = 1.3;
-            showMessage("青色の種: 果実のボーナスアップ！");
         }
 
-        // ゲーム開始時のクエスト設定
-        updateQuest("quest1", false);
-        updateQuest("quest2", false);
+
+        function moveDown() {
+            if (!collision(0, 1)) {
+                undrawShape();
+                currentY++;
+                drawShape();
+            } else {
+                lockShape();
+                currentShape = getRandomShape();
+                currentX = 3;
+                currentY = -2;
+            }
+        }
+        let gameInterval = setInterval(moveDown, 1000);
+
+
+
+        function moveLeft() {
+            if (!collision(-1, 0)) {
+                undrawShape();
+                currentX--;
+                drawShape();
+            }
+        }
+
+        function moveRight() {
+            if (!collision(1, 0)) {
+                undrawShape();
+                currentX++;
+                drawShape();
+            }
+        }
+
+        function rotate() {
+            undrawShape();
+            const rotatedShape = [];
+            for (let x = 0; x < currentShape[0].length; x++) {
+                rotatedShape[x] = [];
+                for (let y = currentShape.length - 1; y >= 0; y--) {
+                    rotatedShape[x].push(currentShape[y][x]);
+                }
+            }
+
+            if (!collision(0, 0, rotatedShape)) {
+                currentShape = rotatedShape;
+            }
+            drawShape();
+        }
+
+
+        function drop() {
+            while (!collision(0, 1)) {
+                moveDown();
+            }
+        }
+
+        function collision(offsetX = 0, offsetY = 0, shape = currentShape) {
+            for (let y = 0; y < shape.length; y++) {
+                for (let x = 0; x < shape[y].length; x++) {
+                    if (shape[y][x]) {
+                        let nextX = currentX + x + offsetX;
+                        let nextY = currentY + y + offsetY;
+
+                        if (nextX < 0 || nextX >= COLS || nextY >= ROWS || (nextY >= 0 && board[nextY][nextX] !== 'white')) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        function lockShape() {
+            for (let y = 0; y < currentShape.length; y++) {
+                for (let x = 0; x < currentShape[y].length; x++) {
+                    if (currentShape[y][x]) {
+                        if (currentY + y < 0) {
+                            // Game Over!
+                            alert("Game Over!");
+                            clearInterval(gameInterval)
+                            board = [];
+                            for (let r = 0; r < ROWS; r++) {
+                                board[r] = [];
+                                for (let c = 0; c < COLS; c++) {
+                                    board[r][c] = 'white';
+                                }
+                            }
+                            score = 0;
+                            scoreDisplay.textContent = "スコア: " + score;
+
+                            break;
+                        }
+
+                        board[currentY + y][currentX + x] = 'red';
+                    }
+                }
+            }
+            checkCompletedRows();
+        }
+        function checkCompletedRows() {
+            let completedRows = 0;
+            for (let y = 0; y < ROWS; y++) {
+                let isRowFull = true;
+                for (let x = 0; x < COLS; x++) {
+                    if (board[y][x] === 'white') {
+                        isRowFull = false;
+                        break;
+                    }
+                }
+                if (isRowFull) {
+                    completedRows++;
+                    // Remove the row and shift everything down
+                    for (let r = y; r > 0; r--) {
+                        for (let c = 0; c < COLS; c++) {
+                            board[r][c] = board[r - 1][c];
+                        }
+                    }
+                    // Clear the very top row
+                    for (let c = 0; c < COLS; c++) {
+                        board[0][c] = 'white';
+                    }
+
+                }
+            }
+            if (completedRows > 0) {
+                score += completedRows * 10;
+                scoreDisplay.textContent = "スコア: " + score;
+            }
+
+        }
+
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'w' || event.key === 'ArrowUp') {
+                rotate();
+            } else if (event.key === 'a' || event.key === 'ArrowLeft') {
+                moveLeft();
+            } else if (event.key === 'd' || event.key === 'ArrowRight') {
+                moveRight();
+            } else if (event.key === 's' || event.key === 'ArrowDown') {
+                moveDown();
+            } else if (event.key === ' ') {
+                drop();
+            }
+        });
+
+        drawBoard();
+        drawShape();
+
+
     </script>
 </body>
 

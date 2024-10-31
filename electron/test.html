@@ -3,440 +3,305 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CSS Creator</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <title>テトリス</title>
   <style>
     body {
-      font-family: sans-serif;
-    }
-
-    #preview {
-      width: 100%;
-      height: 400px;
-      border: 1px dashed #ccc;
-      position: relative;
-      background-color: #f8f9fa;
-    }
-
-    .block {
-      width: 100px;
-      height: 100px;
-      background-color: black;
-      position: absolute;
-      cursor: move;
-      border: 1px solid #ccc;
-      transition: all 0.2s ease;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 16px;
+      min-height: 100vh;
+      background-color: #e0e0e0;
+      margin: 0;
+      font-family: sans-serif;
     }
 
-    .block.selected {
-      border: 2px solid blue;
+    canvas {
+      border: 2px solid #333;
+      background-color: #f0f0f0;
+    }
+
+    .container {
+      display: flex;
+    }
+
+    .right-panel {
+      margin-left: 20px;
+      text-align: center;
+    }
+
+    .right-panel h2 {
+      margin-bottom: 10px;
+    }
+
+    .controls button {
+      font-size: 16px;
+      margin: 5px;
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #f5f5f5;
+      cursor: pointer;
+    }
+
+    .controls button:hover {
+      background-color: #e0e0e0;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .right-panel {
+        margin-top: 20px;
+        margin-left: 0;
+      }
     }
   </style>
 </head>
 
 <body>
-
-  <div class="container-fluid mt-5">
-    <div class="row">
-      <div class="col-md-6">
-        <h2>プレビュー</h2>
-        <div id="preview">
-          <!-- ブロックはここに追加されます -->
-        </div>
+  <div class="container">
+    <canvas id="gameCanvas" width="300" height="600"></canvas>
+    <div class="right-panel">
+      <h2>テトリス</h2>
+      <div class="controls">
+        <button onclick="rotate()">回転</button><br>
+        <button onclick="moveLeft()">左</button>
+        <button onclick="moveDown()">下</button>
+        <button onclick="moveRight()">右</button><br>
+        <button onclick="drop()">ドロップ</button>
       </div>
-      <div class="col-md-6">
-        <h2>コントロール</h2>
-        <button id="addBlock" class="btn btn-primary mb-3">ブロックを追加</button>
-        <div id="controls" style="display: none;">
-          <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item">
-              <a class="nav-link active" id="size-tab" data-toggle="tab" href="#size" role="tab" aria-controls="size"
-                aria-selected="true">サイズ</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" id="color-tab" data-toggle="tab" href="#color" role="tab" aria-controls="color"
-                aria-selected="false">色</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" id="text-tab" data-toggle="tab" href="#text" role="tab" aria-controls="text"
-                aria-selected="false">テキスト</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" id="transform-tab" data-toggle="tab" href="#transform" role="tab"
-                aria-controls="transform" aria-selected="false">変形</a>
-            </li>
-          </ul>
-          <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active p-3" id="size" role="tabpanel" aria-labelledby="size-tab">
-              <div class="form-group">
-                <label for="blockWidth">幅:</label>
-                <input type="range" class="form-control-range" id="blockWidth" min="0" max="300" value="100">
-              </div>
-              <div class="form-group">
-                <label for="blockHeight">高さ:</label>
-                <input type="range" class="form-control-range" id="blockHeight" min="0" max="300" value="100">
-              </div>
-              <div class="form-group">
-                <label for="blockBorderRadius">角丸:</label>
-                <input type="range" class="form-control-range" id="blockBorderRadius" min="0" max="50" value="0">
-              </div>
-            </div>
-            <div class="tab-pane fade p-3" id="color" role="tabpanel" aria-labelledby="color-tab">
-              <div class="form-group">
-                <label for="blockBgColor">背景色:</label>
-                <input type="color" class="form-control" id="blockBgColor" value="#ff0000">
-              </div>
-              <div class="form-group">
-                <label for="blockTextColor">文字色:</label>
-                <input type="color" class="form-control" id="blockTextColor" value="#000000">
-              </div>
-            </div>
-            <div class="tab-pane fade p-3" id="text" role="tabpanel" aria-labelledby="text-tab">
-              <div class="form-group">
-                <label for="blockFontSize">フォントサイズ:</label>
-                <input type="range" class="form-control-range" id="blockFontSize" min="10" max="50" value="16">
-              </div>
-              <div class="form-group">
-                <label for="blockFontFamily">フォント:</label>
-                <select class="form-control" id="blockFontFamily">
-                  <option value="sans-serif">sans-serif</option>
-                  <option value="serif">serif</option>
-                  <option value="monospace">monospace</option>
-                </select>
-              </div>
-            </div>
-            <div class="tab-pane fade p-3" id="transform" role="tabpanel" aria-labelledby="transform-tab">
-              <div class="form-group">
-                <label for="blockSkewX">斜めX:</label>
-                <input type="range" class="form-control-range" id="blockSkewX" min="-90" max="90" value="0">
-              </div>
-              <div class="form-group">
-                <label for="blockSkewY">斜めY:</label>
-                <input type="range" class="form-control-range" id="blockSkewY" min="-90" max="90" value="0">
-              </div>
-            </div>
-          </div>
-        </div>
-        <h2 class="mt-5">生成されたCSSコード</h2>
-        <textarea id="cssCode" class="form-control" readonly style="height: 150px;"></textarea>
-        <button id="copyCss" class="btn btn-success mt-3">CSSをコピー</button>
-        <div id="outputMessage" class="mt-3"></div>
-
-        <h2 class="mt-5">HTMLコード</h2>
-        <textarea id="htmlCode" class="form-control" readonly style="height: 150px;"></textarea>
-        <button id="copyHtml" class="btn btn-success mt-3">HTMLをコピー</button>
-        <div id="outputMessageHtml" class="mt-3"></div>
-      </div>
+      <div id="score">スコア: 0</div>
     </div>
   </div>
 
-
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script>
-    $(document).ready(function () {
-      const preview = document.getElementById('preview');
-      const addBlockButton = document.getElementById('addBlock');
-      const controls = document.getElementById('controls');
-      const blockWidthControl = document.getElementById('blockWidth');
-      const blockHeightControl = document.getElementById('blockHeight');
-      const blockBgColorControl = document.getElementById('blockBgColor');
-      const blockBorderRadiusControl = document.getElementById('blockBorderRadius');
-      const blockTextColorControl = document.getElementById('blockTextColor');
-      const blockFontSizeControl = document.getElementById('blockFontSize');
-      const blockFontFamilyControl = document.getElementById('blockFontFamily');
-      const blockSkewXControl = document.getElementById('blockSkewX');
-      const blockSkewYControl = document.getElementById('blockSkewY');
-      const cssCodeArea = document.getElementById('cssCode');
-      const copyCssButton = document.getElementById('copyCss');
-      const outputMessage = document.getElementById('outputMessage');
-      const htmlCodeArea = document.getElementById('htmlCode');
-      const copyHtmlButton = document.getElementById('copyHtml');
-      const outputMessageHtml = document.getElementById('outputMessageHtml');
+    // JavaScriptコード (変更なし)
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const ROWS = 20;
+    const COLS = 10;
+    const SQUARE_SIZE = 30;
+    let score = 0;
+    const scoreDisplay = document.getElementById('score');
 
-      let selectedBlock = null;
-      let blockCount = 0;
 
-      //keydownイベントリスナーをdocumentに追加
-      document.addEventListener('keydown', (event) => {
-        if (selectedBlock) {
-          if (event.ctrlKey && event.key === 'd') {
-            duplicateBlock();
-          } else if (event.ctrlKey && event.key === 'x') {
-            deleteBlock();
+
+    const SHAPES = [
+      [[1, 1, 1, 1]], // I
+      [[1, 1, 1], [0, 1, 0]], // T
+      [[1, 1], [1, 1]], // O
+      [[1, 1], [0, 1, 1]], // Z
+      [[0, 1, 1], [1, 1]], // S
+      [[1, 1, 0], [0, 1, 1]], // J
+      [[0, 1, 0], [1, 1, 1]] // L
+    ];
+
+    let currentShape = getRandomShape();
+    let currentX = 3;
+    let currentY = -2; // Start above the visible area
+
+    let board = [];
+    for (let r = 0; r < ROWS; r++) {
+      board[r] = [];
+      for (let c = 0; c < COLS; c++) {
+        board[r][c] = 'white';
+      }
+    }
+
+    function getRandomShape() {
+      return SHAPES[Math.floor(Math.random() * SHAPES.length)];
+    }
+
+    function drawSquare(x, y, color) {
+      ctx.fillStyle = color;
+      ctx.fillRect(x * SQUARE_SIZE, y * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
+      ctx.strokeStyle = 'white';
+      ctx.strokeRect(x * SQUARE_SIZE, y * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
+    }
+
+    function drawBoard() {
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          drawSquare(c, r, board[r][c]);
+        }
+      }
+    }
+
+    function drawShape() {
+      for (let y = 0; y < currentShape.length; y++) {
+        for (let x = 0; x < currentShape[y].length; x++) {
+          if (currentShape[y][x]) {
+            drawSquare(currentX + x, currentY + y, 'red');
           }
         }
-      });
-
-      addBlockButton.addEventListener('click', () => {
-        createNewBlock();
-      });
-
-      function createNewBlock() {
-        blockCount++;
-        const block = document.createElement('div');
-        block.classList.add('block');
-        block.style.width = '100px';
-        block.style.height = '100px';
-        block.id = `block-${blockCount}`;
-        block.style.left = '50px';
-        block.style.top = '50px';
-        block.textContent = `ブロック${blockCount}`;
-        preview.appendChild(block);
-
-        block.addEventListener('click', () => {
-          selectBlock(block);
-        });
-
-        makeDraggable(block);
-        controls.style.display = 'block';
-        selectBlock(block);
-        updateCssCode();
-        updateHtmlCode();
       }
+    }
 
-      function selectBlock(block) {
-        if (selectedBlock) {
-          selectedBlock.classList.remove('selected');
+
+    function undrawShape() {
+      for (let y = 0; y < currentShape.length; y++) {
+        for (let x = 0; x < currentShape[y].length; x++) {
+          if (currentShape[y][x]) {
+            drawSquare(currentX + x, currentY + y, 'white');
+          }
         }
-        selectedBlock = block;
-        selectedBlock.classList.add('selected');
-
-        // Update control values with checks for null
-        blockWidthControl.value = parseInt(block.style.width) || 100;
-        blockHeightControl.value = parseInt(block.style.height) || 100;
-        blockBgColorControl.value = block.style.backgroundColor ? rgbToHex(block.style.backgroundColor) : '#ff0000';
-        blockBorderRadiusControl.value = parseInt(block.style.borderRadius) || 0;
-        blockTextColorControl.value = block.style.color ? rgbToHex(block.style.color) : '#000000';
-        blockFontSizeControl.value = parseInt(block.style.fontSize) || 16;
-        blockFontFamilyControl.value = block.style.fontFamily || 'sans-serif';
-        blockSkewXControl.value = parseInt(block.style.transform.replace(/[^-\d]/g, '')) || 0;
-        blockSkewYControl.value = parseInt(block.style.transform.replace(/[^-\d]/g, '')) || 0;
-
-        updateCssCode();
-        updateHtmlCode();
       }
+    }
 
-      function makeDraggable(element) {
-        let offsetX, offsetY;
 
-        element.addEventListener('mousedown', (e) => {
-          // ドラッグ開始時にtransitionを無効化
-          element.style.transition = 'none';
-          offsetX = e.clientX - element.offsetLeft;
-          offsetY = e.clientY - element.offsetTop;
-          document.addEventListener('mousemove', onMouseMove);
-          document.addEventListener('mouseup', onMouseUp);
-        });
+    function moveDown() {
+      if (!collision(0, 1)) {
+        undrawShape();
+        currentY++;
+        drawShape();
+      } else {
+        lockShape();
+        currentShape = getRandomShape();
+        currentX = 3;
+        currentY = -2;
+      }
+    }
+    let gameInterval = setInterval(moveDown, 1000);
 
-        function onMouseMove(e) {
-          element.style.left = (e.clientX - offsetX) + 'px';
-          element.style.top = (e.clientY - offsetY) + 'px';
-        }
 
-        function onMouseUp() {
-          // ドラッグ終了時にtransitionを再度有効化
-          element.style.transition = 'all 0.2s ease';
-          document.removeEventListener('mousemove', onMouseMove);
-          document.removeEventListener('mouseup', onMouseUp);
-          // マウスボタンを離したタイミングでCSSを更新
-          updateCssCode();
-          updateHtmlCode();
-          // マウスアップ時に選択状態にする
-          selectBlock(element);
+
+    function moveLeft() {
+      if (!collision(-1, 0)) {
+        undrawShape();
+        currentX--;
+        drawShape();
+      }
+    }
+
+    function moveRight() {
+      if (!collision(1, 0)) {
+        undrawShape();
+        currentX++;
+        drawShape();
+      }
+    }
+
+    function rotate() {
+      undrawShape();
+      const rotatedShape = [];
+      for (let x = 0; x < currentShape[0].length; x++) {
+        rotatedShape[x] = [];
+        for (let y = currentShape.length - 1; y >= 0; y--) {
+          rotatedShape[x].push(currentShape[y][x]);
         }
       }
 
-
-      // Event listeners for control changes
-      blockWidthControl.addEventListener('input', () => {
-        if (selectedBlock) {
-          selectedBlock.style.width = blockWidthControl.value + 'px';
-          updateCssCode();
-          updateHtmlCode();
-        }
-      });
-
-      blockHeightControl.addEventListener('input', () => {
-        if (selectedBlock) {
-          selectedBlock.style.height = blockHeightControl.value + 'px';
-          updateCssCode();
-          updateHtmlCode();
-        }
-      });
-
-      blockBgColorControl.addEventListener('input', () => {
-        if (selectedBlock) {
-          selectedBlock.style.backgroundColor = blockBgColorControl.value;
-          updateCssCode();
-          updateHtmlCode();
-        }
-      });
-
-      blockBorderRadiusControl.addEventListener('input', () => {
-        if (selectedBlock) {
-          selectedBlock.style.borderRadius = blockBorderRadiusControl.value + 'px';
-          updateCssCode();
-          updateHtmlCode();
-        }
-      });
-
-      blockTextColorControl.addEventListener('input', () => {
-        if (selectedBlock) {
-          selectedBlock.style.color = blockTextColorControl.value;
-          updateCssCode();
-          updateHtmlCode();
-        }
-      });
-
-      blockFontSizeControl.addEventListener('input', () => {
-        if (selectedBlock) {
-          selectedBlock.style.fontSize = blockFontSizeControl.value + 'px';
-          updateCssCode();
-          updateHtmlCode();
-        }
-      });
-
-      blockFontFamilyControl.addEventListener('change', () => {
-        if (selectedBlock) {
-          selectedBlock.style.fontFamily = blockFontFamilyControl.value;
-          updateCssCode();
-          updateHtmlCode();
-        }
-      });
-
-      blockSkewXControl.addEventListener('input', () => {
-        if (selectedBlock) {
-          selectedBlock.style.transform = `skewX(${blockSkewXControl.value}deg) skewY(${blockSkewYControl.value}deg)`;
-          updateCssCode();
-          updateHtmlCode();
-        }
-      });
-
-      blockSkewYControl.addEventListener('input', () => {
-        if (selectedBlock) {
-          selectedBlock.style.transform = `skewX(${blockSkewXControl.value}deg) skewY(${blockSkewYControl.value}deg)`;
-          updateCssCode();
-          updateHtmlCode();
-        }
-      });
-
-
-      function updateCssCode() {
-        let css = '';
-        const blocks = preview.querySelectorAll('.block');
-        blocks.forEach((block, index) => {
-          css += `#${block.id} {\n`;
-          if (block.style.width) css += `  width: ${block.style.width};\n`;
-          if (block.style.height) css += `  height: ${block.style.height};\n`;
-          if (block.style.backgroundColor) css += `  background-color: ${rgbToHex(block.style.backgroundColor)};\n`;
-          if (block.style.borderRadius) css += `  border-radius: ${block.style.borderRadius};\n`;
-          if (block.style.color) css += `  color: ${rgbToHex(block.style.color)};\n`;
-          if (block.style.fontSize) css += `  font-size: ${block.style.fontSize};\n`;
-          if (block.style.fontFamily) css += `  font-family: ${block.style.fontFamily};\n`;
-          if (block.style.transform) css += `  transform: ${block.style.transform};\n`;
-          css += `  position: absolute;\n`;
-          css += `  left: ${block.style.left};\n`;
-          css += `  top: ${block.style.top};\n`;
-          css += `}\n\n`;
-        });
-        cssCodeArea.value = css;
+      if (!collision(0, 0, rotatedShape)) {
+        currentShape = rotatedShape;
       }
+      drawShape();
+    }
 
-      function rgbToHex(rgb) {
-        if (!rgb) return '#000000'; // Default to black if rgb is not defined
-        rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-        return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+
+    function drop() {
+      while (!collision(0, 1)) {
+        moveDown();
       }
+    }
 
-      function hex(x) {
-        const hexDigits = "0123456789abcdef";
-        return isNaN(x) ? "00" : hexDigits[(x - x % 16) / 16] + hexDigits[x % 16];
-      }
+    function collision(offsetX = 0, offsetY = 0, shape = currentShape) {
+      for (let y = 0; y < shape.length; y++) {
+        for (let x = 0; x < shape[y].length; x++) {
+          if (shape[y][x]) {
+            let nextX = currentX + x + offsetX;
+            let nextY = currentY + y + offsetY;
 
-      copyCssButton.addEventListener('click', () => {
-        const cssCode = cssCodeArea.value;
-        navigator.clipboard.writeText(cssCode)
-          .then(() => {
-            outputMessage.textContent = 'CSSをクリップボードにコピーしました！';
-          })
-          .catch(err => {
-            outputMessage.textContent = 'コピーに失敗しました: ' + err;
-          });
-      });
-
-      function updateHtmlCode() {
-        let html = '';
-        const blocks = preview.querySelectorAll('.block');
-        blocks.forEach((block, index) => {
-          html += `<div id="${block.id}" style="
-                        width: ${block.style.width};
-                        height: ${block.style.height};
-                        background-color: ${rgbToHex(block.style.backgroundColor)};
-                        border-radius: ${block.style.borderRadius};
-                        color: ${rgbToHex(block.style.color)};
-                        font-size: ${block.style.fontSize};
-                        font-family: ${block.style.fontFamily};
-                        position: absolute;
-                        left: ${block.style.left};
-                        top: ${block.style.top};
-                        transform: ${block.style.transform};
-                    ">${block.textContent}</div>\n`;
-        });
-        htmlCodeArea.value = html;
-      }
-
-      copyHtmlButton.addEventListener('click', () => {
-        const htmlCode = htmlCodeArea.value;
-        navigator.clipboard.writeText(htmlCode)
-          .then(() => {
-            outputMessageHtml.textContent = 'HTMLをクリップボードにコピーしました！';
-          })
-          .catch(err => {
-            outputMessageHtml.textContent = 'コピーに失敗しました: ' + err;
-          });
-      });
-
-      // ブロックを複製する関数
-      function duplicateBlock() {
-        if (selectedBlock) {
-          const newBlock = selectedBlock.cloneNode(true);
-          const newIdNumber = blockCount + 1;
-          newBlock.id = `block-${newIdNumber}`;
-          blockCount = newIdNumber;
-          newBlock.textContent = `ブロック${newIdNumber}`;
-          //複製したブロックの位置を少しずらす
-          newBlock.style.left = parseInt(selectedBlock.style.left) + 20 + 'px';
-          newBlock.style.top = parseInt(selectedBlock.style.top) + 20 + 'px';
-          preview.appendChild(newBlock);
-          // 複製したブロックにもドラッグ機能を追加
-          makeDraggable(newBlock);
-          updateCssCode();
-          updateHtmlCode();
-          // 新しいブロックを選択状態にする
-          selectBlock(newBlock);
+            if (nextX < 0 || nextX >= COLS || nextY >= ROWS || (nextY >= 0 && board[nextY][nextX] !== 'white')) {
+              return true;
+            }
+          }
         }
       }
+      return false;
+    }
 
+    function lockShape() {
+      for (let y = 0; y < currentShape.length; y++) {
+        for (let x = 0; x < currentShape[y].length; x++) {
+          if (currentShape[y][x]) {
+            if (currentY + y < 0) {
+              // Game Over!
+              alert("Game Over!");
+              clearInterval(gameInterval)
+              board = [];
+              for (let r = 0; r < ROWS; r++) {
+                board[r] = [];
+                for (let c = 0; c < COLS; c++) {
+                  board[r][c] = 'white';
+                }
+              }
+              score = 0;
+              scoreDisplay.textContent = "スコア: " + score;
 
-      //ブロックを削除する関数
-      function deleteBlock() {
-        if (selectedBlock) {
-          selectedBlock.remove();
-          selectedBlock = null;
-          updateCssCode();
-          updateHtmlCode();
+              break;
+            }
+
+            board[currentY + y][currentX + x] = 'red';
+          }
         }
+      }
+      checkCompletedRows();
+    }
+    function checkCompletedRows() {
+      let completedRows = 0;
+      for (let y = 0; y < ROWS; y++) {
+        let isRowFull = true;
+        for (let x = 0; x < COLS; x++) {
+          if (board[y][x] === 'white') {
+            isRowFull = false;
+            break;
+          }
+        }
+        if (isRowFull) {
+          completedRows++;
+          // Remove the row and shift everything down
+          for (let r = y; r > 0; r--) {
+            for (let c = 0; c < COLS; c++) {
+              board[r][c] = board[r - 1][c];
+            }
+          }
+          // Clear the very top row
+          for (let c = 0; c < COLS; c++) {
+            board[0][c] = 'white';
+          }
+
+        }
+      }
+      if (completedRows > 0) {
+        score += completedRows * 10;
+        scoreDisplay.textContent = "スコア: " + score;
+      }
+
+    }
+
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'w' || event.key === 'ArrowUp') {
+        rotate();
+      } else if (event.key === 'a' || event.key === 'ArrowLeft') {
+        moveLeft();
+      } else if (event.key === 'd' || event.key === 'ArrowRight') {
+        moveRight();
+      } else if (event.key === 's' || event.key === 'ArrowDown') {
+        moveDown();
+      } else if (event.key === ' ') {
+        drop();
       }
     });
-  </script>
 
+    drawBoard();
+    drawShape();
+
+
+  </script>
 </body>
 
 </html>

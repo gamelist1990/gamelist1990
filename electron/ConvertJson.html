@@ -240,10 +240,16 @@
         const messageIdInput = document.getElementById('message-id-input');
         const messageIdInputTextbox = document.getElementById('message-id');
 
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return decodeURIComponent(parts.pop().split(';').shift());
+        }
+
 
         // 設定の読み込み (localStorageまたはデフォルト値)
-        let currentMarkdownTemplate = localStorage.getItem('markdownTemplate') || `# 原神コード配布 (最終: {{lastUpdatedDate}})\n\n**コードの期限は分からないので各々で確認してください(一応最新のコードから順に並べてあります)**\n\n \n\n{{codeItems}}`;
-        let currentScriptCode = localStorage.getItem('scriptCode') || `
+        let currentMarkdownTemplate = getCookie('markdownTemplate') || `# 原神コード配布 (最終: {{lastUpdatedDate}})\n\n**コードの期限は分からないので各々で確認してください(一応最新のコードから順に並べてあります)**\n\n \n\n{{codeItems}}`;
+        let currentScriptCode = getCookie('scriptCode') || `
 jsonData.sort((a, b) => {
     const dateA = new Date(a.addedDate.replace('追加日：', ''));
     const dateB = new Date(b.addedDate.replace('追加日：', ''));
@@ -285,11 +291,11 @@ return { lastUpdatedDate, codeItems };
 `;
 
         // Discord Webhook 設定の読み込み
-        let useDiscordWebhook = localStorage.getItem('useDiscordWebhook') === 'true';
-        let webhookUrl = localStorage.getItem('webhookUrl') || '';
-        let webhookContent = localStorage.getItem('webhookContent') || '@[message]';
-        let editExistingMessage = localStorage.getItem('editExistingMessage') === 'true';
-        let messageId = localStorage.getItem('messageId') || '';
+        let useDiscordWebhook = getCookie('useDiscordWebhook') === 'true';
+        let webhookUrl = getCookie('webhookUrl') || '';
+        let webhookContent = getCookie('webhookContent') || '@[message]';
+        let editExistingMessage = getCookie('editExistingMessage') === 'true';
+        let messageId = getCookie('messageId') || '';
 
         editExistingMessageCheckbox.checked = editExistingMessage;
         messageIdInputTextbox.value = messageId;
@@ -415,51 +421,51 @@ return { lastUpdatedDate, codeItems };
 
         // Discordへの送信処理
         sendToDiscordButton.addEventListener('click', async () => {
-                const longText = markdownOutput.textContent; // 長いテキスト
-                const chunkSize = 2000; // 分割サイズ
-                const currentTime = new Date().toLocaleString('ja-JP');
-                const timeline = Math.floor(Date.now() / 1000);
+            const longText = markdownOutput.textContent; // 長いテキスト
+            const chunkSize = 2000; // 分割サイズ
+            const currentTime = new Date().toLocaleString('ja-JP');
+            const timeline = Math.floor(Date.now() / 1000);
 
-                // Webhook メッセージ内容をカスタム
-               let customMessageContent = webhookContent.replace('@[message]', longText);
-                   customMessageContent = customMessageContent.replace('@[time]', currentTime);
-                   customMessageContent = customMessageContent.replace('@[timeline]',timeline)
+            // Webhook メッセージ内容をカスタム
+            let customMessageContent = webhookContent.replace('@[message]', longText);
+            customMessageContent = customMessageContent.replace('@[time]', currentTime);
+            customMessageContent = customMessageContent.replace('@[timeline]', timeline)
 
-                // メッセージIDが指定されている場合は編集、そうでない場合は新規投稿
-                const method = editExistingMessage && messageId ? 'PATCH' : 'POST';
-                const url = editExistingMessage && messageId ? `${webhookUrl}/messages/${messageId}` : webhookUrl;
+            // メッセージIDが指定されている場合は編集、そうでない場合は新規投稿
+            const method = editExistingMessage && messageId ? 'PATCH' : 'POST';
+            const url = editExistingMessage && messageId ? `${webhookUrl}/messages/${messageId}` : webhookUrl;
 
-                for (let i = 0; i < customMessageContent.length; i += chunkSize) {
-                    const chunk = customMessageContent.slice(i, i + chunkSize);
+            for (let i = 0; i < customMessageContent.length; i += chunkSize) {
+                const chunk = customMessageContent.slice(i, i + chunkSize);
 
-                    const message = {
-                        content: chunk
-                    };
+                const message = {
+                    content: chunk
+                };
 
-                    try {
-                        const response = await fetch(url, {
-                            method: method,
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(message)
-                        });
+                try {
+                    const response = await fetch(url, {
+                        method: method,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(message)
+                    });
 
-                        if (response.ok) {
-                            // 各チャンクの送信が成功した場合は特に何もしない
-                        } else {
-                            alert(`Discordへの${method === 'PATCH' ? '編集' : '送信'}に失敗しました (チャンク ${i / chunkSize + 1})。Webhook URLとメッセージIDを確認してください。`);
-                            return; // エラーが発生したらループを中断
-                        }
-                    } catch (error) {
-                        console.error(`Discordへの${method === 'PATCH' ? '編集' : '送信'}中にエラーが発生しました (チャンク ${i / chunkSize + 1}):`, error);
-                        alert(`Discordへの${method === 'PATCH' ? '編集' : '送信'}中にエラーが発生しました (チャンク ${i / chunkSize + 1})。`);
+                    if (response.ok) {
+                        // 各チャンクの送信が成功した場合は特に何もしない
+                    } else {
+                        alert(`Discordへの${method === 'PATCH' ? '編集' : '送信'}に失敗しました (チャンク ${i / chunkSize + 1})。Webhook URLとメッセージIDを確認してください。`);
                         return; // エラーが発生したらループを中断
                     }
+                } catch (error) {
+                    console.error(`Discordへの${method === 'PATCH' ? '編集' : '送信'}中にエラーが発生しました (チャンク ${i / chunkSize + 1}):`, error);
+                    alert(`Discordへの${method === 'PATCH' ? '編集' : '送信'}中にエラーが発生しました (チャンク ${i / chunkSize + 1})。`);
+                    return; // エラーが発生したらループを中断
                 }
+            }
 
-                alert(`Discordに${method === 'PATCH' ? '編集' : '送信'}しました！`); // 全てのチャンクの送信が成功した場合のみ表示
-            });
+            alert(`Discordに${method === 'PATCH' ? '編集' : '送信'}しました！`); // 全てのチャンクの送信が成功した場合のみ表示
+        });
 
         // 設定モーダルの開閉
         settingsButton.onclick = function () {
@@ -484,13 +490,15 @@ return { lastUpdatedDate, codeItems };
             editExistingMessage = editExistingMessageCheckbox.checked;
             messageId = messageIdInputTextbox.value;
 
-            localStorage.setItem('markdownTemplate', currentMarkdownTemplate);
-            localStorage.setItem('scriptCode', currentScriptCode);
-            localStorage.setItem('useDiscordWebhook', useDiscordWebhook);
-            localStorage.setItem('webhookUrl', webhookUrl);
-            localStorage.setItem('webhookContent', webhookContent);
-            localStorage.setItem('editExistingMessage', editExistingMessage);
-            localStorage.setItem('messageId', messageId);
+            const expirationDate = new Date();
+            expirationDate.setFullYear(expirationDate.getFullYear() + 1);
+            document.cookie = `markdownTemplate=${encodeURIComponent(currentMarkdownTemplate)};expires=${expirationDate.toUTCString()};path=/`;
+            document.cookie = `scriptCode=${encodeURIComponent(currentScriptCode)};expires=${expirationDate.toUTCString()};path=/`;
+            document.cookie = `useDiscordWebhook=${useDiscordWebhook};expires=${expirationDate.toUTCString()};path=/`;
+            document.cookie = `webhookUrl=${encodeURIComponent(webhookUrl)};expires=${expirationDate.toUTCString()};path=/`;
+            document.cookie = `webhookContent=${encodeURIComponent(webhookContent)};expires=${expirationDate.toUTCString()};path=/`;
+            document.cookie = `editExistingMessage=${editExistingMessage};expires=${expirationDate.toUTCString()};path=/`;
+            document.cookie = `messageId=${encodeURIComponent(messageId)};expires=${expirationDate.toUTCString()};path=/`;
             alert('設定を保存しました。');
             settingsModal.style.display = "none";
         });

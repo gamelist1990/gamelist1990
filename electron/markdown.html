@@ -7,7 +7,7 @@
     <script src="https://unpkg.com/prettier@2.8.8/parser-markdown.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lz-string@1.4.4/libs/lz-string.min.js"></script>
     <style>
-        /* Basic styles to reset margins and padding */
+        /* 基本的なスタイルのリセット */
         body,
         html {
             margin: 0;
@@ -15,13 +15,13 @@
             height: 100%;
         }
 
-        /* Modern and clean styles */
+        /* モダンでクリーンなスタイル */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f4f4f4;
-            /* Light background */
+            /* 薄い背景 */
             color: #333;
-            /* Dark text */
+            /* 濃いテキスト */
         }
 
         .container {
@@ -32,7 +32,7 @@
         .editor-pane {
             width: 50%;
             border-right: 1px solid #ddd;
-            /* Light divider */
+            /* 薄い分割線 */
         }
 
         #markdown-editor {
@@ -40,7 +40,7 @@
             height: 100%;
             padding: 20px;
             background-color: #fff;
-            /* White editor background */
+            /* 白いエディタ背景 */
             color: #333;
             border: none;
             resize: none;
@@ -50,17 +50,16 @@
             white-space: pre-wrap;
         }
 
-
         .preview-pane {
             width: 50%;
             padding: 20px;
             background-color: #fff;
-            /* White preview background */
+            /* 白いプレビュー背景 */
             overflow-y: auto;
             box-sizing: border-box;
         }
 
-        /* Modern scrollbar (adjust as needed) */
+        /* モダンなスクロールバー (必要に応じて調整) */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -79,12 +78,13 @@
 
         .toolbar {
             background-color: #eee;
-            /* Light toolbar background */
+            /* 薄いツールバーの背景 */
             padding: 10px;
             display: flex;
             justify-content: space-between;
             border-bottom: 1px solid #ddd;
         }
+
 
         .toolbar button {
             background-color: #fff;
@@ -105,14 +105,15 @@
             border: 1px solid #ddd;
             padding: 5px 0;
             z-index: 10;
-            /* Ensure it's above other elements */
+            /* 他の要素の上に表示されるようにする */
             display: none;
-            /* Hide by default */
+            /* デフォルトでは非表示 */
             border: 1px solid #ccc;
-            /* Add border */
+            /* 枠線を追加 */
             box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-            /* Add shadow */
+            /* 影を追加 */
         }
+
 
         .context-menu li {
             list-style: none;
@@ -125,7 +126,96 @@
         }
 
 
-        /* 画像 (例: 紫) */
+        /* Markdown Preview Styling */
+        #preview {
+            font-family: sans-serif;
+        }
+
+        #preview h1,
+        #preview h2,
+        #preview h3,
+        #preview h4,
+        #preview h5,
+        #preview h6 {
+            font-weight: bold;
+            margin-bottom: 0.5em;
+        }
+
+        #preview h1 {
+            font-size: 2em;
+        }
+
+        #preview h2 {
+            font-size: 1.5em;
+            border-bottom: 1px solid #eee;
+        }
+
+        #preview p {
+            line-height: 1.6;
+        }
+
+        #preview a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+
+        #preview a:hover {
+            text-decoration: underline;
+        }
+
+
+        #preview code {
+            background-color: #f5f5f5;
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+
+
+        #preview pre {
+            background-color: #f5f5f5;
+            padding: 1em;
+            border-radius: 3px;
+            overflow: auto;
+            font-family: monospace;
+        }
+
+
+        #preview pre code {
+            background-color: transparent;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        #preview blockquote {
+            border-left: 4px solid #ddd;
+            padding: 0.5em 1em;
+            color: #777;
+        }
+
+        #preview ul,
+        #preview ol {
+            padding-left: 2em;
+        }
+
+        #preview table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1em;
+        }
+
+        #preview th,
+        #preview td {
+            border: 1px solid #ddd;
+            padding: 0.5em;
+            text-align: left;
+        }
+
+        #preview img {
+            max-width: 100%;
+            height: auto;
+        }
     </style>
 </head>
 
@@ -188,6 +278,7 @@
             if (compressedTextFromUrl) {
                 const decompressedText = LZString.decompressFromEncodedURIComponent(compressedTextFromUrl);
                 markdownEditor.innerText = decompressedText;
+                updatePreview();
             }
 
             saveBtn.addEventListener('click', () => {

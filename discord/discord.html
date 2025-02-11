@@ -1,10 +1,204 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
+
 <head>
   <meta charset="UTF-8">
-  <title>HTML Sample</title>
-  <link rel="stylesheet" href="style.css">
-  <script type="text/javascript" src="sample.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PEXserver - Discordコミュニティ</title>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* 全体的なスタイル */
+    body {
+      font-family: 'Roboto', sans-serif;
+      /* モダンなサンセリフ体 */
+      margin: 0;
+      background: linear-gradient(to bottom, #212121, #36454F);
+      /* ダークグレー系のグラデーション */
+      color: #F5F5F5;
+      /* ライトグレーのテキスト */
+    }
+
+    .container {
+      max-width: 1024px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* ヘッダー */
+    header {
+      text-align: center;
+      padding: 3rem 0;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    header h1 {
+      font-size: 3em;
+      margin-bottom: 1rem;
+      text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    header p {
+      font-size: 1.1em;
+      line-height: 1.6;
+      color: #E0E0E0;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    /* セクションタイトル */
+    .section-title {
+      color: #42A5F5;
+      /* 落ち着いた青 */
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 2.2em;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    /* ウィジェットコンテナ */
+    .widget-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 25px;
+    }
+
+    /* ウィジェットアイテム */
+    .widget-item {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 25px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease;
+    }
+
+    .widget-item:hover {
+      transform: translateY(-5px);
+    }
+
+    .widget-item h3 {
+      color: #42A5F5;
+      /* 落ち着いた青 */
+      margin-bottom: 15px;
+      font-size: 1.5em;
+    }
+
+    .discord-widget iframe {
+      border: none;
+      border-radius: 10px;
+      width: 100%;
+      height: 500px;
+    }
+
+    .widgetbot-container {
+      margin-bottom: 0;
+      height: 650px;
+    }
+
+    /* ボタン */
+    .button {
+      display: inline-block;
+      padding: 15px 30px;
+      background-color: #42A5F5;
+      /* 落ち着いた青 */
+      color: #FFFFFF;
+      /* 白 */
+      text-align: center;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 1.2em;
+      font-weight: bold;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      margin-top: 30px;
+    }
+
+    .button:hover {
+      background-color: #2979FF;
+      /* ホバー時は少し明るい青 */
+      transform: scale(1.05);
+    }
+
+    .button i {
+      margin-right: 10px;
+    }
+
+    /* フッター */
+    footer {
+      text-align: center;
+      padding: 2rem 0;
+      margin-top: 3rem;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      color: #E0E0E0;
+    }
+
+    /* ウィジェットの見出しアイコン色 */
+    .widget-item h3 .fa-users,
+    .widget-item h3 .fa-comments {
+      color: #42A5F5;
+      /* 落ち着いた青 */
+    }
+  </style>
 </head>
-  <iframe src="https://e.widgetbot.io/channels/890315487962095637/901361525728608277" height="800" width="100%"></iframe>
+
+<body>
+  <div class="container">
+    <header>
+      <h1>PEXserver</h1>
+      <p>Discordコミュニティへようこそ！<br>このページではDiscordが使えない人向けに、<br>お試し環境を作ってみました</p>
+    </header>
+
+    <main>
+      <h2 class="section-title">↓↓↓</h2>
+      <div class="widget-container">
+        <div class="widget-item discord-widget">
+          <h3><i class="fas fa-users"></i> 現在オンラインのプレイヤー</h3>
+          <iframe id="main-vc-iframe" src="" allowtransparency="true" frameborder="0"
+            sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+        </div>
+        <div class="widget-item widgetbot-container">
+          <h3><i class="fas fa-comments"></i> お試し雑談 (テキスト)</h3>
+          <widgetbot server="890315487962095637" channel="1148749910825504888" width="100%" height="500"></widgetbot>
+        </div>
+      </div>
+      <a href="" id="join-button" class="button" target="_blank" rel="noopener noreferrer">
+        <i class="fab fa-discord"></i> Discord サーバーに参加
+      </a>
+
+    </main>
+
+    <footer>
+      <p>© 2024 PEXserver. All rights reserved.</p>
+    </footer>
+  </div>
+
+
+  <script>
+    const serverId = '890315487962095637';
+    const mainVcChannelId = '1157257600455426058';
+
+    document.getElementById('join-button').href = "https://discord.gg/GJyqBm7Pyd";
+
+    if (mainVcChannelId) {
+      document.getElementById('main-vc-iframe').src = `https://discord.com/widget?id=${serverId}&theme=dark&channel=${mainVcChannelId}`;
+    } else {
+      document.getElementById('main-vc-iframe').src = "about:blank";
+      document.getElementById('main-vc-iframe').style.display = "none";
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@widgetbot/html-embed"></script>
+</body>
+
 </html>

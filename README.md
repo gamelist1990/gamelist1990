@@ -7,10 +7,8 @@
 
 **Ongoing Projects:**
 - Gamelist1990 GitHub Page
-- ChestLockAddon(minecraft)
-- Webapi(ChatGPT)
-- electron(APP)
-- MenuClient(LastVersion:4.0)
+- FerrumProxy
+- pexserver(Mineceaft)
 
 
 **My Goals:**
